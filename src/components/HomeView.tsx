@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import dynamic from "next/dynamic";
 import { useMarqueStore } from "../store/store";
 import { BRANDS, RC_GUIDES, Product, RCGuide } from "../data/mockData";
 import {
@@ -17,11 +16,18 @@ import {
   Sparkles,
   ArrowRight,
   TrendingUp,
-  X
+  X,
+  Search,
+  Sliders,
+  Car,
+  Settings,
+  CheckCircle2,
+  Quote,
+  Layers,
+  HelpCircle,
+  Truck,
+  Heart
 } from "lucide-react";
-
-// Load our hyper-realistic client-side 3D WebGL engine dynamically with SSR disabled
-const ThreeDShowcase = dynamic(() => import("./ThreeDShowcase"), { ssr: false });
 
 export default function HomeView() {
   const {
@@ -30,18 +36,25 @@ export default function HomeView() {
     setView,
     setFilterBrand,
     setFilterTerrain,
+    setSearchQuery,
     setSelectedProduct,
     addToCart,
-    cart
+    toggleWishlist,
+    wishlist
   } = useMarqueStore();
 
   const [activeGuide, setActiveGuide] = useState<RCGuide | null>(null);
 
-  // Take featured products
-  const featuredProducts = products.filter(p => p.isFeatured && p.isActive).slice(0, 4);
+  // Impel tabbed search panel states
+  const [searchQueryLocal, setSearchQueryLocal] = useState("");
+  const [selectedBrandLocal, setSelectedBrandLocal] = useState("ALL");
+  const [selectedTerrainLocal, setSelectedTerrainLocal] = useState("ALL");
 
-  // Take top brands
-  const topBrands = BRANDS;
+  // Impel "Explore All Vehicles" tab state
+  const [exploreTab, setExploreTab] = useState<'ALL' | 'Off-Road' | 'On-Road' | 'Crawler' | 'Drift'>('ALL');
+
+  // Impel testimonials slider index simulator
+  const [testimonialIndex, setTestimonialIndex] = useState(0);
 
   const handleBrandClick = (slug: string) => {
     setFilterBrand(slug);
@@ -64,215 +77,571 @@ export default function HomeView() {
     addToCart(product, product.variants[0], 1);
   };
 
-  return (
-    <div className="space-y-20 pb-20">
+  const handleSearchSubmit = () => {
+    setSearchQuery(searchQueryLocal);
+    setFilterBrand(selectedBrandLocal);
+    setFilterTerrain(selectedTerrainLocal);
+    setSelectedProduct(null);
+    setView('shop');
+  };
 
-      {/* 1. HERO SPOTLIGHT BANNER */}
-      <section className="relative carbon-overlay overflow-hidden rounded-3xl border border-brand-border bg-slate-950 py-24 px-8 sm:px-16 lg:px-24">
+  // Filter explore rigs dynamically
+  const exploreFilteredProducts = products
+    .filter((p) => {
+      if (exploreTab === "ALL") return p.isActive;
+      return p.isActive && p.terrainType === exploreTab;
+    })
+    .slice(0, 6); // Impel displays 6 items in this showcase
+
+  // Testimonials database
+  const testimonials = [
+    {
+      name: "Vikram Malhotra",
+      role: "Verified Traxxas X-Maxx Owner • Chennai",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
+      quote: "Purchased the Solar Flare Orange X-Maxx and it has been absolute insanity. Handled rocky terrains in Lonavala and water streams effortlessly. Unbelievable construction and raw power! Delivery to Madipakkam was incredibly fast."
+    },
+    {
+      name: "Rohan Das",
+      role: "Club Racer • Bengaluru",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+      quote: "I've jumped the Arrma Infraction off a 6-foot mud ramp at least 30 times. Not a single suspension arm or gear broke. It's expensive but you get exactly what you pay for: bulletproof RC engineering. Spektrum Smart telemetry is top-tier!"
+    },
+    {
+      name: "Priyanjali Sen",
+      role: "Drift Enthusiast • Mumbai",
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
+      quote: "For the price, the carbon fiber and anodized aluminum on the AM-X12 speed car is unbelievable. The car is super responsive and literally flies on a 3S pack. Tuning options are usually reserved for high-end kits."
+    }
+  ];
+
+  return (
+    <div className="space-y-24 pb-24">
+
+      {/* ==================== 1. HERO SPOTLIGHT BANNER ==================== */}
+      <section className="relative carbon-overlay overflow-hidden rounded-3xl border border-brand-border bg-slate-950 py-12 px-8 sm:px-12 lg:px-16 lg:py-16">
         {/* Neon Orange & Gold Background Radial Glows */}
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-brand-orange/10 blur-[120px] pointer-events-none" />
         <div className="absolute top-1/3 right-1/4 h-[300px] w-[300px] rounded-full bg-brand-gold/10 blur-[120px] pointer-events-none" />
 
-        <div className="relative z-10 max-w-2xl space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-brand-orange/10 px-3 py-1 text-xs font-bold text-brand-orange uppercase tracking-wider">
-            <Flame className="h-3.5 w-3.5" />
-            Spotlight: Traxxas X-Maxx 8S
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          {/* Left Column (Copy and CTA) */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-brand-orange/10 px-3 py-1 text-xs font-bold text-brand-orange uppercase tracking-wider">
+              <Flame className="h-3.5 w-3.5" />
+              Spotlight: Traxxas X-Maxx 8S
+            </div>
+
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-none">
+              BRUTAL SPEED.<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-gold">
+                UNMATCHED DURABILITY.
+              </span>
+            </h1>
+
+            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              Experience 130+ km/h runs, fully waterproof brushless motors, and aircraft-grade carbon fiber/alloy constructs. MARQUE brings the world's most extreme RC brands to Indian bashers and track racers.
+            </p>
+
+            <div className="flex flex-wrap gap-4 pt-2">
+              <button
+                onClick={() => { setFilterBrand('ALL'); setView('shop'); }}
+                className="group flex items-center gap-2 rounded-xl bg-brand-orange px-6 py-3.5 text-sm font-bold text-black hover:bg-brand-gold hover:shadow-glow transition-all duration-300 uppercase tracking-wider"
+              >
+                Explore Track Rigs
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              <button
+                onClick={() => handleBrandClick('traxxas')}
+                className="rounded-xl border border-brand-border bg-slate-900/60 hover:bg-slate-900 px-6 py-3.5 text-sm font-bold text-white hover:border-brand-orange transition-all duration-300 uppercase tracking-wider"
+              >
+                Shop Traxxas VXL
+              </button>
+            </div>
           </div>
 
-          <h1 className="font-display text-4xl sm:text-6xl font-black uppercase tracking-tight text-white leading-none">
-            BRUTAL SPEED.<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-gold">
-              UNMATCHED DURABILITY.
-            </span>
-          </h1>
-
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            Experience 130+ km/h runs, fully waterproof brushless motors, and aircraft-grade carbon fiber/alloy constructs. MARQUE brings the world's most extreme RC brands to Indian bashers and track racers.
-          </p>
-
-          <div className="flex flex-wrap gap-4 pt-4">
-            <button
-              onClick={() => { setFilterBrand('ALL'); setView('shop'); }}
-              className="group flex items-center gap-2 rounded-xl bg-brand-orange px-6 py-3.5 text-sm font-bold text-black hover:bg-brand-gold hover:shadow-glow transition-all duration-300 uppercase tracking-wider"
-            >
-              Explore Track Rigs
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-
-            <button
-              onClick={() => handleBrandClick('traxxas')}
-              className="rounded-xl border border-brand-border bg-slate-900/60 hover:bg-slate-900 px-6 py-3.5 text-sm font-bold text-white hover:border-brand-orange transition-all duration-300 uppercase tracking-wider"
-            >
-              Shop Traxxas VXL
-            </button>
+          {/* Right Column (Attractive Image Display) */}
+          <div className="lg:col-span-5 relative w-full flex justify-center items-center">
+            <div className="absolute -inset-1.5 rounded-2xl bg-gradient-to-r from-brand-orange to-brand-gold opacity-30 blur-lg pointer-events-none"></div>
+            <div className="relative rounded-2xl border border-brand-border overflow-hidden bg-slate-950 group shadow-2xl">
+              <img 
+                src="/hero_rc_car.png" 
+                alt="Traxxas X-Maxx 8S High Performance RC Truck" 
+                className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500 rounded-2xl" 
+              />
+              <div className="absolute bottom-4 right-4 flex flex-col items-end gap-1 p-3 rounded-xl bg-slate-950/80 backdrop-blur border border-white/10 text-right">
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Top Velocity Record</span>
+                <span className="font-display text-xl font-black text-brand-gold leading-none">134+ KM/H</span>
+                <span className="text-[9px] text-slate-300">Arrma Infraction 6S BLX</span>
+              </div>
+            </div>
           </div>
-        </div>
-
-        {/* Floating Accent Specifications Badge */}
-        <div className="absolute bottom-8 right-8 hidden xl:flex flex-col items-end gap-1.5 p-4 rounded-2xl glass-panel text-right">
-          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Top Velocity Record</span>
-          <span className="font-display text-3xl font-black text-brand-gold leading-none">134+ KM/H</span>
-          <span className="text-[10px] text-slate-400">Arrma Infraction 6S BLX</span>
         </div>
       </section>
 
-      {/* INTERACTIVE 3D SHOWROOM & DRIVING SIMULATOR */}
+      {/* ==================== 2. TABBED VEHICLE SEARCH/FILTER (Impel "Find Cars") ==================== */}
+      <section className="-mt-12 relative z-20 max-w-5xl mx-auto">
+        <div className="rounded-3xl border border-brand-border bg-slate-950/90 backdrop-blur p-6 sm:p-8 shadow-2xl">
+          <div className="space-y-4">
+            <div className="border-b border-brand-border pb-3 flex items-center justify-between">
+              <span className="font-display text-xs sm:text-sm font-black uppercase tracking-wider text-brand-orange">
+                Find High-Performance Cars For Sale
+              </span>
+              <span className="text-[10px] text-slate-500 font-bold uppercase hidden sm:inline">
+                Madipakkam Hub Serviceable
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+              {/* Keyword Search */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Search Keyword</label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                  <input
+                    type="text"
+                    value={searchQueryLocal}
+                    onChange={(e) => setSearchQueryLocal(e.target.value)}
+                    placeholder="Slash, X-Maxx, Arrma..."
+                    className="w-full rounded-xl border border-brand-border bg-slate-900/50 pl-10 pr-3 py-3 text-xs font-bold text-white placeholder-slate-500 focus:border-brand-orange focus:bg-slate-900 transition-all outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Brand Select */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Select Brand</label>
+                <select
+                  value={selectedBrandLocal}
+                  onChange={(e) => setSelectedBrandLocal(e.target.value)}
+                  className="w-full rounded-xl border border-brand-border bg-slate-900/50 px-3 py-3 text-xs font-bold text-white focus:border-brand-orange focus:bg-slate-900 transition-all outline-none"
+                >
+                  <option value="ALL">All Brands (Traxxas, Arrma...)</option>
+                  <option value="traxxas">Traxxas High-Performance</option>
+                  <option value="arrma">Arrma Bashers</option>
+                  <option value="fms">FMS Scale Realism</option>
+                  <option value="rlaarlo">Rlaarlo Speed Demons</option>
+                  <option value="mjx">MJX Hyper Go</option>
+                </select>
+              </div>
+
+              {/* Terrain Select */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Select Terrain Type</label>
+                <select
+                  value={selectedTerrainLocal}
+                  onChange={(e) => setSelectedTerrainLocal(e.target.value)}
+                  className="w-full rounded-xl border border-brand-border bg-slate-900/50 px-3 py-3 text-xs font-bold text-white focus:border-brand-orange focus:bg-slate-900 transition-all outline-none"
+                >
+                  <option value="ALL">All Terrains</option>
+                  <option value="Off-Road">Off-Road Dirt Bashers</option>
+                  <option value="On-Road">On-Road Asphalt Speed</option>
+                  <option value="Crawler">Technical Rock Crawlers</option>
+                  <option value="Drift">Precision Drift Machines</option>
+                </select>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                onClick={handleSearchSubmit}
+                className="w-full rounded-xl bg-brand-orange hover:bg-brand-gold text-black py-3.5 text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 hover:shadow-glow"
+              >
+                <Search className="h-4 w-4" />
+                Search Garage
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== 3. BROWSE BY TYPE (Impel Circle Badges) ==================== */}
       <section className="space-y-8">
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-brand-orange/10 px-3 py-1 text-xs font-bold text-brand-orange uppercase tracking-wider">
-            <Sparkles className="h-3.5 w-3.5" />
-            Interactive 3D Showroom & Driving Arena
-          </div>
-          <h2 className="font-display text-2xl sm:text-4xl font-black uppercase tracking-tight text-white leading-tight">
-            EXPERIENCE THE ULTRA-REALISM
-          </h2>
-          <p className="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
-            Rotate the chassis, choose custom metallic finishes, or click to slide off the body shell to inspect brushless internals. Switch to **Drive Mode** (WASD / Arrows) to steer and drift on our simulated physics sandbox!
-          </p>
-        </div>
-
-        <div className="rounded-3xl border border-brand-border bg-slate-950/80 overflow-hidden shadow-glow">
-          <ThreeDShowcase />
-        </div>
-      </section>
-
-      {/* 2. TERRAIN-BASED FILTER GRID */}
-      <section className="space-y-6">
         <div className="text-center space-y-2">
-          <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-tight text-white">
-            Choose Your Battlefield
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-orange uppercase tracking-widest">
+            <Sliders className="h-4 w-4" />
+            Segment Selector
+          </div>
+          <h2 className="font-display text-2xl sm:text-4xl font-black uppercase tracking-tight text-white">
+            Browse By Segment
           </h2>
-          <p className="text-slate-400 text-xs sm:text-sm">
-            Curated rigs built explicitly for the dirt, paved high-speed circuits, or technical rock trails.
+          <p className="text-slate-400 text-xs sm:text-sm max-w-lg mx-auto">
+            Choose your engineering blueprint built explicitly for speedways, dirt trails, or backyard bashers.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
           {[
-            { name: 'Off-Road', icon: Trophy, label: 'Monster Trucks & Buggies', color: 'from-orange-600 to-red-600', desc: 'Crush fields, ramps, and sand dunes.' },
-            { name: 'On-Road', icon: Zap, label: 'Street Speed & High Speed Pulls', color: 'from-blue-600 to-indigo-600', desc: 'Precision tarmac grip & insane highway blasts.' },
-            { name: 'Crawler', icon: Compass, label: 'Technical Trial & Scale crawling', color: 'from-green-600 to-emerald-600', desc: 'Low-gear torque for rock piles and scale realism.' },
-            { name: 'Drift', icon: Sparkles, label: 'Slick Slide & Gyro-locked control', color: 'from-amber-600 to-yellow-600', desc: 'Oversteer masteries & perfect hairpin slides.' }
-          ].map((item, idx) => (
+            { name: "Crawler", label: "Crawler Rigs", icon: Compass, action: () => handleTerrainClick("Crawler") },
+            { name: "Drift", label: "Drifting", icon: Sliders, action: () => handleTerrainClick("Drift") },
+            { name: "On-Road", label: "Street Speed", icon: Zap, action: () => handleTerrainClick("On-Road") },
+            { name: "Off-Road", label: "Dirt Bashers", icon: Trophy, action: () => handleTerrainClick("Off-Road") },
+            { name: "Featured", label: "Speed Stars", icon: Sparkles, action: () => { setFilterBrand("ALL"); setView("shop"); } },
+            { name: "Brands", label: "Top Makers", icon: Car, action: () => { setFilterBrand("ALL"); setView("shop"); } }
+          ].map((cat, idx) => (
             <div
               key={idx}
-              onClick={() => handleTerrainClick(item.name as any)}
-              className="group cursor-pointer relative overflow-hidden rounded-2xl border border-brand-border bg-slate-900/40 p-6 hover:border-brand-orange hover:bg-slate-900/80 transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-glow"
+              onClick={cat.action}
+              className="group cursor-pointer rounded-2xl border border-brand-border bg-slate-900/10 p-5 text-center flex flex-col items-center gap-3.5 hover:border-brand-orange hover:bg-slate-950 transition-all duration-300 relative overflow-hidden"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 text-brand-orange group-hover:bg-brand-orange group-hover:text-black transition-all">
-                <item.icon className="h-5 w-5 stroke-[2.5]" />
+              <div className="absolute inset-0 bg-gradient-to-b from-brand-orange/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="h-14 w-14 rounded-full bg-slate-900 border border-brand-border flex items-center justify-center text-slate-400 group-hover:text-brand-orange group-hover:border-brand-orange transition-all duration-300 relative z-10">
+                <cat.icon className="h-6 w-6 transform group-hover:scale-110 transition-transform" />
               </div>
-              <h3 className="font-display text-lg font-bold text-white mt-4">{item.name}</h3>
-              <p className="text-[10px] text-brand-orange font-bold uppercase tracking-wider">{item.label}</p>
-              <p className="text-xs text-slate-400 mt-2 leading-relaxed">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 3. SHOP BY BRAND LOGO GRID */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-white">
-              The Legend Board
-            </h2>
-            <p className="text-slate-400 text-xs">
-              Direct authorized inventory of the absolute highest-performance RC brands on Earth.
-            </p>
-          </div>
-          <button
-            onClick={() => { setFilterBrand('ALL'); setView('shop'); }}
-            className="text-xs text-brand-orange font-bold uppercase hover:underline flex items-center gap-1"
-          >
-            All Brands <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4">
-          {topBrands.map(b => (
-            <div
-              key={b.id}
-              onClick={() => handleBrandClick(b.slug)}
-              className="group cursor-pointer relative overflow-hidden rounded-xl border border-brand-border bg-slate-900/30 p-4 flex flex-col items-center justify-center text-center hover:border-brand-orange hover:bg-slate-900/90 transition-all duration-300"
-            >
-              <div className="h-10 w-full flex items-center justify-center filter grayscale group-hover:grayscale-0 contrast-125 transition-all">
-                {/* Brand Name Title Styled Premium instead of actual image, or standard logo visual */}
-                <span className="font-display text-base font-black tracking-widest text-slate-400 group-hover:text-brand-orange transition-colors uppercase">
-                  {b.name}
-                </span>
-              </div>
-              <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-2">
-                {b.country}
+              <span className="font-display text-xs font-black uppercase tracking-wider text-slate-300 group-hover:text-white transition-colors relative z-10">
+                {cat.label}
               </span>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 4. FEATURED PRODUCT SHOWCASE */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-white">
-              Featured Speed Machines
-            </h2>
-            <p className="text-slate-400 text-xs">
-              Out-of-the-box VXL power and detailed scale rigs highly requested by Indian hobbyists.
+      {/* ==================== BRANDS INFINITY SCROLLING MARQUEE ==================== */}
+      <section className="space-y-6 overflow-hidden">
+        {/* Style block for reverse marquee animation keyframe */}
+        <style dangerouslySetInnerHTML={{__html: `
+          @keyframes marquee-reverse {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0%); }
+          }
+          .animate-marquee-reverse {
+            animation: marquee-reverse 30s linear infinite;
+          }
+          .animate-marquee-normal {
+            animation: marquee 30s linear infinite;
+          }
+        `}} />
+
+        <div className="text-center space-y-2">
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-gold uppercase tracking-widest">
+            <Sparkles className="h-4 w-4" />
+            Elite Racing Makes
+          </div>
+          <h2 className="font-display text-2xl sm:text-3xl font-black uppercase text-white tracking-tight">
+            Championship Lineup
+          </h2>
+          <p className="text-slate-400 text-xs sm:text-sm max-w-md mx-auto">
+            Click any manufacturer badge to immediately filter the garage catalog.
+          </p>
+        </div>
+
+        {/* Outer Scrolling Container */}
+        <div className="relative space-y-8 py-6 pointer-events-auto">
+          {/* Parallax Left-scrolling ribbon */}
+          <div className="flex w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]">
+            <div className="flex gap-8 shrink-0 animate-marquee-normal hover:[animation-play-state:paused] py-2">
+              {[
+                { name: "TRAXXAS", logo: "/logo_traxxas.png", country: "USA", flag: "🇺🇸" },
+                { name: "ARRMA", logo: "/logo_arrma.png", country: "UK", flag: "🇬🇧" },
+                { name: "RLAARLO", logo: "/logo_rlaarlo.png", country: "Hong Kong", flag: "🇭🇰" },
+                { name: "MJX", logo: "/logo_mjx.png", country: "China", flag: "🇨🇳" },
+                { name: "FMS", logo: "/logo_fms.png", country: "China", flag: "🇨🇳" },
+                { name: "MN MODEL", logo: "/logo_mnmodel.png", country: "China", flag: "🇨🇳" },
+                { name: "HOT WHEELS", logo: "/logo_hotwheels.png", country: "USA", flag: "🇺🇸" }
+              ].concat([
+                { name: "TRAXXAS", logo: "/logo_traxxas.png", country: "USA", flag: "🇺🇸" },
+                { name: "ARRMA", logo: "/logo_arrma.png", country: "UK", flag: "🇬🇧" },
+                { name: "RLAARLO", logo: "/logo_rlaarlo.png", country: "Hong Kong", flag: "🇭🇰" },
+                { name: "MJX", logo: "/logo_mjx.png", country: "China", flag: "🇨🇳" },
+                { name: "FMS", logo: "/logo_fms.png", country: "China", flag: "🇨🇳" },
+                { name: "MN MODEL", logo: "/logo_mnmodel.png", country: "China", flag: "🇨🇳" },
+                { name: "HOT WHEELS", logo: "/logo_hotwheels.png", country: "USA", flag: "🇺🇸" }
+              ]).map((brand, idx) => {
+                let glowColor = "rgba(239, 68, 68, 0.25)"; // Default Red
+                if (brand.name === "ARRMA") glowColor = "rgba(220, 38, 38, 0.3)";
+                if (brand.name === "RLAARLO") glowColor = "rgba(34, 197, 94, 0.3)";
+                if (brand.name === "MJX") glowColor = "rgba(234, 179, 8, 0.3)";
+                if (brand.name === "FMS") glowColor = "rgba(16, 185, 129, 0.3)";
+                if (brand.name === "MN MODEL") glowColor = "rgba(245, 158, 11, 0.3)";
+                if (brand.name === "HOT WHEELS") glowColor = "rgba(249, 115, 22, 0.3)";
+
+                return (
+                  <div
+                    key={idx}
+                    onClick={() => handleBrandClick(brand.name.toLowerCase().replace(' ', '-'))}
+                    className="group cursor-pointer flex flex-col items-center justify-center relative w-48 shrink-0 transition-all duration-300 hover:-translate-y-1.5 py-4"
+                  >
+                    {/* Unique Ambient Pulsing Radial Backglow */}
+                    <div 
+                      className="absolute h-28 w-28 rounded-full blur-2xl opacity-20 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                      style={{ backgroundColor: glowColor }}
+                    />
+                    
+                    {/* Huge Floating Logo Image */}
+                    <div className="relative z-10 h-16 w-28 flex items-center justify-center">
+                      <img 
+                        src={brand.logo} 
+                        alt={`${brand.name} Logo`} 
+                        className="h-full w-full object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-115 transition-all duration-500" 
+                      />
+                    </div>
+
+                    {/* Minimalist Subtext */}
+                    <div className="relative z-10 mt-3 text-center space-y-0.5">
+                      <span className="font-display text-xs font-black tracking-widest text-slate-400 group-hover:text-white transition-colors block uppercase">
+                        {brand.name}
+                      </span>
+                      <span className="text-[9px] text-slate-600 font-bold uppercase tracking-wider group-hover:text-brand-orange transition-colors flex items-center justify-center gap-1">
+                        {brand.country} {brand.flag}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Parallax Right-scrolling ribbon */}
+          <div className="flex w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]">
+            <div className="flex gap-8 shrink-0 animate-marquee-reverse hover:[animation-play-state:paused] py-2">
+              {[
+                { name: "HOT WHEELS", logo: "/logo_hotwheels.png", country: "USA", flag: "🇺🇸" },
+                { name: "MN MODEL", logo: "/logo_mnmodel.png", country: "China", flag: "🇨🇳" },
+                { name: "FMS", logo: "/logo_fms.png", country: "China", flag: "🇨🇳" },
+                { name: "MJX", logo: "/logo_mjx.png", country: "China", flag: "🇨🇳" },
+                { name: "RLAARLO", logo: "/logo_rlaarlo.png", country: "Hong Kong", flag: "🇭🇰" },
+                { name: "ARRMA", logo: "/logo_arrma.png", country: "UK", flag: "🇬🇧" },
+                { name: "TRAXXAS", logo: "/logo_traxxas.png", country: "USA", flag: "🇺🇸" }
+              ].concat([
+                { name: "HOT WHEELS", logo: "/logo_hotwheels.png", country: "USA", flag: "🇺🇸" },
+                { name: "MN MODEL", logo: "/logo_mnmodel.png", country: "China", flag: "🇨🇳" },
+                { name: "FMS", logo: "/logo_fms.png", country: "China", flag: "🇨🇳" },
+                { name: "MJX", logo: "/logo_mjx.png", country: "China", flag: "🇨🇳" },
+                { name: "RLAARLO", logo: "/logo_rlaarlo.png", country: "Hong Kong", flag: "🇭🇰" },
+                { name: "ARRMA", logo: "/logo_arrma.png", country: "UK", flag: "🇬🇧" },
+                { name: "TRAXXAS", logo: "/logo_traxxas.png", country: "USA", flag: "🇺🇸" }
+              ]).map((brand, idx) => {
+                let glowColor = "rgba(239, 68, 68, 0.25)"; 
+                if (brand.name === "ARRMA") glowColor = "rgba(220, 38, 38, 0.3)";
+                if (brand.name === "RLAARLO") glowColor = "rgba(34, 197, 94, 0.3)";
+                if (brand.name === "MJX") glowColor = "rgba(234, 179, 8, 0.3)";
+                if (brand.name === "FMS") glowColor = "rgba(16, 185, 129, 0.3)";
+                if (brand.name === "MN MODEL") glowColor = "rgba(245, 158, 11, 0.3)";
+                if (brand.name === "HOT WHEELS") glowColor = "rgba(249, 115, 22, 0.3)";
+
+                return (
+                  <div
+                    key={idx}
+                    onClick={() => handleBrandClick(brand.name.toLowerCase().replace(' ', '-'))}
+                    className="group cursor-pointer flex flex-col items-center justify-center relative w-48 shrink-0 transition-all duration-300 hover:-translate-y-1.5 py-4"
+                  >
+                    {/* Unique Ambient Pulsing Radial Backglow */}
+                    <div 
+                      className="absolute h-28 w-28 rounded-full blur-2xl opacity-20 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                      style={{ backgroundColor: glowColor }}
+                    />
+                    
+                    {/* Huge Floating Logo Image */}
+                    <div className="relative z-10 h-16 w-28 flex items-center justify-center">
+                      <img 
+                        src={brand.logo} 
+                        alt={`${brand.name} Logo`} 
+                        className="h-full w-full object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-115 transition-all duration-500" 
+                      />
+                    </div>
+
+                    {/* Minimalist Subtext */}
+                    <div className="relative z-10 mt-3 text-center space-y-0.5">
+                      <span className="font-display text-xs font-black tracking-widest text-slate-400 group-hover:text-white transition-colors block uppercase">
+                        {brand.name}
+                      </span>
+                      <span className="text-[9px] text-slate-600 font-bold uppercase tracking-wider group-hover:text-brand-orange transition-colors flex items-center justify-center gap-1">
+                        {brand.country} {brand.flag}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== 4. DUAL CALL-TO-ACTION CARDS (Impel Looking for Car / Sell) ==================== */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        {/* Card 1: Ready-To-Run */}
+        <div className="relative rounded-3xl border border-brand-border overflow-hidden bg-slate-950 py-12 px-8 flex flex-col justify-between min-h-[220px]">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-brand-orange/10 rounded-full blur-[40px] pointer-events-none" />
+          <div className="space-y-3 relative z-10">
+            <span className="text-[9px] font-bold text-brand-orange uppercase border border-brand-orange/30 px-2 py-0.5 rounded bg-brand-orange/10 tracking-widest inline-block">
+              Casual & Expert Drivers
+            </span>
+            <h3 className="font-display text-xl sm:text-2xl font-black uppercase tracking-tight text-white">
+              Are You Looking For a Ready-To-Run Rig?
+            </h3>
+            <p className="text-slate-400 text-xs sm:text-sm max-w-sm">
+              Ready-To-Run (RTR) models come fully assembled and painted. Just plug in your battery and shred the tarmac!
             </p>
           </div>
           <button
-            onClick={() => { setFilterBrand('ALL'); setView('shop'); }}
-            className="text-xs text-brand-orange font-bold uppercase hover:underline flex items-center gap-1"
+            onClick={() => { setFilterBrand("ALL"); setView("shop"); }}
+            className="mt-6 inline-flex items-center gap-1 text-xs font-black uppercase text-brand-orange hover:text-brand-gold transition-colors tracking-widest w-fit"
           >
-            View Full Garage <ChevronRight className="h-4 w-4" />
+            Explore RTR Garage <ChevronRight className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProducts.map((p) => {
+        {/* Card 2: Hardcore Builders */}
+        <div className="relative rounded-3xl border border-brand-border overflow-hidden bg-slate-950 py-12 px-8 flex flex-col justify-between min-h-[220px]">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-brand-gold/10 rounded-full blur-[40px] pointer-events-none" />
+          <div className="space-y-3 relative z-10">
+            <span className="text-[9px] font-bold text-brand-gold uppercase border border-brand-gold/30 px-2 py-0.5 rounded bg-brand-gold/10 tracking-widest inline-block">
+              Scale Builders & Tuners
+            </span>
+            <h3 className="font-display text-xl sm:text-2xl font-black uppercase tracking-tight text-white">
+              Do You Want to Build Custom Kits?
+            </h3>
+            <p className="text-slate-400 text-xs sm:text-sm max-w-sm">
+              We stock raw chassis kits, carbon fiber upgrade parts, high-torque servos, and brushless motors for ultimate tuners.
+            </p>
+          </div>
+          <button
+            onClick={() => { setFilterBrand("ALL"); setView("shop"); }}
+            className="mt-6 inline-flex items-center gap-1 text-xs font-black uppercase text-brand-gold hover:text-brand-orange transition-colors tracking-widest w-fit"
+          >
+            Browse Tuning Kits <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+      </section>
+
+      {/* ==================== 5. WELCOME ABOUT SECTION (Impel Welcome block) ==================== */}
+      <section className="relative max-w-6xl mx-auto rounded-3xl border border-brand-border bg-slate-950/40 p-8 sm:p-12 overflow-hidden">
+        <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-brand-orange/5 rounded-full blur-[60px]" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <span className="text-[10px] text-brand-orange font-bold uppercase tracking-widest block">
+                Welcome to MARQUE Premium RC India
+              </span>
+              <h2 className="font-display text-2xl sm:text-4xl font-black uppercase tracking-tight text-white leading-tight">
+                Sleek Rigs, Smart Prices.<br />
+                Your Ideal Car Is A Click Away.
+              </h2>
+            </div>
+            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              MARQUE is India's dedicated hub for authentic, hobby-grade remote control scale engineering. We source directly from elite international manufacturers, providing bash-tested rigs with comprehensive part catalogs, technical support, and official Indian custom clearances.
+            </p>
+
+            <ul className="space-y-3">
+              {[
+                "100% Genuine models with sealed manufacturer pack guarantees.",
+                "18% Inclusive GST billing with business HSN inputs.",
+                "Dedicated Madipakkam technical support for repairs and tuning advice."
+              ].map((bullet, idx) => (
+                <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-300 leading-relaxed">
+                  <CheckCircle2 className="h-4 w-4 text-brand-orange mt-0.5 shrink-0" />
+                  <span>{bullet}</span>
+                </li>
+              ))}
+            </ul>
+
+            <button
+              onClick={() => { setFilterBrand("ALL"); setView("shop"); }}
+              className="rounded-xl bg-brand-orange hover:bg-brand-gold text-black font-black uppercase tracking-wider px-6 py-3.5 text-xs transition-all duration-300 inline-block"
+            >
+              Explore Vehicles
+            </button>
+          </div>
+
+          <div className="relative rounded-2xl border border-brand-border overflow-hidden bg-slate-950 max-h-[350px] shadow-2xl flex items-center justify-center">
+            <img
+              src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80"
+              alt="Hobbyists tuning brushless motor"
+              className="w-full h-full object-cover filter contrast-125 hover:scale-105 transition duration-500"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== 6. EXPLORE ALL VEHICLES / TABS (Impel Explore section) ==================== */}
+      <section className="space-y-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-brand-border pb-6">
+          <div className="space-y-2">
+            <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block">
+              Direct Garage Clearance
+            </span>
+            <h2 className="font-display text-2xl sm:text-3xl font-black uppercase text-white tracking-tight">
+              Explore All Vehicles
+            </h2>
+          </div>
+
+          {/* Impel Category Tabs */}
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: 'ALL', name: 'All Vehicles' },
+              { id: 'Off-Road', name: 'Off-Road Bashers' },
+              { id: 'On-Road', name: 'On-Road Speed' },
+              { id: 'Crawler', name: 'Scale Crawlers' },
+              { id: 'Drift', name: 'Drift Spec' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setExploreTab(tab.id as any)}
+                className={`rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
+                  exploreTab === tab.id
+                    ? "bg-brand-orange text-black font-black shadow-glow"
+                    : "border border-brand-border bg-slate-900/30 text-slate-400 hover:text-white hover:border-brand-orange"
+                }`}
+              >
+                {tab.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Dynamic Products Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {exploreFilteredProducts.map((p) => {
             const variant = p.variants[0];
-            const brand = BRANDS.find(b => b.id === p.brandId);
+            const brand = BRANDS.find((b) => b.id === p.brandId);
 
             return (
               <div
                 key={p.id}
                 onClick={() => handleProductClick(p)}
-                className="group cursor-pointer relative flex flex-col rounded-2xl border border-brand-border bg-slate-900/30 overflow-hidden hover:border-brand-orange hover:bg-slate-900/80 transition-all duration-300"
+                className="group cursor-pointer flex flex-col rounded-2xl border border-brand-border bg-slate-950 overflow-hidden hover:border-brand-orange hover:shadow-2xl transition-all duration-300 relative"
               >
                 {/* Image Section */}
-                <div className="relative aspect-square w-full overflow-hidden bg-slate-950">
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-900 border-b border-brand-border">
                   <img
                     src={p.images[0]}
                     alt={p.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
 
-                  {/* Accent Badges */}
-                  <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-                    <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-orange border border-brand-orange/30 uppercase tracking-wider">
+                  {/* Absolute Badges */}
+                  <div className="absolute top-3 left-3 flex flex-col gap-1 z-10">
+                    <span className="rounded bg-slate-950/80 px-2 py-0.5 text-[8px] font-bold text-brand-orange border border-brand-orange/30 uppercase tracking-wider">
                       {p.scale} Scale
                     </span>
-                    <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
+                    <span className="rounded bg-slate-950/80 px-2 py-0.5 text-[8px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
                       {p.speedKmh}+ KM/H
                     </span>
                   </div>
 
-                  <div className="absolute top-3 right-3 z-10">
-                    <span className="rounded-full bg-slate-950/80 p-1.5 text-xs text-brand-gold font-bold flex items-center gap-0.5 border border-slate-800">
-                      <Star className="h-3 w-3 fill-brand-gold text-brand-gold" />
-                      {p.averageRating}
-                    </span>
-                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleWishlist(p.id);
+                    }}
+                    className="absolute top-3 right-3 z-10 rounded-full bg-slate-950/80 p-2 border border-slate-800 text-slate-400 hover:text-brand-orange hover:scale-110 transition-all"
+                  >
+                    <Heart className={`h-3.5 w-3.5 ${wishlist.includes(p.id) ? 'fill-brand-orange text-brand-orange' : ''}`} />
+                  </button>
                 </div>
 
                 {/* Info Section */}
-                <div className="p-4 flex-1 flex flex-col justify-between gap-4">
+                <div className="p-5 flex-1 flex flex-col justify-between gap-4">
                   <div className="space-y-1.5">
-                    <span className="text-[10px] text-brand-orange font-bold uppercase tracking-widest font-display">
-                      {brand?.name}
-                    </span>
-                    <h3 className="font-display text-sm font-bold text-white line-clamp-1 group-hover:text-brand-orange transition-colors">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[9px] text-brand-orange font-bold uppercase tracking-wider font-display">
+                        {brand?.name}
+                      </span>
+                      <span className="text-base font-black text-brand-gold font-display">
+                        ₹{p.price.toLocaleString('en-IN')}
+                      </span>
+                    </div>
+                    <h3 className="font-display text-sm font-black text-white line-clamp-1 group-hover:text-brand-orange transition-colors">
                       {p.name}
                     </h3>
                     <p className="text-xs text-slate-400 line-clamp-2">
@@ -280,32 +649,34 @@ export default function HomeView() {
                     </p>
                   </div>
 
-                  <div className="space-y-3">
-                    {/* Specifications badges row */}
-                    <div className="flex gap-2 text-[9px] font-bold text-slate-400 border-t border-brand-border pt-2.5">
-                      <span>{p.terrainType}</span>
-                      <span>•</span>
-                      <span>{p.buildType} (Ready-to-Race)</span>
+                  {/* Impel styled car specs row */}
+                  <div className="grid grid-cols-3 gap-2 border-t border-brand-border pt-4 text-center">
+                    <div className="bg-slate-900/50 rounded-lg p-2 border border-brand-border">
+                      <span className="text-[8px] text-slate-500 block uppercase font-bold">Terrain</span>
+                      <span className="text-[10px] text-slate-300 font-extrabold block uppercase truncate">{p.terrainType}</span>
                     </div>
-
-                    {/* Price and Cart */}
-                    <div className="flex items-center justify-between border-t border-brand-border pt-3">
-                      <div>
-                        <span className="text-[10px] text-slate-500 line-through block">
-                          ₹{p.comparePrice.toLocaleString('en-IN')}
-                        </span>
-                        <span className="text-base font-black text-brand-gold font-display">
-                          ₹{p.price.toLocaleString('en-IN')}
-                        </span>
-                      </div>
-
-                      <button
-                        onClick={(e) => handleQuickAdd(e, p)}
-                        className="rounded-lg bg-brand-orange text-black px-3 py-1.5 text-xs font-bold uppercase hover:bg-brand-gold transition-colors"
-                      >
-                        Buy Rig
-                      </button>
+                    <div className="bg-slate-900/50 rounded-lg p-2 border border-brand-border">
+                      <span className="text-[8px] text-slate-500 block uppercase font-bold">Build</span>
+                      <span className="text-[10px] text-slate-300 font-extrabold block uppercase truncate">{p.buildType}</span>
                     </div>
+                    <div className="bg-slate-900/50 rounded-lg p-2 border border-brand-border">
+                      <span className="text-[8px] text-slate-500 block uppercase font-bold">ESC Max</span>
+                      <span className="text-[10px] text-slate-300 font-extrabold block uppercase truncate">{p.variants[0]?.attributes?.battery?.split(' ')[0] || "LiPo"}</span>
+                    </div>
+                  </div>
+
+                  {/* Cart Action */}
+                  <div className="border-t border-brand-border pt-4 flex items-center justify-between">
+                    <span className="text-[9px] text-slate-500 line-through">
+                      ₹{p.comparePrice.toLocaleString('en-IN')}
+                    </span>
+                    <button
+                      onClick={(e) => handleQuickAdd(e, p)}
+                      className="rounded-lg bg-brand-orange hover:bg-brand-gold text-black font-black uppercase px-4 py-2 text-xs transition-colors flex items-center gap-1"
+                    >
+                      <Car className="h-3.5 w-3.5" />
+                      Buy Rig
+                    </button>
                   </div>
                 </div>
               </div>
@@ -314,42 +685,174 @@ export default function HomeView() {
         </div>
       </section>
 
-      {/* 5. EXPERT RC GUIDES */}
-      <section className="space-y-6">
+      {/* ==================== 7. STATISTICS COUNTER PANEL ==================== */}
+      <section className="relative rounded-3xl border border-brand-border bg-slate-950 py-10 px-6 max-w-6xl mx-auto overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-orange/5 to-brand-gold/5 opacity-50" />
+        <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-brand-border">
+          {[
+            { value: "150+", label: "Speed Rigs In-Stock" },
+            { value: "24K+", label: "PIN Codes Covered" },
+            { value: "98.7%", label: "Happy Basher Reviews" },
+            { value: "1-Day", label: "Local Hub Dispatch" }
+          ].map((stat, idx) => (
+            <div key={idx} className="space-y-1.5 pt-6 md:pt-0">
+              <span className="font-display text-3xl sm:text-4xl font-black text-brand-orange block tracking-tight">
+                {stat.value}
+              </span>
+              <span className="text-[10px] text-slate-400 uppercase font-black tracking-widest block">
+                {stat.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ==================== 8. WHY CHOOSE US? (Impel Why Choose Us block) ==================== */}
+      <section className="space-y-10 max-w-6xl mx-auto">
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-gold uppercase tracking-widest">
-            <BookOpen className="h-4 w-4" />
-            Curated Hobbyist Guides
-          </div>
-          <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-tight text-white">
-            MARQUE Tech Hub
+          <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block">
+            Why Choose MARQUE?
+          </span>
+          <h2 className="font-display text-2xl sm:text-4xl font-black uppercase text-white tracking-tight">
+            We Set The Performance Standard
           </h2>
-          <p className="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto">
-            RC is more than just driving — it's a deep hobby. Learn lipo safety, scale comparisons, and build custom speedruns.
+          <p className="text-slate-400 text-xs sm:text-sm max-w-md mx-auto">
+            Hobby-grade remote control is a mechanical art. We structure our India operations to provide a stress-free experience.
           </p>
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              title: "Elite International Brands",
+              desc: "Official distribution stock of Traxxas, Arrma, FMS, and Rlaarlo machines.",
+              icon: Car
+            },
+            {
+              title: "Transparent GST Invoicing",
+              desc: "Standard 18% inclusive GSTIN pricing on all parts, accessories, and RTR vehicles.",
+              icon: Layers
+            },
+            {
+              title: "Expert Technical Garage",
+              desc: "Live part cross-referencing and diagnostic advice from veteran RC pilots.",
+              icon: Settings
+            },
+            {
+              title: "Fast Indian Logistics",
+              desc: "1-Day dispatch from Madipakkam, Chennai hub covering 24,000+ PIN codes.",
+              icon: Truck
+            }
+          ].map((perk, idx) => (
+            <div
+              key={idx}
+              className="rounded-2xl border border-brand-border bg-slate-900/10 p-6 space-y-4 hover:border-brand-orange hover:bg-slate-950 transition-all duration-300"
+            >
+              <div className="h-10 w-10 rounded-xl bg-slate-950 border border-brand-border flex items-center justify-center text-brand-orange">
+                <perk.icon className="h-5 w-5" />
+              </div>
+              <div className="space-y-1.5">
+                <h4 className="font-display text-sm font-black text-white uppercase tracking-tight">
+                  {perk.title}
+                </h4>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  {perk.desc}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ==================== 9. WHAT OUR CUSTOMERS SAY (Impel Testimonials) ==================== */}
+      <section className="relative rounded-3xl border border-brand-border bg-slate-950 py-12 px-6 sm:px-12 relative overflow-hidden text-center max-w-4xl mx-auto shadow-glow">
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-orange/5 to-transparent pointer-events-none" />
+
+        <div className="space-y-8 relative z-10">
+          <div className="text-center space-y-2">
+            <span className="text-[10px] text-brand-orange font-bold uppercase tracking-widest block">
+              Pilot Reviews
+            </span>
+            <h2 className="font-display text-xl sm:text-2xl font-black uppercase text-white">
+              What Our Customers Say
+            </h2>
+          </div>
+
+          {/* Testimonial Active Slide */}
+          <div className="space-y-6">
+            <Quote className="mx-auto h-8 w-8 text-brand-orange/30 rotate-180" />
+            <blockquote className="font-display text-sm sm:text-lg font-medium text-slate-200 leading-relaxed italic max-w-2xl mx-auto">
+              "{testimonials[testimonialIndex].quote}"
+            </blockquote>
+            <div className="flex items-center justify-center gap-3">
+              <img
+                src={testimonials[testimonialIndex].avatar}
+                alt={testimonials[testimonialIndex].name}
+                className="h-10 w-10 rounded-full border border-brand-border object-cover"
+              />
+              <div className="text-left">
+                <span className="font-bold text-white block text-xs sm:text-sm">
+                  {testimonials[testimonialIndex].name}
+                </span>
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">
+                  {testimonials[testimonialIndex].role}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Testimonial Slide Buttons */}
+          <div className="flex justify-center gap-2 pt-2">
+            {testimonials.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setTestimonialIndex(idx)}
+                className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${
+                  testimonialIndex === idx ? "bg-brand-orange w-6" : "bg-slate-800"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== 10. CURATED HOBBYIST GUIDES (Impel Recent News) ==================== */}
+      <section className="space-y-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-brand-border pb-6">
+          <div className="space-y-2">
+            <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block">
+              Knowledge Database
+            </span>
+            <h2 className="font-display text-2xl sm:text-3xl font-black uppercase text-white tracking-tight">
+              Recent News & Articles
+            </h2>
+          </div>
+          <span className="text-xs text-slate-400 uppercase font-bold tracking-widest">
+            Hobby Garage Blog
+          </span>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {RC_GUIDES.map(guide => (
+          {RC_GUIDES.map((guide) => (
             <div
               key={guide.id}
               onClick={() => setActiveGuide(guide)}
-              className="group cursor-pointer overflow-hidden rounded-2xl border border-brand-border bg-slate-900/30 flex flex-col justify-between hover:border-brand-orange transition-all duration-300"
+              className="group cursor-pointer overflow-hidden rounded-2xl border border-brand-border bg-slate-950 flex flex-col justify-between hover:border-brand-orange hover:shadow-2xl transition-all duration-300"
             >
               <div>
-                <div className="relative h-44 overflow-hidden bg-slate-950">
+                <div className="relative h-48 overflow-hidden bg-slate-900 border-b border-brand-border">
                   <img
                     src={guide.imageUrl}
                     alt={guide.title}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <span className="absolute bottom-3 left-3 bg-slate-950/80 border border-brand-border text-[9px] font-bold text-brand-orange uppercase px-2 py-0.5 rounded">
+                  <span className="absolute bottom-3 left-3 bg-slate-950/80 border border-brand-border text-[8px] font-bold text-brand-orange uppercase px-2 py-0.5 rounded">
                     {guide.category}
                   </span>
                 </div>
-                <div className="p-5 space-y-2">
-                  <span className="text-[10px] text-slate-500 font-bold block">{guide.readTime}</span>
-                  <h3 className="font-display text-base font-bold text-white group-hover:text-brand-orange transition-colors">
+                <div className="p-5 space-y-2.5">
+                  <span className="text-[9px] text-slate-500 font-bold block">{guide.readTime}</span>
+                  <h3 className="font-display text-sm font-black text-white group-hover:text-brand-orange transition-colors leading-snug">
                     {guide.title}
                   </h3>
                   <p className="text-xs text-slate-400 leading-relaxed line-clamp-3">
@@ -359,7 +862,7 @@ export default function HomeView() {
               </div>
 
               <div className="p-5 pt-0">
-                <span className="text-xs font-bold text-brand-orange uppercase tracking-wider flex items-center gap-1 group-hover:text-brand-gold transition-colors">
+                <span className="text-[10px] font-black text-brand-orange uppercase tracking-widest flex items-center gap-1 group-hover:text-brand-gold transition-colors">
                   Read Article <ChevronRight className="h-4 w-4" />
                 </span>
               </div>
@@ -368,33 +871,9 @@ export default function HomeView() {
         </div>
       </section>
 
-      {/* 6. IMMERSIVE CUSTOMER REVIEW CAROUSEL */}
-      <section className="rounded-3xl border border-brand-border bg-slate-900/10 py-12 px-6 sm:px-12 relative overflow-hidden text-center max-w-4xl mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-orange/5 to-transparent pointer-events-none" />
-
-        <div className="space-y-8 relative z-10">
-          <div className="flex justify-center gap-1">
-            {[1, 2, 3, 4, 5].map((s) => (
-              <Star key={s} className="h-5 w-5 fill-brand-gold text-brand-gold" />
-            ))}
-          </div>
-
-          {/* Testimonial text from list */}
-          <div className="space-y-4">
-            <blockquote className="font-display text-lg sm:text-2xl font-medium text-slate-200 leading-relaxed italic">
-              "Purchased the Solar Flare Orange X-Maxx and it has been absolute insanity. Handled rocky terrains in Ooty and water streams effortlessly. The self-righting works perfectly when it rolls over on high grass. Unbelievable construction and raw power!"
-            </blockquote>
-            <div>
-              <span className="font-bold text-white block text-sm sm:text-base">Vikram Malhotra</span>
-              <span className="text-xs text-brand-orange font-bold uppercase tracking-widest">Verified Traxxas X-Maxx Owner • Chennai</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* GUIDE POPUP DETAIL DIALOG */}
+      {/* ==================== 11. GUIDE POPUP DETAIL DIALOG ==================== */}
       {activeGuide && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
           <div className="relative w-full max-w-2xl rounded-2xl border border-brand-border bg-slate-950 p-6 md:p-8 max-h-[85vh] overflow-y-auto shadow-2xl space-y-6">
             <button
               onClick={() => setActiveGuide(null)}
@@ -404,10 +883,10 @@ export default function HomeView() {
             </button>
 
             <div className="space-y-4">
-              <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider bg-brand-orange/10 px-2 py-0.5 rounded border border-brand-orange/20">
+              <span className="text-[9px] text-brand-orange font-bold uppercase tracking-wider bg-brand-orange/10 px-2 py-0.5 rounded border border-brand-orange/20">
                 {activeGuide.category} • {activeGuide.readTime}
               </span>
-              <h2 className="font-display text-2xl md:text-3xl font-extrabold text-white">
+              <h2 className="font-display text-2xl md:text-3xl font-extrabold text-white leading-tight">
                 {activeGuide.title}
               </h2>
               <img

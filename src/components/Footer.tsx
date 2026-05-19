@@ -97,7 +97,7 @@ export default function Footer() {
               <li className="flex items-start gap-2">
                 <MapPin className="h-4.5 w-4.5 text-brand-orange shrink-0 mt-0.5" />
                 <span>
-                  <strong>Chennai Fulfillment Hub</strong>. Located at No. 2 Kuru Street, Madipakkam Main Road, Chennai, Tamil Nadu. Courier coverage to over 24,000 PIN codes.
+                  <strong>Chennai Fulfillment Hub</strong>. Located at No. 2 Kuru Street, Madipakkam, Chennai, Tamil Nadu - 600091. Courier coverage to over 24,000 PIN codes.
                 </span>
               </li>
             </ul>

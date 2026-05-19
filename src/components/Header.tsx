@@ -27,8 +27,11 @@ export default function Header() {
     setSearchQuery,
     setFilterBrand,
     setSelectedProduct,
-    isAuthenticated
+    isAuthenticated,
+    userEmail
   } = useMarqueStore();
+
+  const isAdmin = isAuthenticated && userEmail === "2002dineshmurugan@gmail.com";
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSearchBox, setShowSearchBox] = useState(false);
@@ -223,13 +226,15 @@ export default function Header() {
             </button>
 
             {/* Admin Controls */}
-            <button 
-              onClick={() => { setSelectedProduct(null); setView('admin'); }}
-              className={`p-2.5 rounded-xl border transition-all ${currentView === 'admin' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
-              title="Admin Panel"
-            >
-              <Settings className="h-5 w-5" />
-            </button>
+            {isAdmin && (
+              <button 
+                onClick={() => { setSelectedProduct(null); setView('admin'); }}
+                className={`p-2.5 rounded-xl border transition-all ${currentView === 'admin' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
+                title="Admin Panel"
+              >
+                <Settings className="h-5 w-5" />
+              </button>
+            )}
 
           </div>
         </div>

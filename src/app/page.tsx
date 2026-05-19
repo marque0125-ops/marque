@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useMarqueStore } from "../store/store";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -12,9 +12,15 @@ import AccountView from "../components/AccountView";
 import AdminView from "../components/AdminView";
 
 export default function Home() {
-  const { currentView } = useMarqueStore();
+  const { currentView, fetchProducts, isAuthenticated, userEmail } = useMarqueStore();
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   const renderActiveView = () => {
+    const isAdmin = isAuthenticated && userEmail === "2002dineshmurugan@gmail.com";
+
     switch (currentView) {
       case 'shop':
         return <ShopView />;
@@ -25,7 +31,7 @@ export default function Home() {
       case 'account':
         return <AccountView />;
       case 'admin':
-        return <AdminView />;
+        return isAdmin ? <AdminView /> : <HomeView />;
       case 'home':
       default:
         return <HomeView />;

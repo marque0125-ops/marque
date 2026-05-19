@@ -156,10 +156,8 @@ export const PRODUCTS: Product[] = [
     speedKmh: 80,
     buildType: "RTR",
     images: [
-      "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=800&q=80", // primary
-      "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80", // 360-1
-      "https://images.unsplash.com/photo-1531693251400-38df35776dc7?w=800&q=80", // 360-2
-      "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&q=80"  // 360-3
+      "/rc_traxxas_xmaxx.png",
+      "/rc_traxxas_xmaxx.png"
     ],
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Simulated review video
     whatsInTheBox: [
@@ -240,9 +238,8 @@ export const PRODUCTS: Product[] = [
     speedKmh: 130,
     buildType: "RTR",
     images: [
-      "https://images.unsplash.com/photo-1531693251400-38df35776dc7?w=800&q=80",
-      "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80",
-      "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=800&q=80"
+      "/rc_arrma_infraction.png",
+      "/rc_arrma_infraction.png"
     ],
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     whatsInTheBox: [
@@ -314,8 +311,8 @@ export const PRODUCTS: Product[] = [
     speedKmh: 80,
     buildType: "RTR",
     images: [
-      "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&q=80",
-      "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=800&q=80"
+      "/rc_rlaarlo_amx12.png",
+      "/rc_rlaarlo_amx12.png"
     ],
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     whatsInTheBox: [
@@ -384,8 +381,8 @@ export const PRODUCTS: Product[] = [
     speedKmh: 55,
     buildType: "RTR",
     images: [
-      "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80",
-      "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&q=80"
+      "/rc_mjx_hypergo.png",
+      "/rc_mjx_hypergo.png"
     ],
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     whatsInTheBox: [
@@ -455,8 +452,8 @@ export const PRODUCTS: Product[] = [
     speedKmh: 10,
     buildType: "RTR",
     images: [
-      "https://images.unsplash.com/photo-1485291571150-772bcfc10da5?w=800&q=80",
-      "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=800&q=80"
+      "/rc_fms_blazer.png",
+      "/rc_fms_blazer.png"
     ],
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     whatsInTheBox: [
@@ -525,8 +522,8 @@ export const PRODUCTS: Product[] = [
     speedKmh: 15,
     buildType: "RTR",
     images: [
-      "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=800&q=80",
-      "https://images.unsplash.com/photo-1485291571150-772bcfc10da5?w=800&q=80"
+      "/rc_mn_defender.png",
+      "/rc_mn_defender.png"
     ],
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     whatsInTheBox: [
@@ -587,8 +584,8 @@ export const PRODUCTS: Product[] = [
     speedKmh: 95,
     buildType: "RTR",
     images: [
-      "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80",
-      "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=800&q=80"
+      "/rc_traxxas_slash.png",
+      "/rc_traxxas_slash.png"
     ],
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     whatsInTheBox: [
@@ -648,8 +645,8 @@ export const PRODUCTS: Product[] = [
     speedKmh: 25,
     buildType: "RTR",
     images: [
-      "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80",
-      "https://images.unsplash.com/photo-1531693251400-38df35776dc7?w=800&q=80"
+      "/rc_hotwheels_tesla.png",
+      "/rc_hotwheels_tesla.png"
     ],
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     whatsInTheBox: [
@@ -773,6 +770,7 @@ export interface PinCodeDetail {
 }
 
 export const PIN_CODES: Record<string, PinCodeDetail> = {
+  "600091": { pincode: "600091", city: "Madipakkam, Chennai", state: "Tamil Nadu", deliveryDays: 1, shippingCost: 0, codAvailable: true, serviceable: true },
   "110001": { pincode: "110001", city: "New Delhi", state: "Delhi", deliveryDays: 2, shippingCost: 450, codAvailable: true, serviceable: true },
   "400001": { pincode: "400001", city: "Mumbai", state: "Maharashtra", deliveryDays: 3, shippingCost: 550, codAvailable: true, serviceable: true },
   "560001": { pincode: "560001", city: "Bengaluru", state: "Karnataka", deliveryDays: 3, shippingCost: 500, codAvailable: true, serviceable: true },
