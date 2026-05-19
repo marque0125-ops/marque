@@ -815,6 +815,8 @@ export const useMarqueStore = create<MarqueState>()(
         address: state.address,
         lowStockAlerts: state.lowStockAlerts,
         isAuthenticated: state.isAuthenticated,
+        userEmail: state.userEmail,
+        jwtToken: state.jwtToken,
         announcementText: state.announcementText
       })
     }
