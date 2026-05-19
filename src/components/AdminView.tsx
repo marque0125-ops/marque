@@ -35,10 +35,13 @@ export default function AdminView() {
     clearLowStockAlerts,
     addProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    announcementText,
+    setAnnouncementText
   } = useMarqueStore();
 
   const [activeTab, setActiveTab] = useState<'analytics' | 'inventory' | 'orders'>('analytics');
+  const [announcementInput, setAnnouncementInput] = useState(announcementText);
   
   // Inline stock edit helper states
   const [editingVariantId, setEditingVariantId] = useState<string | null>(null);
@@ -237,6 +240,15 @@ export default function AdminView() {
     setEditingStockVal(currentStock);
   };
 
+  const handleUpdateAnnouncement = () => {
+    if (!announcementInput.trim()) {
+      alert("Announcement ticker text cannot be empty!");
+      return;
+    }
+    setAnnouncementText(announcementInput);
+    alert("Ticker content broadcasted successfully! Marquee updated on all pages.");
+  };
+
   return (
     <div className="space-y-10 pb-20">
       
@@ -356,26 +368,89 @@ export default function AdminView() {
               </div>
             </div>
 
-            {/* Right: Banners management mock */}
-            <div className="md:col-span-4 rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4">
-              <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200 border-b border-brand-border pb-3 flex items-center gap-1.5">
-                <Sparkles className="h-4.5 w-4.5 text-brand-gold" />
-                Storefront Campaigns
-              </h3>
+            {/* Right: Banners & Marquee management */}
+            <div className="md:col-span-4 rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-6">
               
-              <div className="space-y-3 text-xs">
-                <div className="p-3 bg-slate-900 rounded border border-brand-border/60">
-                  <span className="text-[8px] bg-brand-orange text-black px-1 font-bold uppercase rounded block w-max">Active Banner</span>
-                  <span className="font-bold text-white block mt-1.5">Traxxas X-Maxx 8S Extreme basher</span>
-                  <span className="text-[10px] text-slate-500 block">CTR: 4.8% • conversion: 32 orders</span>
-                </div>
+              {/* Campaign Banners */}
+              <div className="space-y-4">
+                <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200 border-b border-brand-border pb-3 flex items-center gap-1.5">
+                  <Sparkles className="h-4.5 w-4.5 text-brand-gold" />
+                  Storefront Campaigns
+                </h3>
+                
+                <div className="space-y-3 text-xs">
+                  <div className="p-3 bg-slate-900 rounded border border-brand-border/60">
+                    <span className="text-[8px] bg-brand-orange text-black px-1 font-bold uppercase rounded block w-max">Active Banner</span>
+                    <span className="font-bold text-white block mt-1.5">Traxxas X-Maxx 8S Extreme basher</span>
+                    <span className="text-[10px] text-slate-500 block">CTR: 4.8% • conversion: 32 orders</span>
+                  </div>
 
-                <div className="p-3 bg-slate-900/30 rounded border border-brand-border/20 text-slate-500">
-                  <span className="text-[8px] bg-slate-800 text-slate-400 px-1 font-bold uppercase rounded block w-max">Draft campaign</span>
-                  <span className="font-bold block mt-1.5">Arrma Infraction 6S Asphalt Slider</span>
-                  <span className="text-[10px] block">Scheduled: Monsoon racing tournament 2026</span>
+                  <div className="p-3 bg-slate-900/30 rounded border border-brand-border/20 text-slate-500">
+                    <span className="text-[8px] bg-slate-800 text-slate-400 px-1 font-bold uppercase rounded block w-max">Draft campaign</span>
+                    <span className="font-bold block mt-1.5">Arrma Infraction 6S Asphalt Slider</span>
+                    <span className="text-[10px] block">Scheduled: Monsoon racing tournament 2026</span>
+                  </div>
                 </div>
               </div>
+
+              {/* Live Announcement Marquee Editor */}
+              <div className="space-y-4 pt-4 border-t border-brand-border/55">
+                <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
+                  <Settings className="h-4.5 w-4.5 text-brand-orange" />
+                  Header Announcement Marquee
+                </h3>
+                
+                <div className="space-y-3 text-xs">
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">Ticker Text Content</label>
+                    <textarea 
+                      value={announcementInput}
+                      onChange={(e) => setAnnouncementInput(e.target.value)}
+                      placeholder="Enter announcement text..."
+                      rows={3}
+                      className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-slate-200 outline-none focus:border-brand-orange resize-none text-[11px]"
+                    />
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleUpdateAnnouncement}
+                      className="w-full bg-brand-orange hover:bg-brand-gold text-black py-2 rounded font-bold uppercase text-[10px] transition-all hover:shadow-glow"
+                    >
+                      Update Ticker
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const defaultVal = "⚡ EXTREME 8S BRUSHLESS ACTION • GST-INCLUSIVE PRICES • FREE SHIPPING ABOVE ₹10,000 ⚡";
+                        setAnnouncementInput(defaultVal);
+                        setAnnouncementText(defaultVal);
+                      }}
+                      className="border border-brand-border hover:border-slate-500 text-slate-300 px-3 py-2 rounded text-[10px]"
+                      title="Reset to Default"
+                    >
+                      Reset
+                    </button>
+                  </div>
+
+                  {/* Preview Bar */}
+                  <div className="space-y-1.5 pt-2">
+                    <span className="text-[8px] text-slate-500 font-bold uppercase block">Live Telemetry Preview:</span>
+                    <div className="w-full bg-gradient-to-r from-brand-orange to-brand-gold py-1 text-[9px] font-bold uppercase tracking-wider text-black rounded overflow-hidden select-none relative">
+                      <div className="flex whitespace-nowrap animate-marquee gap-4">
+                        <div className="flex shrink-0 items-center justify-around gap-4 min-w-full">
+                          <span>{announcementText}</span>
+                        </div>
+                        <div className="flex shrink-0 items-center justify-around gap-4 min-w-full" aria-hidden="true">
+                          <span>{announcementText}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
           </div>

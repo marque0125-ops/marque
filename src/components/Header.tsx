@@ -28,7 +28,8 @@ export default function Header() {
     setFilterBrand,
     setSelectedProduct,
     isAuthenticated,
-    userEmail
+    userEmail,
+    announcementText
   } = useMarqueStore();
 
   const isAdmin = isAuthenticated && userEmail === "2002dineshmurugan@gmail.com";
@@ -53,9 +54,16 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-brand-border bg-brand-dark/85 backdrop-blur-md">
-      {/* Dynamic Promotion Ticker */}
-      <div className="w-full bg-gradient-to-r from-brand-orange to-brand-gold py-1 text-center text-xs font-bold uppercase tracking-wider text-black">
-        ⚡ Extreme 8S Brushless Action • GST-Inclusive Prices • Free Shipping Above ₹10,000 ⚡
+      {/* Dynamic Promotion Ticker Marquee */}
+      <div className="w-full bg-gradient-to-r from-brand-orange to-brand-gold py-1.5 text-[11px] font-bold uppercase tracking-wider text-black overflow-hidden select-none">
+        <div className="flex whitespace-nowrap animate-marquee gap-8">
+          <div className="flex shrink-0 items-center justify-around gap-8 min-w-full">
+            <span>{announcementText}</span>
+          </div>
+          <div className="flex shrink-0 items-center justify-around gap-8 min-w-full" aria-hidden="true">
+            <span>{announcementText}</span>
+          </div>
+        </div>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

@@ -140,6 +140,10 @@ interface MarqueState {
   
   // Real-Time Catalog Sync Actions
   fetchProducts: () => Promise<void>;
+
+  // Announcement Marquee Ticker
+  announcementText: string;
+  setAnnouncementText: (text: string) => void;
 }
 
 // Normalizes snake_case database schema fields to camelCase TS structure
@@ -268,6 +272,8 @@ export const useMarqueStore = create<MarqueState>()(
       // In-memory data structures
       products: PRODUCTS,
       reviews: MOCK_REVIEWS,
+      announcementText: "⚡ EXTREME 8S BRUSHLESS ACTION • GST-INCLUSIVE PRICES • FREE SHIPPING ABOVE ₹10,000 ⚡",
+      setAnnouncementText: (text) => set({ announcementText: text }),
       
       updateProductStock: (productId, variantId, newStock) => {
         const currentProducts = get().products;
@@ -808,7 +814,8 @@ export const useMarqueStore = create<MarqueState>()(
         wishlist: state.wishlist,
         address: state.address,
         lowStockAlerts: state.lowStockAlerts,
-        isAuthenticated: state.isAuthenticated
+        isAuthenticated: state.isAuthenticated,
+        announcementText: state.announcementText
       })
     }
   )
