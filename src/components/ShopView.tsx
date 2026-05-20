@@ -1,7 +1,9 @@
 "use client";
 
 import React from "react";
-import { useMarqueStore } from "../store/store";
+import { useCartStore } from "../store/useCartStore";
+import { useProductStore } from "../store/useProductStore";
+import { useUIStore } from "../store/useUIStore";
 import { BRANDS, Product } from "../data/mockData";
 import { 
   Heart, 
@@ -15,10 +17,9 @@ import {
 } from "lucide-react";
 
 export default function ShopView() {
-  const {
+  const { addToCart } = useCartStore();
+  const { 
     products,
-    setView,
-    setSelectedProduct,
     searchQuery,
     setSearchQuery,
     filterBrand,
@@ -35,9 +36,12 @@ export default function ShopView() {
     setSortBy,
     resetFilters,
     wishlist,
-    toggleWishlist,
-    addToCart
-  } = useMarqueStore();
+    toggleWishlist
+  } = useProductStore();
+  const {
+    setView,
+    setSelectedProduct
+  } = useUIStore();
 
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
@@ -340,11 +344,19 @@ export default function ShopView() {
                       {/* Scale and Speed Badges */}
                       <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
                         <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-orange border border-brand-orange/30 uppercase tracking-wider">
-                          {p.scale} Scale
+                          {p.categoryId === 'accessories' ? 'Accessory' : `${p.scale} Scale`}
                         </span>
-                        <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
-                          {p.speedKmh}+ KM/H
-                        </span>
+                        {p.categoryId === 'accessories' ? (
+                          p.specs.Pieces && (
+                            <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
+                              {p.specs.Pieces}
+                            </span>
+                          )
+                        ) : (
+                          <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
+                            {p.speedKmh}+ KM/H
+                          </span>
+                        )}
                       </div>
 
                       {/* Wishlist button */}
@@ -401,7 +413,11 @@ export default function ShopView() {
                           <Star className="h-3 w-3 fill-brand-gold" />
                           {p.averageRating} ({p.reviewCount})
                         </span>
-                        <span>{p.terrainType} • {p.buildType}</span>
+                        {p.categoryId === 'accessories' ? (
+                          <span>{p.specs["Age Range"] ? `Ages ${p.specs["Age Range"]}` : 'Accessory'} • {p.buildType}</span>
+                        ) : (
+                          <span>{p.terrainType} • {p.buildType}</span>
+                        )}
                       </div>
 
                       {/* Price Section */}
@@ -420,7 +436,7 @@ export default function ShopView() {
                           disabled={p.stockQty === 0}
                           className="rounded-lg bg-brand-orange text-black px-3 py-2 text-xs font-bold uppercase hover:bg-brand-gold disabled:bg-slate-800 disabled:text-slate-600 transition-colors"
                         >
-                          {p.stockQty === 0 ? "Out" : "Buy Rig"}
+                          {p.stockQty === 0 ? "Out" : (p.categoryId === 'accessories' ? "Buy Item" : "Buy Rig")}
                         </button>
                       </div>
                     </div>

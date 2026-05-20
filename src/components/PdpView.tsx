@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useMarqueStore, CartItem } from "../store/store";
+import { useCartStore } from "../store/useCartStore";
+import { useProductStore } from "../store/useProductStore";
+import { useUIStore } from "../store/useUIStore";
 import { BRANDS, Product, ProductVariant } from "../data/mockData";
 import { 
   Heart, 
@@ -22,17 +24,19 @@ import {
 } from "lucide-react";
 
 export default function PdpView() {
+  const { addToCart } = useCartStore();
+  const { 
+    products,
+    reviews,
+    addProductReview,
+    wishlist,
+    toggleWishlist
+  } = useProductStore();
   const {
     selectedProduct,
     setSelectedProduct,
-    reviews,
-    addProductReview,
-    addToCart,
-    wishlist,
-    toggleWishlist,
-    products,
     setView
-  } = useMarqueStore();
+  } = useUIStore();
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [viewMode, setViewMode] = useState<'standard' | '360'>('standard');
@@ -624,6 +628,135 @@ export default function PdpView() {
         </div>
 
       </section>
+
+      {/* RELATED PRODUCTS SECTION */}
+      {relatedProducts.length > 0 && (
+        <section className="pt-8 border-t border-brand-border">
+          <h3 className="font-display text-xl font-bold uppercase text-white mb-6">
+            Related Gear & Upgrades
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {relatedProducts.map((p) => {
+              const brand = BRANDS.find(b => b.id === p.brandId);
+              const isWished = wishlist.includes(p.id);
+
+              return (
+                <div 
+                  key={p.id}
+                  onClick={() => {
+                    setSelectedProduct(p);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="group cursor-pointer relative flex flex-col rounded-2xl border border-brand-border bg-slate-900/30 overflow-hidden hover:border-brand-orange hover:bg-slate-900/80 transition-all duration-300 shadow-lg hover:shadow-glow"
+                >
+                  {/* Primary Image Container */}
+                  <div className="relative aspect-square w-full overflow-hidden bg-slate-950">
+                    <img 
+                      src={p.images[0]} 
+                      alt={p.name}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+
+                    {/* Scale and Speed Badges */}
+                    <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+                      <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-orange border border-brand-orange/30 uppercase tracking-wider">
+                        {p.categoryId === 'accessories' ? 'Accessory' : `${p.scale} Scale`}
+                      </span>
+                      {p.categoryId === 'accessories' ? (
+                        p.specs.Pieces && (
+                          <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
+                            {p.specs.Pieces}
+                          </span>
+                        )
+                      ) : (
+                        <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
+                          {p.speedKmh}+ KM/H
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Wishlist button */}
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleWishlist(p.id);
+                      }}
+                      className="absolute top-3 right-3 z-10 rounded-full bg-slate-950/80 p-2 border border-slate-800 text-slate-400 hover:text-brand-orange transition-colors"
+                    >
+                      <Heart className={`h-4.5 w-4.5 ${isWished ? 'fill-brand-orange text-brand-orange' : 'text-slate-300'}`} />
+                    </button>
+
+                    {/* Stock Badge */}
+                    <div className="absolute bottom-3 left-3 z-10">
+                      {p.stockQty === 0 ? (
+                        <span className="rounded bg-red-600 px-2 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider">
+                          Out of stock
+                        </span>
+                      ) : p.stockQty < 3 ? (
+                        <span className="rounded bg-brand-orange px-2 py-0.5 text-[9px] font-bold text-black uppercase tracking-wider animate-pulse">
+                          Only {p.stockQty} Left!
+                        </span>
+                      ) : (
+                        <span className="rounded bg-slate-950/80 border border-slate-800 px-2 py-0.5 text-[9px] font-bold text-green-400 uppercase tracking-wider">
+                          In Stock
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Specifications detail text */}
+                  <div className="p-4 flex-1 flex flex-col justify-between gap-3">
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider font-display">
+                          {brand?.name}
+                        </span>
+                        <span className="text-[10px] text-slate-500 font-semibold">
+                          SKU: {p.sku.slice(0, 8)}
+                        </span>
+                      </div>
+                      <h3 className="font-display text-sm font-bold text-white line-clamp-1 group-hover:text-brand-orange transition-colors">
+                        {p.name}
+                      </h3>
+                      <p className="text-xs text-slate-400 line-clamp-2">
+                        {p.description}
+                      </p>
+                    </div>
+
+                    {/* Star rating and key spec */}
+                    <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 border-t border-brand-border pt-2">
+                      <span className="flex items-center gap-0.5 text-brand-gold">
+                        <Star className="h-3 w-3 fill-brand-gold" />
+                        {p.averageRating} ({p.reviewCount})
+                      </span>
+                      {p.categoryId === 'accessories' ? (
+                        <span>{p.specs["Age Range"] ? `Ages ${p.specs["Age Range"]}` : 'Accessory'} • {p.buildType}</span>
+                      ) : (
+                        <span>{p.terrainType} • {p.buildType}</span>
+                      )}
+                    </div>
+
+                    {/* Price Section */}
+                    <div className="flex items-center justify-between border-t border-brand-border pt-3">
+                      <div>
+                        <span className="text-[10px] text-slate-500 line-through block leading-none">
+                          ₹{p.comparePrice.toLocaleString('en-IN')}
+                        </span>
+                        <span className="text-base font-black text-brand-gold font-display leading-none block mt-1">
+                          ₹{p.price.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+                      <button className="flex items-center justify-center rounded-lg bg-brand-orange px-3 py-1.5 text-[10px] font-bold text-black uppercase hover:bg-brand-gold transition-colors">
+                        {p.categoryId === 'accessories' ? 'Buy Item' : 'Buy Rig'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* VIDEO POPUP OVERLAY DIALOG */}
       {showVideo && (

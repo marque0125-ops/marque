@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMarqueStore } from "../store/store";
+import { useCartStore } from "../store/useCartStore";
+import { useProductStore } from "../store/useProductStore";
+import { useUIStore } from "../store/useUIStore";
 import { BRANDS, RC_GUIDES, Product, RCGuide } from "../data/mockData";
 import {
   Trophy,
@@ -30,18 +32,20 @@ import {
 } from "lucide-react";
 
 export default function HomeView() {
-  const {
+  const { addToCart } = useCartStore();
+  const { 
     products,
     reviews,
-    setView,
+    wishlist,
+    toggleWishlist,
     setFilterBrand,
     setFilterTerrain,
-    setSearchQuery,
-    setSelectedProduct,
-    addToCart,
-    toggleWishlist,
-    wishlist
-  } = useMarqueStore();
+    setSearchQuery
+  } = useProductStore();
+  const {
+    setView,
+    setSelectedProduct
+  } = useUIStore();
 
   const [activeGuide, setActiveGuide] = useState<RCGuide | null>(null);
 
@@ -140,7 +144,7 @@ export default function HomeView() {
             </h1>
 
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-              Experience 130+ km/h runs, fully waterproof brushless motors, and aircraft-grade carbon fiber/alloy constructs. MARQUE brings the world's most extreme RC brands to Indian bashers and track racers.
+              Experience 130+ km/h runs, fully waterproof brushless motors, and high-performance accessories/spares. MARQUE brings the world's most extreme RC cars and accessories to Indian bashers and track racers.
             </p>
 
             <div className="flex flex-wrap gap-4 pt-2">
@@ -519,7 +523,7 @@ export default function HomeView() {
               </h2>
             </div>
             <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-              MARQUE is India's dedicated hub for authentic, hobby-grade remote control scale engineering. We source directly from elite international manufacturers, providing bash-tested rigs with comprehensive part catalogs, technical support, and official Indian custom clearances.
+              MARQUE is India's dedicated hub for authentic, hobby-grade remote control scale engineering and premium accessories. We source directly from elite international manufacturers, providing bash-tested rigs, performance upgrades, and spare parts with comprehensive catalogs.
             </p>
 
             <ul className="space-y-3">

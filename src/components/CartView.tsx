@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMarqueStore } from "../store/store";
+import { useCartStore } from "../store/useCartStore";
+import { useAuthStore } from "../store/useAuthStore";
+import { useUIStore } from "../store/useUIStore";
+import { useOrderStore } from "../store/useOrderStore";
 import { BRANDS } from "../data/mockData";
 import { 
   Trash2, 
@@ -26,18 +29,24 @@ export default function CartView() {
     removeFromCart,
     updateCartQty,
     clearCart,
-    setView,
     appliedCoupon,
     applyCoupon,
-    removeCoupon,
+    removeCoupon
+  } = useCartStore();
+
+  const {
+    setView,
     pincode,
     pinDetail,
     pinLoading,
     pinError,
-    checkPincode,
+    checkPincode
+  } = useUIStore();
+
+  const {
     address,
     setAddress
-  } = useMarqueStore();
+  } = useAuthStore();
 
   const [couponInput, setCouponInput] = useState("");
   const [couponFeedback, setCouponFeedback] = useState<{ type: 'success' | 'error', text: string } | null>(null);
@@ -328,19 +337,86 @@ export default function CartView() {
     );
   }
 
-  // Trigger placed order in store
-  const handlePlaceOrder = (method: 'UPI' | 'Card' | 'COD') => {
-    const store = useMarqueStore.getState();
-    const order = store.createOrder(method);
-    
-    // Navigate straight to orders page
-    setView('account');
-    setCheckoutStep(false);
-    
-    // Play alert sound / simulation complete message
-    setTimeout(() => {
-      alert(`CONGRATULATIONS: Order ${order.id} placed! Open the Order History tab in your account panel to track status updates dispatched by admin.`);
-    }, 500);
+  // Embed Razorpay Script
+  React.useEffect(() => {
+    const scriptId = 'razorpay-checkout-js';
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, []);
+
+  const handlePlaceOrder = async (method: 'UPI' | 'Card' | 'COD') => {
+    if (method === 'COD') {
+      const store = useOrderStore.getState();
+      const order = store.createOrder(method);
+      setView('account');
+      setCheckoutStep(false);
+      clearCart();
+      setTimeout(() => alert(`Order ${order.id} placed via Cash on Delivery!`), 500);
+      return;
+    }
+
+    try {
+      // Create order via our Next.js backend API
+      const res = await fetch('/api/razorpay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: grandTotal })
+      });
+      
+      const orderData = await res.json();
+      
+      if (!orderData || !orderData.id) {
+        alert("Payment initialization failed. Please try again.");
+        return;
+      }
+
+      // Initialize Razorpay Popup
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "MARQUE Pitstop",
+        description: "RC Gear & Accessories Purchase",
+        image: "/hero_rc_car.png",
+        order_id: orderData.id,
+        handler: function (response: any) {
+          // Success Callback
+          const store = useOrderStore.getState();
+          const order = store.createOrder(method);
+          order.status = "Confirmed";
+          order.paymentMethod = method;
+          
+          setView('account');
+          setCheckoutStep(false);
+          clearCart();
+          setTimeout(() => {
+            alert(`PAYMENT SUCCESSFUL! Razorpay Payment ID: ${response.razorpay_payment_id}. Your order ${order.id} is confirmed!`);
+          }, 500);
+        },
+        prefill: {
+          name: address.name,
+          contact: address.phone,
+        },
+        theme: {
+          color: "#ff4d00"
+        }
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on('payment.failed', function (response: any) {
+        alert(`Payment Failed: ${response.error.description}`);
+      });
+      rzp.open();
+      
+    } catch (err) {
+      console.error("Razorpay trigger error:", err);
+      alert("Error securely contacting payment gateway.");
+    }
   };
 
   return (
@@ -370,7 +446,7 @@ export default function CartView() {
             onClick={() => { setView('shop'); }}
             className="bg-brand-orange text-black font-bold text-xs uppercase px-5 py-2.5 rounded-lg hover:bg-brand-gold transition-colors"
           >
-            Visit Catalog
+            Visit Shop
           </button>
         </div>
       ) : (
@@ -496,7 +572,7 @@ export default function CartView() {
                         required
                         value={address.phone}
                         onChange={(e) => setAddress({ phone: e.target.value })}
-                        placeholder="e.g. 9876543210"
+                        placeholder="e.g. 8754498038"
                         className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-slate-200 outline-none focus:border-brand-orange"
                       />
                     </div>

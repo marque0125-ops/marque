@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMarqueStore } from "../store/store";
+import { useCartStore } from "../store/useCartStore";
+import { useProductStore } from "../store/useProductStore";
+import { useAuthStore } from "../store/useAuthStore";
+import { useUIStore } from "../store/useUIStore";
 import { BRANDS } from "../data/mockData";
 import { 
   ShoppingBag, 
@@ -16,21 +19,22 @@ import {
 } from "lucide-react";
 
 export default function Header() {
+  const { cart } = useCartStore();
+  const { 
+    wishlist,
+    searchQuery,
+    setSearchQuery,
+    setFilterBrand
+  } = useProductStore();
+  const { isAuthenticated, userEmail } = useAuthStore();
   const {
     currentView,
     setView,
-    cart,
-    wishlist,
     lowStockAlerts,
     clearLowStockAlerts,
-    searchQuery,
-    setSearchQuery,
-    setFilterBrand,
     setSelectedProduct,
-    isAuthenticated,
-    userEmail,
     announcementText
-  } = useMarqueStore();
+  } = useUIStore();
 
   const isAdmin = isAuthenticated && userEmail === "2002dineshmurugan@gmail.com";
 
@@ -72,17 +76,21 @@ export default function Header() {
           {/* Logo */}
           <div 
             onClick={() => { setSelectedProduct(null); setView('home'); }} 
-            className="flex cursor-pointer items-center gap-2"
+            className="flex cursor-pointer items-center gap-2 group"
           >
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-brand-orange text-black shadow-glow">
-              <Car className="h-6 w-6 stroke-[2.5]" />
+            <div className="relative flex h-11 w-11 items-center justify-center rounded-lg bg-slate-950 overflow-hidden border border-brand-border/60 shadow-glow transition-all duration-300 group-hover:border-brand-orange">
+              <img 
+                src="/marque-new-logo.jpg" 
+                alt="MARQUE Logo" 
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" 
+              />
             </div>
             <div>
-              <span className="font-display text-2xl font-black uppercase tracking-tighter text-white">
+              <span className="font-display text-2xl font-black uppercase tracking-tighter text-white transition-colors group-hover:text-brand-orange">
                 MARQUE
               </span>
-              <span className="ml-1 text-[10px] font-bold uppercase tracking-widest text-brand-orange block leading-none">
-                RC INDIA
+              <span className="ml-1 text-[9px] font-bold uppercase tracking-widest text-brand-orange block leading-none">
+                RC CARS & ACCESSORIES
               </span>
             </div>
           </div>
@@ -95,18 +103,15 @@ export default function Header() {
             >
               Home
             </button>
-            <button 
-              onClick={() => { setSelectedProduct(null); setView('shop'); }}
-              className={`hover:text-brand-orange transition-colors ${currentView === 'shop' ? 'text-brand-orange font-bold' : 'text-slate-300'}`}
-            >
-              Catalog
-            </button>
             
-            {/* Brands Mega-menu dropdown */}
+            {/* Shop Mega-menu dropdown */}
             <div className="relative group py-2">
-              <span className="cursor-pointer text-slate-300 hover:text-brand-orange transition-colors flex items-center gap-1">
-                Shop Brands
-              </span>
+              <button
+                onClick={() => { setSelectedProduct(null); setView('shop'); }}
+                className={`hover:text-brand-orange transition-colors flex items-center gap-1 ${currentView === 'shop' ? 'text-brand-orange font-bold' : 'text-slate-300'}`}
+              >
+                Shop
+              </button>
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 rounded-xl border border-brand-border bg-slate-950 p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 grid grid-cols-2 gap-2 z-50">
                 {BRANDS.map(b => (
                   <button
@@ -120,6 +125,13 @@ export default function Header() {
                 ))}
               </div>
             </div>
+
+            <button 
+              onClick={() => { setSelectedProduct(null); setView('accessories'); }}
+              className={`hover:text-brand-orange transition-colors ${currentView === 'accessories' ? 'text-brand-orange font-bold' : 'text-slate-300'}`}
+            >
+              Accessories
+            </button>
           </nav>
 
           {/* Search bar middle */}

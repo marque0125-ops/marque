@@ -134,6 +134,33 @@ export const BRANDS: Brand[] = [
     description: "Pure performance and custom speed on a miniature scale. Their premium R/C line brings the iconic, wild custom car designs from toy boxes to real-life living room drift tracks and stunt ramps, built with high-frequency control and fast charging.",
     country: "USA",
     established: "1968"
+  },
+  {
+    id: "b8",
+    name: "LEGO",
+    slug: "lego",
+    logoUrl: "https://images.unsplash.com/photo-1513384312027-9fa62a244fd2?w=400&q=80",
+    description: "The legendary interlocking brick toy brand. Officially licensed Disney theme kits containing castles, houses, and magical sleighs. Perfect for display and hobby collectors.",
+    country: "Denmark",
+    established: "1932"
+  },
+  {
+    id: "b9",
+    name: "MARQUE SHOWCASE",
+    slug: "marque-showcase",
+    logoUrl: "/marque-new-logo.jpg",
+    description: "Premium custom accessories designed by MARQUE, including acrylic showcase enclosures and display stands tailored for high-end hobby gear and collectibles.",
+    country: "India",
+    established: "2026"
+  },
+  {
+    id: "b10",
+    name: "SPEED DRIVER R/C",
+    slug: "speed-driver",
+    logoUrl: "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=400&q=80",
+    description: "High performance consumer-grade remote control racers, drifters, wall climbers, and excavators built for maximum indoor and outdoor action.",
+    country: "India",
+    established: "2026"
   }
 ];
 
@@ -679,6 +706,667 @@ export const PRODUCTS: Product[] = [
     stockQty: 10,
     averageRating: 4.3,
     reviewCount: 14
+  },
+  {
+    id: "p9",
+    brandId: "b9",
+    categoryId: "accessories",
+    name: "Acrylic Display Box, Compatible with Lego",
+    slug: "acrylic-display-box-compatible-with-lego",
+    description: "High-quality, crystal clear premium acrylic display showcase enclosure. Dust-proof, heavy-duty build with a black polished base to display your prized LEGO builds, models, or art pieces with elegant premium visibility.",
+    price: 9999,
+    comparePrice: 12999,
+    sku: "MQ-ACRYLIC-BOX",
+    weightGrams: 1800,
+    scale: "Custom",
+    terrainType: "On-Road",
+    isFeatured: true,
+    isActive: true,
+    speedKmh: 0,
+    buildType: "RTR",
+    images: ["/acrylic_box.png"],
+    whatsInTheBox: ["Acrylic panels", "Polished black base", "Assembly screws", "Microfiber cleaning cloth"],
+    specs: {
+      "Material": "Crystal Clear Acrylic",
+      "Base Color": "Glossy Black",
+      "Thickness": "3.5 mm",
+      "Dimensions": "40 x 30 x 25 cm"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p9-v1",
+        name: "Glossy Black Base / Standard Enclosure",
+        sku: "MQ-AC-BLK",
+        stockQty: 12,
+        attributes: { color: "Glossy Black" }
+      }
+    ],
+    stockQty: 12,
+    averageRating: 4.8,
+    reviewCount: 8
+  },
+  {
+    id: "p10",
+    brandId: "b8",
+    categoryId: "accessories",
+    name: "LEGO | Disney Encanto Mirabel's Mini House",
+    slug: "lego-disney-encanto-mini-house",
+    description: "Step inside Mirabel's colorful world! This miniature LEGO build features the magical Casa Madrigal from Disney's Encanto. Includes Mirabel mini-doll figure and detailed, colorful accessories inside her bedroom.",
+    price: 2499,
+    comparePrice: 2999,
+    sku: "LG-EN-MINI-HSE",
+    weightGrams: 350,
+    scale: "Micro",
+    terrainType: "On-Road",
+    isFeatured: false,
+    isActive: true,
+    speedKmh: 0,
+    buildType: "Kit",
+    images: ["/lego_encanto.png"],
+    whatsInTheBox: ["Lego Bricks", "Mirabel mini-doll", "Decorative stickers", "Manual instructions"],
+    specs: {
+      "Pieces": "148 Pcs",
+      "Age Range": "5+",
+      "Dimensions": "15.7 x 14.1 x 4.5 cm",
+      "Released": "2024"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p10-v1",
+        name: "Standard Retail Box",
+        sku: "LG-EN-MINI-STD",
+        stockQty: 25,
+        attributes: { color: "Multicolor" }
+      }
+    ],
+    stockQty: 25,
+    averageRating: 4.9,
+    reviewCount: 14
+  },
+  {
+    id: "p11",
+    brandId: "b8",
+    categoryId: "accessories",
+    name: "LEGO | Disney Frozen Anna's Sleigh Adventure",
+    slug: "lego-disney-frozen-annas-sleigh",
+    description: "Embark on a snowy journey with Princess Anna and Sven the reindeer! Help Anna pack the sleigh with hot chocolate, and explore the winter woods. Includes Anna mini-doll, Sven, a sleigh, and a feeding station for Sven.",
+    price: 4499,
+    comparePrice: 4999,
+    sku: "LG-FR-ANNA-SLG",
+    weightGrams: 420,
+    scale: "Micro",
+    terrainType: "On-Road",
+    isFeatured: false,
+    isActive: true,
+    speedKmh: 0,
+    buildType: "Kit",
+    images: ["/lego_sleigh.png"],
+    whatsInTheBox: ["Lego Bricks", "Anna mini-doll", "Sven reindeer", "Sleigh", "Instruction guide"],
+    specs: {
+      "Pieces": "174 Pcs",
+      "Age Range": "4+",
+      "Dimensions": "26.2 x 19.1 x 6.1 cm"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p11-v1",
+        name: "Standard Retail Box",
+        sku: "LG-FR-ANNA-STD",
+        stockQty: 18,
+        attributes: { color: "Sky Blue & White" }
+      }
+    ],
+    stockQty: 18,
+    averageRating: 4.8,
+    reviewCount: 11
+  },
+  {
+    id: "p12",
+    brandId: "b8",
+    categoryId: "accessories",
+    name: "LEGO | Disney Frozen Arendelle Castle Celebration",
+    slug: "lego-disney-frozen-arendelle-castle",
+    description: "Celebrate Anna's birthday in the glorious Arendelle Castle! Help Elsa and Kristoff prepare the grand dining hall, bake an enormous cake, and play hide-and-seek with mini snowmen. Includes Anna, Elsa, Kristoff, and Olaf!",
+    price: 3499,
+    comparePrice: 3999,
+    sku: "LG-FR-AR-CASTLE",
+    weightGrams: 550,
+    scale: "Micro",
+    terrainType: "On-Road",
+    isFeatured: false,
+    isActive: true,
+    speedKmh: 0,
+    buildType: "Kit",
+    images: ["/lego_castle.png"],
+    whatsInTheBox: ["Lego Bricks", "Anna, Elsa, Kristoff mini-dolls", "Olaf snowman", "Giant castle stickers", "Manual instructions"],
+    specs: {
+      "Pieces": "477 Pcs",
+      "Age Range": "6+",
+      "Dimensions": "38.2 x 26.2 x 5.6 cm"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p12-v1",
+        name: "Standard Retail Box",
+        sku: "LG-FR-AR-STD",
+        stockQty: 15,
+        attributes: { color: "Purple & Aqua" }
+      }
+    ],
+    stockQty: 15,
+    averageRating: 4.9,
+    reviewCount: 19
+  },
+  {
+    id: "p13",
+    brandId: "b8",
+    categoryId: "accessories",
+    name: "LEGO | Disney Frozen Elsa's Frozen Ice Palace",
+    slug: "lego-disney-frozen-elsas-ice-palace",
+    description: "Behold Elsa's breathtaking crystal ice palace! Features a magical sliding bridge, spinning staircase, dynamic ice chandelier, and an outdoor playground slide. Comes with Elsa, Anna, Olaf, and Marshmallow the giant snow monster.",
+    price: 5499,
+    comparePrice: 5999,
+    sku: "LG-FR-EL-PALACE",
+    weightGrams: 680,
+    scale: "Micro",
+    terrainType: "On-Road",
+    isFeatured: true,
+    isActive: true,
+    speedKmh: 0,
+    buildType: "Kit",
+    images: ["/lego_palace.png"],
+    whatsInTheBox: ["Lego Bricks", "Elsa & Anna mini-dolls", "Olaf snowman", "Marshmallow snow monster", "Instruction guide"],
+    specs: {
+      "Pieces": "701 Pcs",
+      "Age Range": "6+",
+      "Dimensions": "37.8 x 35.5 x 7.4 cm"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p13-v1",
+        name: "Standard Retail Box",
+        sku: "LG-FR-EL-STD",
+        stockQty: 9,
+        attributes: { color: "Crystal Ice Blue" }
+      }
+    ],
+    stockQty: 9,
+    averageRating: 4.7,
+    reviewCount: 22
+  },
+  {
+    id: "p14",
+    brandId: "b10",
+    categoryId: "drift",
+    name: "1:16 Model 4WD RC Drift Car 4X4 High Speed",
+    slug: "1-16-model-4wd-rc-drift-car-4x4-high-speed",
+    description: "High-octane yellow & black racing drifter. Equipped with proportional steering, a powerful high-torque motor, custom slick drift tires, and rubber grip racing tires to easily swap out. Perfect for doing high-speed hairpins and street slides.",
+    price: 2899,
+    comparePrice: 4599,
+    sku: "SD-DRIFT-4X4-YLW",
+    weightGrams: 980,
+    scale: "1:16",
+    terrainType: "Drift",
+    isFeatured: true,
+    isActive: true,
+    speedKmh: 30,
+    buildType: "RTR",
+    images: ["/rc_mjx_hypergo.png"],
+    whatsInTheBox: ["Drift Car", "2.4GHz Remote Controller", "7.4V 1200mAh Battery", "Spare high-grip tires", "Screwdriver"],
+    specs: {
+      "Scale": "1:16",
+      "Drive System": "4WD",
+      "Frequency": "2.4GHz Proportional",
+      "Top Speed": "30 km/h",
+      "Battery": "7.4V 1200mAh Li-ion"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p14-v1",
+        name: "Viper Yellow / Standard Battery Pack",
+        sku: "SD-DR-YL-STD",
+        stockQty: 8,
+        attributes: { color: "Viper Yellow & Black" }
+      }
+    ],
+    stockQty: 8,
+    averageRating: 4.5,
+    reviewCount: 17
+  },
+  {
+    id: "p15",
+    brandId: "b10",
+    categoryId: "crawler",
+    name: "1:14 Rc Wall Climbing Car 20km/h",
+    slug: "1-14-rc-wall-climbing-car-20km-h",
+    description: "Defy gravity with this extreme vacuum wall climbing stunt car! Featuring dual-mode transition (Ground and Wall mode) and a high-efficiency suction fan, this vehicle crawls seamlessly up glass windows, vertical walls, and ceilings.",
+    price: 2650,
+    comparePrice: 4500,
+    sku: "SD-WALL-CLIMBER",
+    weightGrams: 550,
+    scale: "1:14",
+    terrainType: "Crawler",
+    isFeatured: false,
+    isActive: true,
+    speedKmh: 20,
+    buildType: "RTR",
+    images: ["/rc_hotwheels_tesla.png"],
+    whatsInTheBox: ["Wall Climbing Car", "Infrared Transmitter", "Built-in Rechargeable battery", "USB Charger cable"],
+    specs: {
+      "Suction Power": "Vacuum Fan Suction",
+      "Modes": "Wall / Floor Dual Mode",
+      "Remote Control": "Infrared 2.4GHz",
+      "Battery": "3.7V Rechargeable Li-Po"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p15-v1",
+        name: "Deep Blue / Standard vacuum setup",
+        sku: "SD-WC-BLU",
+        stockQty: 14,
+        attributes: { color: "Metallic Blue" }
+      }
+    ],
+    stockQty: 14,
+    averageRating: 4.3,
+    reviewCount: 9
+  },
+  {
+    id: "p16",
+    brandId: "b10",
+    categoryId: "street-basher",
+    name: "1:16 Porsche GT3 RS 2.4Ghz Sport Racer",
+    slug: "1-16-porsche-gt3-rs-2-4ghz-racer",
+    description: "A stunning scale model of the legendary track weapon Porsche GT3 RS. Features high-fidelity white aerodynamic styling with iconic black and red racing decals, functional brake lights, working headlamps, and responsive rear-wheel drive.",
+    price: 2850,
+    comparePrice: 3599,
+    sku: "SD-PORSCHE-GT3",
+    weightGrams: 850,
+    scale: "1:16",
+    terrainType: "On-Road",
+    isFeatured: false,
+    isActive: true,
+    speedKmh: 25,
+    buildType: "RTR",
+    images: ["/rc_arrma_infraction.png"],
+    whatsInTheBox: ["Porsche GT3 RS Model", "2.4GHz Pistol Transmitter", "Rechargeable Battery Pack", "USB Fast Charger"],
+    specs: {
+      "Official License": "Inspired by GT3 RS Design",
+      "Radio Control": "2.4GHz Multi-Frequency",
+      "Scale": "1:16",
+      "Drive System": "2WD High Speed"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p16-v1",
+        name: "Pure White & Red racing stripes",
+        sku: "SD-GT3-WHT",
+        stockQty: 5,
+        attributes: { color: "Chalk White" }
+      }
+    ],
+    stockQty: 5,
+    averageRating: 4.6,
+    reviewCount: 15
+  },
+  {
+    id: "p17",
+    brandId: "b10",
+    categoryId: "drift",
+    name: "1:16 RC Drift Car, 20KM/H 4WD (Toyota AE86)",
+    slug: "1-16-rc-drift-car-20km-h-4wd-ae86",
+    description: "Step into retro drifting with the legendary Hachiroku AE86! Features the classic white & black panda paint scheme, pop-up style headlamps, full 4WD traction, and dual tire sets (slick drift and high-grip rubber). PERFECT FOR SLIDING!",
+    price: 1799,
+    comparePrice: 2799,
+    sku: "SD-AE86-PANDA",
+    weightGrams: 900,
+    scale: "1:16",
+    terrainType: "Drift",
+    isFeatured: false,
+    isActive: true,
+    speedKmh: 20,
+    buildType: "RTR",
+    images: ["/rc_fms_blazer.png"],
+    whatsInTheBox: ["AE86 Drift Car", "2.4GHz Remote", "7.4V Rechargeable Battery", "4x Slick Drift tires", "4x Rubber tires"],
+    specs: {
+      "Nostalgia Factor": "Initial D Tribute Panda Scheme",
+      "Top Speed": "20 km/h",
+      "Drive": "Full Time 4WD",
+      "Chassis": "Nylon Impact Resistant"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p17-v1",
+        name: "Classic Panda White & Black",
+        sku: "SD-AE86-WHT",
+        stockQty: 0,
+        attributes: { color: "Panda White & Black" }
+      }
+    ],
+    stockQty: 0,
+    averageRating: 4.7,
+    reviewCount: 32
+  },
+  {
+    id: "p18",
+    brandId: "b10",
+    categoryId: "drift",
+    name: "1:16 RC Drift Car, 25KM/H 4WD (BMW E30)",
+    slug: "1-16-rc-drift-car-25km-h-4wd-e30",
+    description: "An absolute classic track drifter! Featuring retro BMW E30 lines with premium racing decals, full-time 4WD shaft drive, and custom slick performance drift tires. Built to handle hairpin slides and long slick arcs.",
+    price: 3299,
+    comparePrice: 6899,
+    sku: "SD-BMW-E30",
+    weightGrams: 950,
+    scale: "1:16",
+    terrainType: "Drift",
+    isFeatured: false,
+    isActive: true,
+    speedKmh: 25,
+    buildType: "RTR",
+    images: ["/rc_traxxas_slash.png"],
+    whatsInTheBox: ["E30 Drift Car", "2.4GHz Controller", "7.4V Lithium Battery", "USB Charging cable", "Custom decals set"],
+    specs: {
+      "Body Style": "Classic BMW E30 Coupe",
+      "Top Speed": "25 km/h",
+      "Drivetrain": "4WD Shaft-Driven",
+      "Lighting": "Full Functional Headlamps"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p18-v1",
+        name: "Alpine White / Classic M-Decals",
+        sku: "SD-E30-WHT",
+        stockQty: 10,
+        attributes: { color: "Alpine White with Decals" }
+      }
+    ],
+    stockQty: 10,
+    averageRating: 4.8,
+    reviewCount: 23
+  },
+  {
+    id: "p19",
+    brandId: "b10",
+    categoryId: "off-road-truggy",
+    name: "1:16 Scale RC Cars Off-Road Alloy Truck",
+    slug: "1-16-scale-rc-cars-off-road-alloy-truck",
+    description: "Rugged alloy-bodied off-road sand buggy! Heavy duty impact-resistant orange outer cage, high-efficiency coil-over spring shocks, and knobby deep tread tires. Delivers exceptional stability and fun bashing off dirt ramps.",
+    price: 1950,
+    comparePrice: 2399,
+    sku: "SD-ALLOY-ORANGE",
+    weightGrams: 1100,
+    scale: "1:16",
+    terrainType: "Off-Road",
+    isFeatured: false,
+    isActive: true,
+    speedKmh: 18,
+    buildType: "RTR",
+    images: ["/rc_rlaarlo_amx12.png"],
+    whatsInTheBox: ["Buggy Chassis", "2.4GHz Controller", "4.8V Ni-MH Battery", "USB wall adapter"],
+    specs: {
+      "Body material": "High Strength Alloy Sheet",
+      "Suspension": "Heavy Coil Springs",
+      "Top Speed": "18 km/h",
+      "Battery": "4.8V Ni-MH Rechargeable"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p19-v1",
+        name: "Blaze Orange Alloy Cage",
+        sku: "SD-AL-ORN",
+        stockQty: 7,
+        attributes: { color: "Blaze Orange" }
+      }
+    ],
+    stockQty: 7,
+    averageRating: 4.4,
+    reviewCount: 16
+  },
+  {
+    id: "p20",
+    brandId: "b10",
+    categoryId: "crawler",
+    name: "1:16 Scale RC Crawler, 38KM/H Off-Road",
+    slug: "1-16-scale-rc-crawler-38km-h-4wd",
+    description: "A beastly 4WD off-road crawler and basher combined! Capable of hitting a blistering 38 km/h over rugged rocks, mud paths, and sandy dunes. Equipped with dynamic metal differentials, full four-wheel drive, and long-travel shocks.",
+    price: 9500,
+    comparePrice: 15999,
+    sku: "SD-CRAWLER-38K",
+    weightGrams: 1350,
+    scale: "1:16",
+    terrainType: "Crawler",
+    isFeatured: true,
+    isActive: true,
+    speedKmh: 38,
+    buildType: "RTR",
+    images: ["/rc_traxxas_xmaxx.png"],
+    whatsInTheBox: ["4WD Crawler", "2.4GHz Pistol controller", "7.4V 1500mAh Li-Po battery", "Balance Charger adapter", "Hex key wrenches"],
+    specs: {
+      "Axles": "Locked Front & Rear Diffs",
+      "Top Speed": "38 km/h",
+      "Drive System": "Heavy Duty 4WD",
+      "Chassis": "Reinforced Nylon Composite"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p20-v1",
+        name: "Stealth Black / Dual Speed Gearbox",
+        sku: "SD-CR-38-BLK",
+        stockQty: 11,
+        attributes: { color: "Stealth Black" }
+      }
+    ],
+    stockQty: 11,
+    averageRating: 4.7,
+    reviewCount: 20
+  },
+  {
+    id: "p21",
+    brandId: "b10",
+    categoryId: "drift",
+    name: "1:16 Scale RC Mustang Drift Car 4WD",
+    slug: "1-16-scale-rc-mustang-drift-car-4wd",
+    description: "American muscle meets high-speed sliding. High-fidelity custom Mustang body styling with aggressive hood scoop, working bright LED lights, 4WD shaft drive, and custom compound drift wheels. Out of stock due to massive demand!",
+    price: 3499,
+    comparePrice: 4899,
+    sku: "SD-MUSTANG-DRIFT",
+    weightGrams: 960,
+    scale: "1:16",
+    terrainType: "Drift",
+    isFeatured: false,
+    isActive: true,
+    speedKmh: 22,
+    buildType: "RTR",
+    images: ["/hero_rc_car.png"],
+    whatsInTheBox: ["Mustang Drift Car", "2.4GHz Transmitter", "7.4V Rechargeable Battery pack", "4x Hard compound tires", "4x Rubber street tires"],
+    specs: {
+      "Chassis Style": "Mustang Muscle Coupe",
+      "Drivetrain": "4WD Shaft Drive",
+      "Drive Tires": "Drift Slick Compound",
+      "Lighting": "Front & Rear LEDs"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p21-v1",
+        name: "Carbon Shadow Stripe",
+        sku: "SD-MU-BLK",
+        stockQty: 0,
+        attributes: { color: "Carbon Shadow Black" }
+      }
+    ],
+    stockQty: 0,
+    averageRating: 4.5,
+    reviewCount: 19
+  },
+  {
+    id: "p22",
+    brandId: "b10",
+    categoryId: "crawler",
+    name: "1:16 Scale Remote Control Monster Truck",
+    slug: "1-16-scale-remote-control-monster-truck",
+    description: "A classic heavy-duty climbing crawler designed to run over high grass, mud fields, and rocky slopes. Heavy-duty suspension, extra-wide high grip wheels, and a solid steel cage design. Completely sold out!",
+    price: 1850,
+    comparePrice: 2500,
+    sku: "SD-MONSTER-TRK",
+    weightGrams: 1200,
+    scale: "1:16",
+    terrainType: "Crawler",
+    isFeatured: false,
+    isActive: true,
+    speedKmh: 15,
+    buildType: "RTR",
+    images: ["/rc_mn_defender.png"],
+    whatsInTheBox: ["Monster Truck Rig", "2.4GHz Controller", "Rechargeable internal battery pack", "USB charger"],
+    specs: {
+      "Drivetrain": "4WD Solid Axle",
+      "Wheels": "High-Density Rubber Off-Road",
+      "Frequency": "2.4GHz",
+      "Suspension": "Heavy Travel Springs"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p22-v1",
+        name: "Stealth Black / Rock Crawler",
+        sku: "SD-MN-BLK",
+        stockQty: 0,
+        attributes: { color: "Stealth Black" }
+      }
+    ],
+    stockQty: 0,
+    averageRating: 4.2,
+    reviewCount: 12
+  },
+  {
+    id: "p23",
+    brandId: "b10",
+    categoryId: "crawler",
+    name: "1:20 Scale J-C-B Excavator Construction Truck",
+    slug: "1-20-scale-jcb-excavator-toy",
+    description: "Experience real construction action! Highly accurate 1:20 scale model of a classic yellow excavator loader. Fully proportional multi-channel control lets you move the boom, stick, and bucket up and down, and spin the cab 680 degrees.",
+    price: 1999,
+    comparePrice: 2999,
+    sku: "SD-JCB-EXCAVATOR",
+    weightGrams: 1400,
+    scale: "1:20",
+    terrainType: "Crawler",
+    isFeatured: false,
+    isActive: true,
+    speedKmh: 5,
+    buildType: "RTR",
+    images: ["/rc_mjx_hypergo.png"],
+    whatsInTheBox: ["Excavator Rig", "Proportional Remote Controller", "Rechargeable 4.8V Battery", "USB Quick charging adapter"],
+    specs: {
+      "Cab Rotation": "680 Degrees",
+      "Bucket Material": "Alloy Metal",
+      "Control Channels": "11 Channels Proportional",
+      "Tracks": "Independent Rubber Tracks"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p23-v1",
+        name: "Classic Construction Yellow",
+        sku: "SD-JCB-YLW",
+        stockQty: 6,
+        attributes: { color: "Construction Yellow" }
+      }
+    ],
+    stockQty: 6,
+    averageRating: 4.6,
+    reviewCount: 14
+  },
+  {
+    id: "p24",
+    brandId: "b10",
+    categoryId: "drift",
+    name: "1:24 Scale RC Drift Car, 4WD 2.4G Spray Drift",
+    slug: "1-24-scale-rc-drift-car-4wd-spray",
+    description: "Add a gorgeous mist effect to your slides! This 1:24 mini drifter features a water-refillable exhaust that emits a lighted spray mist while drifting, replicating drag racing exhaust exhaust fumes. Insanely popular with kids & indoor racers.",
+    price: 1850,
+    comparePrice: 2499,
+    sku: "SD-SPRAY-DRIFT",
+    weightGrams: 600,
+    scale: "1:24",
+    terrainType: "Drift",
+    isFeatured: false,
+    isActive: true,
+    speedKmh: 15,
+    buildType: "RTR",
+    images: ["/rc_traxxas_slash.png"],
+    whatsInTheBox: ["Drift Car", "Remote controller", "Rechargeable battery pack", "Water filling bottle", "USB charging adaptor"],
+    specs: {
+      "Special Feature": "LED Exhaust Spray Mist",
+      "Scale": "1:24",
+      "Drivetrain": "4WD",
+      "Chassis Material": "High Elasticity PVC"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p24-v1",
+        name: "Dynamic Yellow / Spray Exhaust",
+        sku: "SD-SPY-YLW",
+        stockQty: 9,
+        attributes: { color: "Racing Yellow & Black" }
+      }
+    ],
+    stockQty: 9,
+    averageRating: 4.5,
+    reviewCount: 18
+  },
+  {
+    id: "p25",
+    brandId: "b10",
+    categoryId: "street-basher",
+    name: "1:64 Die Cast Metal F1 Mini RC Racer",
+    slug: "1-64-die-cast-metal-f1-mini-rc-racer",
+    description: "The ultimate micro-scale speed formula racer! Extremely detailed die-cast alloy F1 chassis with a micro-motor and high-frequency remote. Small enough to race on your computer desk, complete with a mini-helmet and high speed traction tires.",
+    price: 1490,
+    comparePrice: 2750,
+    sku: "SD-F1-MINI-DIE",
+    weightGrams: 180,
+    scale: "1:64",
+    terrainType: "On-Road",
+    isFeatured: true,
+    isActive: true,
+    speedKmh: 12,
+    buildType: "RTR",
+    images: ["/rc_arrma_infraction.png"],
+    whatsInTheBox: ["F1 Micro racer", "Desk transmitter", "Built-in micro battery", "Charger adapter cord"],
+    specs: {
+      "Scale": "1:64 Ultra Micro",
+      "Chassis": "Die-Cast Alloy Metal",
+      "Top Speed": "12 km/h",
+      "Charging Time": "15 min fast-charge"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p25-v1",
+        name: "Formula Red / Die-Cast",
+        sku: "SD-F1-RED",
+        stockQty: 15,
+        attributes: { color: "Formula Red & White" }
+      }
+    ],
+    stockQty: 15,
+    averageRating: 4.4,
+    reviewCount: 21
   }
 ];
 

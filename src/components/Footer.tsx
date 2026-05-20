@@ -1,11 +1,13 @@
 "use client";
 
 import React from "react";
-import { useMarqueStore } from "../store/store";
+import { useUIStore } from "../store/useUIStore";
+import { useProductStore } from "../store/useProductStore";
 import { Car, Mail, Phone, ShieldCheck, MapPin, Truck, HelpCircle } from "lucide-react";
 
 export default function Footer() {
-  const { setView, setSelectedProduct, setFilterBrand } = useMarqueStore();
+  const { setView, setSelectedProduct } = useUIStore();
+  const { setFilterBrand } = useProductStore();
 
   const selectBrand = (slug: string) => {
     setFilterBrand(slug);
@@ -22,16 +24,20 @@ export default function Footer() {
           
           {/* Col 1: About */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setSelectedProduct(null); setView('home'); }}>
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-orange text-black">
-                <Car className="h-5 w-5" />
+            <div className="flex items-center gap-2 cursor-pointer group" onClick={() => { setSelectedProduct(null); setView('home'); }}>
+              <div className="relative flex h-8 w-8 items-center justify-center rounded bg-slate-950 overflow-hidden border border-brand-border/60 transition-colors group-hover:border-brand-orange">
+                <img 
+                  src="/marque-new-logo.jpg" 
+                  alt="MARQUE Logo" 
+                  className="h-full w-full object-cover" 
+                />
               </div>
-              <span className="font-display text-xl font-bold uppercase tracking-tighter text-white">
+              <span className="font-display text-xl font-bold uppercase tracking-tighter text-white transition-colors group-hover:text-brand-orange">
                 MARQUE
               </span>
             </div>
             <p className="text-xs leading-relaxed">
-              India's premier e-commerce portal for hobby-grade remote control cars. Stocking international legends: Traxxas, Arrma, FMS, and Rlaarlo. We deliver track-ready engineering straight to your door with certified GST-inclusive pricing.
+              India's premier e-commerce portal for hobby-grade remote control cars and performance accessories. Stocking international legends: Traxxas, Arrma, FMS, and Rlaarlo. We deliver track-ready engineering straight to your door with certified GST-inclusive pricing.
             </p>
             <div className="pt-2 flex flex-col gap-2">
               <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Payments Security</span>
@@ -97,7 +103,7 @@ export default function Footer() {
               <li className="flex items-start gap-2">
                 <MapPin className="h-4.5 w-4.5 text-brand-orange shrink-0 mt-0.5" />
                 <span>
-                  <strong>Chennai Fulfillment Hub</strong>. Located at No. 2 Kuru Street, Madipakkam, Chennai, Tamil Nadu - 600091. Courier coverage to over 24,000 PIN codes.
+                  <strong>Chennai Fulfillment Hub</strong>. Located at Medavakkam main road, Madipakkam, Chennai 600091. Courier coverage to over 24,000 PIN codes.
                 </span>
               </li>
             </ul>
@@ -112,9 +118,9 @@ export default function Footer() {
               Need technical support or custom part compatibility advice? Our expert RC pilots are ready to help.
             </p>
             <div className="space-y-2.5 text-xs text-slate-300">
-              <a href="tel:+919876543210" className="flex items-center gap-2 hover:text-brand-orange transition-colors">
+              <a href="tel:+918754498038" className="flex items-center gap-2 hover:text-brand-orange transition-colors">
                 <Phone className="h-4 w-4 text-brand-orange" />
-                <span>+91 98765 43210</span>
+                <span>+91 87544 98038</span>
               </a>
               <a href="mailto:marque0125@gmail.com" className="flex items-center gap-2 hover:text-brand-orange transition-colors">
                 <Mail className="h-4 w-4 text-brand-orange" />
@@ -130,7 +136,11 @@ export default function Footer() {
 
         {/* Footer Bottom */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
-          <p>© 2026 MARQUE Premium RC India. All rights reserved.</p>
+          <div className="flex flex-col md:flex-row items-center gap-2">
+            <p>© 2026 <a href="https://marque.co.in" target="_blank" rel="noopener noreferrer" className="hover:text-brand-orange font-bold">MARQUE</a> Premium RC India. All rights reserved.</p>
+            <span className="hidden md:inline text-slate-700">|</span>
+            <a href="https://marque.co.in" target="_blank" rel="noopener noreferrer" className="text-brand-orange hover:text-brand-gold font-semibold">marque.co.in</a>
+          </div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-brand-orange">Privacy Policy</a>
             <a href="#" className="hover:text-brand-orange">Terms of Service</a>

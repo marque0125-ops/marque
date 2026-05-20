@@ -1,0 +1,208 @@
+import React, { useState } from "react";
+import { User, AlertCircle, Loader2 } from "lucide-react";
+import { supabase } from '../../utils/supabase';
+import { useAuthStore } from '../../store/useAuthStore';
+import { useUIStore } from '../../store/useUIStore';
+
+export function AuthPanel() {
+  const { login, loginWithSession } = useAuthStore();
+  const { setView } = useUIStore();
+
+  const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
+  const [signInEmail, setSignInEmail] = useState("");
+  const [signInPassword, setSignInPassword] = useState("");
+  const [signUpName, setSignUpName] = useState("");
+  const [signUpPhone, setSignUpPhone] = useState("");
+  const [signUpEmail, setSignUpEmail] = useState("");
+  const [signUpPassword, setSignUpPassword] = useState("");
+  const [signUpAddress, setSignUpAddress] = useState("");
+  const [signUpPincode, setSignUpPincode] = useState("600091");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [isShaking, setIsShaking] = useState(false);
+
+  const triggerShake = () => {
+    setIsShaking(true);
+    setTimeout(() => setIsShaking(false), 400);
+  };
+
+  const handleSignInSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(""); setFieldErrors({});
+    const email = signInEmail.trim();
+    const password = signInPassword.trim();
+    const errors: Record<string, string> = {};
+
+    if (!email) errors.signInEmail = "Email Address is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.signInEmail = "Please enter a valid email address.";
+    if (!password) errors.signInPassword = "Password is required.";
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors); triggerShake(); return;
+    }
+
+    setIsLoading(true);
+    try {
+      const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+      if (isConfigured) {
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
+        if (authError) {
+          setErrorMsg(authError.message);
+          triggerShake(); setIsLoading(false); return;
+        }
+        if (authData?.user) {
+          const { data: profile } = await supabase.from("profiles").select("*").eq("id", authData.user.id).maybeSingle();
+          const prof = profile as any;
+          const name = prof?.name || authData.user.user_metadata?.full_name || email.split("@")[0];
+          const phone = prof?.phone || authData.user.user_metadata?.phone || "9999999999";
+          const token = authData.session?.access_token || "";
+          loginWithSession(name, phone, email, profile || {}, token);
+          setIsLoading(false); return;
+        }
+      } else {
+        const mockName = email.split("@")[0];
+        login(mockName, "9999999999", email);
+        setIsLoading(false); return;
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || "Authentication failed.");
+      triggerShake();
+    }
+    setIsLoading(false);
+  };
+
+  const handleSignUpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(""); setFieldErrors({});
+    const name = signUpName.trim(); const phone = signUpPhone.trim();
+    const email = signUpEmail.trim(); const password = signUpPassword.trim();
+    const addressLine = signUpAddress.trim(); const pincode = signUpPincode.trim();
+    const errors: Record<string, string> = {};
+
+    if (!name) errors.signUpName = "Full Name is required.";
+    if (!phone) errors.signUpPhone = "Phone Number is required.";
+    if (!email) errors.signUpEmail = "Email Address is required.";
+    if (!password) errors.signUpPassword = "Password is required.";
+    if (!pincode) errors.signUpPincode = "Pincode is required.";
+
+    if (Object.keys(errors).length > 0) { setFieldErrors(errors); triggerShake(); return; }
+
+    setIsLoading(true);
+    try {
+      const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+      if (isConfigured) {
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email, password, options: { data: { full_name: name, phone: phone } }
+        });
+        if (authError) {
+          setErrorMsg(authError.message);
+          triggerShake(); setIsLoading(false); return;
+        }
+        if (authData?.user) {
+          await supabase.from("profiles").upsert([{
+            id: authData.user.id, name, phone, address_line: addressLine || "Medavakkam main road, Madipakkam",
+            city: pincode === "600091" ? "Chennai" : "India", state: pincode === "600091" ? "Tamil Nadu" : "State", pincode
+          }] as any);
+          const token = authData.session?.access_token || "";
+          loginWithSession(name, phone, email, { address_line: addressLine, city: pincode === "600091" ? "Chennai" : "India", state: pincode === "600091" ? "Tamil Nadu" : "State", pincode }, token);
+          setIsLoading(false); return;
+        }
+      } else {
+        login(name, phone, email);
+        setIsLoading(false); return;
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || "Registration failed.");
+      triggerShake();
+    }
+    setIsLoading(false);
+  };
+
+  return (
+    <div className="max-w-md mx-auto py-10">
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          20%, 60% { transform: translateX(-6px); }
+          40%, 80% { transform: translateX(6px); }
+        }
+        .animate-shake {
+          animation: shake 0.4s ease-in-out;
+        }
+      `}} />
+      <div className={`rounded-3xl border bg-slate-950 p-8 space-y-6 shadow-glow relative overflow-hidden transition-all duration-300 ${
+        isShaking ? "animate-shake border-red-500/50 shadow-red-500/5" : "border-brand-border"
+      }`}>
+        <div className="absolute top-0 left-1/4 -translate-y-1/2 h-[150px] w-[150px] rounded-full bg-brand-orange/15 blur-[50px] pointer-events-none" />
+        
+        <div className="text-center space-y-2">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand-orange/10 border border-brand-orange/30 text-brand-orange mb-2">
+            <User className="h-6 w-6" />
+          </div>
+          <h2 className="font-display text-2xl font-black uppercase tracking-tight text-white leading-none">
+            Customer Account
+          </h2>
+          <p className="text-xs text-slate-400">
+            Sign in to your Marque RC account to view your orders, track shipments, and manage your wishlist.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 p-1 bg-slate-900 border border-brand-border rounded-xl">
+          <button onClick={() => { setActiveTab('signin'); setErrorMsg(""); setFieldErrors({}); }} className={`py-2 px-3 text-xs font-bold uppercase rounded-lg transition-all ${activeTab === 'signin' ? 'bg-brand-orange text-black font-extrabold' : 'text-slate-400 hover:text-white bg-transparent'}`}>Sign In</button>
+          <button onClick={() => { setActiveTab('signup'); setErrorMsg(""); setFieldErrors({}); }} className={`py-2 px-3 text-xs font-bold uppercase rounded-lg transition-all ${activeTab === 'signup' ? 'bg-brand-orange text-black font-extrabold' : 'text-slate-400 hover:text-white bg-transparent'}`}>Create Account</button>
+        </div>
+
+        {errorMsg && (
+          <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-400 flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 shrink-0" /><span>{errorMsg}</span>
+          </div>
+        )}
+
+        {activeTab === 'signin' && (
+          <form onSubmit={handleSignInSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-[10px] text-slate-500 font-bold uppercase block">Email Address</label>
+              <input type="email" value={signInEmail} onChange={(e) => setSignInEmail(e.target.value)} disabled={isLoading} className={`w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none transition-all ${fieldErrors.signInEmail ? "border-red-500" : "border-brand-border focus:border-brand-orange"}`} />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] text-slate-500 font-bold uppercase block">Password</label>
+              <input type="password" value={signInPassword} onChange={(e) => setSignInPassword(e.target.value)} disabled={isLoading} className={`w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none transition-all ${fieldErrors.signInPassword ? "border-red-500" : "border-brand-border focus:border-brand-orange"}`} />
+            </div>
+            <button type="submit" disabled={isLoading} className="w-full bg-brand-orange text-black font-bold uppercase py-3 rounded-xl hover:bg-brand-gold hover:shadow-glow transition-all flex justify-center items-center">
+              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign In"}
+            </button>
+          </form>
+        )}
+
+        {activeTab === 'signup' && (
+          <form onSubmit={handleSignUpSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-[10px] text-slate-500 font-bold uppercase block">Full Name</label>
+              <input type="text" value={signUpName} onChange={(e) => setSignUpName(e.target.value)} disabled={isLoading} className="w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none border-brand-border focus:border-brand-orange" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] text-slate-500 font-bold uppercase block">Phone Number</label>
+              <input type="text" value={signUpPhone} onChange={(e) => setSignUpPhone(e.target.value)} disabled={isLoading} className="w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none border-brand-border focus:border-brand-orange" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] text-slate-500 font-bold uppercase block">Email Address</label>
+              <input type="email" value={signUpEmail} onChange={(e) => setSignUpEmail(e.target.value)} disabled={isLoading} className="w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none border-brand-border focus:border-brand-orange" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] text-slate-500 font-bold uppercase block">Password</label>
+              <input type="password" value={signUpPassword} onChange={(e) => setSignUpPassword(e.target.value)} disabled={isLoading} className="w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none border-brand-border focus:border-brand-orange" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] text-slate-500 font-bold uppercase block">Pincode</label>
+              <input type="text" value={signUpPincode} onChange={(e) => setSignUpPincode(e.target.value)} disabled={isLoading} className="w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none border-brand-border focus:border-brand-orange" />
+            </div>
+            <button type="submit" disabled={isLoading} className="w-full bg-brand-orange text-black font-bold uppercase py-3 rounded-xl hover:bg-brand-gold hover:shadow-glow transition-all flex justify-center items-center">
+              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create Account"}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}

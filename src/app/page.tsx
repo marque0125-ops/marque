@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useMarqueStore } from "../store/store";
+import { useUIStore } from "../store/useUIStore";
+import { useProductStore } from "../store/useProductStore";
+import { useAuthStore } from "../store/useAuthStore";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HomeView from "../components/HomeView";
@@ -10,9 +12,12 @@ import PdpView from "../components/PdpView";
 import CartView from "../components/CartView";
 import AccountView from "../components/AccountView";
 import AdminView from "../components/AdminView";
+import AccessoriesView from "../components/AccessoriesView";
 
 export default function Home() {
-  const { currentView, fetchProducts, isAuthenticated, userEmail } = useMarqueStore();
+  const { currentView } = useUIStore();
+  const { fetchProducts } = useProductStore();
+  const { isAuthenticated, userEmail } = useAuthStore();
 
   useEffect(() => {
     fetchProducts();
@@ -24,6 +29,8 @@ export default function Home() {
     switch (currentView) {
       case 'shop':
         return <ShopView />;
+      case 'accessories':
+        return <AccessoriesView />;
       case 'pdp':
         return <PdpView />;
       case 'cart':
