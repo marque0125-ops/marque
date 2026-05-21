@@ -8,6 +8,21 @@ export interface Brand {
   established: string;
 }
 
+export interface Category {
+  id: string;
+  name: string;
+  image: string;
+}
+
+export const MOCK_CATEGORIES: Category[] = [
+  { id: "crawler", name: "RC Crawlers", image: "/f.png" },
+  { id: "mini-car", name: "Mini RC Car", image: "/a.png" },
+  { id: "accessories", name: "RC Car Accessories", image: "/b.png" },
+  { id: "helicopter", name: "RC Helicopter", image: "/c.png" },
+  { id: "excavator", name: "RC Excavator", image: "/d.png" },
+  { id: "RCBoat", name: "RC Boat", image: "/e.png" }
+];
+
 export interface Review {
   id: string;
   productId: string;
@@ -31,6 +46,7 @@ export interface ProductVariant {
     color?: string;
     battery?: string;
   };
+  imageUrl?: string;
 }
 
 export interface Product {
@@ -218,14 +234,16 @@ export const PRODUCTS: Product[] = [
         name: "Solar Flare Orange / No Batteries",
         sku: "TX-XMAXX-8S-ORN",
         stockQty: 8,
-        attributes: { color: "Solar Flare Orange", battery: "No Batteries (Requires 2x 4S)" }
+        attributes: { color: "Solar Flare Orange", battery: "No Batteries (Requires 2x 4S)" },
+        imageUrl: "/rc_traxxas_xmaxx.png"
       },
       {
         id: "p1-v2",
         name: "Rock n Roll Blue / No Batteries",
         sku: "TX-XMAXX-8S-BLU",
         stockQty: 4,
-        attributes: { color: "Rock n Roll Blue", battery: "No Batteries (Requires 2x 4S)" }
+        attributes: { color: "Rock n Roll Blue", battery: "No Batteries (Requires 2x 4S)" },
+        imageUrl: "/rc_traxxas_xmaxx.png"
       },
       {
         id: "p1-v3",
@@ -1127,7 +1145,8 @@ export const PRODUCTS: Product[] = [
         name: "Blaze Orange Alloy Cage",
         sku: "SD-AL-ORN",
         stockQty: 7,
-        attributes: { color: "Blaze Orange" }
+        attributes: { color: "Blaze Orange" },
+        imageUrl: "/rc_alloy_truck.png"
       }
     ],
     stockQty: 7,
@@ -1254,7 +1273,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "p23",
     brandId: "b10",
-    categoryId: "crawler",
+    categoryId: "excavator",
     name: "1:20 Scale J-C-B Excavator Construction Truck",
     slug: "1-20-scale-jcb-excavator-toy",
     description: "Experience real construction action! Highly accurate 1:20 scale model of a classic yellow excavator loader. Fully proportional multi-channel control lets you move the boom, stick, and bucket up and down, and spin the cab 680 degrees.",
@@ -1332,7 +1351,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "p25",
     brandId: "b10",
-    categoryId: "street-basher",
+    categoryId: "mini-car",
     name: "1:64 Die Cast Metal F1 Mini RC Racer",
     slug: "1-64-die-cast-metal-f1-mini-rc-racer",
     description: "The ultimate micro-scale speed formula racer! Extremely detailed die-cast alloy F1 chassis with a micro-motor and high-frequency remote. Small enough to race on your computer desk, complete with a mini-helmet and high speed traction tires.",
@@ -1367,6 +1386,82 @@ export const PRODUCTS: Product[] = [
     stockQty: 15,
     averageRating: 4.4,
     reviewCount: 21
+  },
+  {
+    id: "p26",
+    brandId: "b10",
+    categoryId: "helicopter",
+    name: "3.5CH RC Helicopter with Gyro",
+    slug: "3-5ch-rc-helicopter-gyro",
+    description: "Stable and easy to fly remote control helicopter. Built-in gyro stabilization makes it perfect for beginners and indoor flying.",
+    price: 3499,
+    comparePrice: 4500,
+    sku: "SD-HELI-35CH",
+    weightGrams: 200,
+    scale: "1:18",
+    terrainType: "Off-Road",
+    isFeatured: true,
+    isActive: true,
+    speedKmh: 10,
+    buildType: "RTR",
+    images: ["https://images.unsplash.com/photo-1579624536768-3be3a7b11d9a?w=800&q=80"],
+    whatsInTheBox: ["Helicopter", "Controller", "USB Charger", "Spare Blades"],
+    specs: {
+      "Channels": "3.5CH",
+      "Flight Time": "10-15 mins",
+      "Control Range": "30 meters"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p26-v1",
+        name: "Rescue Red",
+        sku: "SD-HELI-RED",
+        stockQty: 12,
+        attributes: { color: "Red" }
+      }
+    ],
+    stockQty: 12,
+    averageRating: 4.6,
+    reviewCount: 8
+  },
+  {
+    id: "p27",
+    brandId: "b10",
+    categoryId: "RCBoat",
+    name: "High Speed RC Racing Boat 30km/h",
+    slug: "high-speed-rc-racing-boat",
+    description: "Tear across the water with this high-speed remote control racing boat. Features anti-flip design and low battery alarm.",
+    price: 4999,
+    comparePrice: 6500,
+    sku: "SD-BOAT-30K",
+    weightGrams: 800,
+    scale: "1:14",
+    terrainType: "On-Road",
+    isFeatured: true,
+    isActive: true,
+    speedKmh: 30,
+    buildType: "RTR",
+    images: ["https://images.unsplash.com/photo-1542617950-8b019b88e1bb?w=800&q=80"],
+    whatsInTheBox: ["Racing Boat", "2.4GHz Controller", "Battery", "USB Charger", "Display Stand"],
+    specs: {
+      "Top Speed": "30 km/h",
+      "Drive System": "Water Cooled Motor",
+      "Range": "150 meters"
+    },
+    compatibleParts: [],
+    variants: [
+      {
+        id: "p27-v1",
+        name: "Vector Red",
+        sku: "SD-BOAT-RED",
+        stockQty: 5,
+        attributes: { color: "Red" }
+      }
+    ],
+    stockQty: 5,
+    averageRating: 4.8,
+    reviewCount: 15
   }
 ];
 

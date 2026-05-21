@@ -78,11 +78,11 @@ export default function Header() {
             onClick={() => { setSelectedProduct(null); setView('home'); }} 
             className="flex cursor-pointer items-center gap-2 group"
           >
-            <div className="relative flex h-11 w-11 items-center justify-center rounded-lg bg-slate-950 overflow-hidden border border-brand-border/60 shadow-glow transition-all duration-300 group-hover:border-brand-orange">
+            <div className="relative flex h-12 w-32 items-center justify-center rounded-lg bg-white overflow-hidden border border-brand-border/60 shadow-glow transition-all duration-300 group-hover:border-brand-orange p-1">
               <img 
                 src="/marque-new-logo.jpg" 
                 alt="MARQUE Logo" 
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" 
+                className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105" 
               />
             </div>
             <div>

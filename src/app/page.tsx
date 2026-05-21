@@ -12,7 +12,10 @@ import PdpView from "../components/PdpView";
 import CartView from "../components/CartView";
 import AccountView from "../components/AccountView";
 import AdminView from "../components/AdminView";
+import { AdminLogin } from "../components/admin/AdminLogin";
 import AccessoriesView from "../components/AccessoriesView";
+import TermsView from "../components/TermsView";
+import ShippingView from "../components/ShippingView";
 
 export default function Home() {
   const { currentView } = useUIStore();
@@ -38,7 +41,11 @@ export default function Home() {
       case 'account':
         return <AccountView />;
       case 'admin':
-        return isAdmin ? <AdminView /> : <HomeView />;
+        return isAdmin ? <AdminView /> : <AdminLogin />;
+      case 'terms':
+        return <TermsView />;
+      case 'shipping':
+        return <ShippingView />;
       case 'home':
       default:
         return <HomeView />;

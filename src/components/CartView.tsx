@@ -6,14 +6,14 @@ import { useAuthStore } from "../store/useAuthStore";
 import { useUIStore } from "../store/useUIStore";
 import { useOrderStore } from "../store/useOrderStore";
 import { BRANDS } from "../data/mockData";
-import { 
-  Trash2, 
-  Plus, 
-  Minus, 
-  MapPin, 
-  Ticket, 
-  Building2, 
-  Check, 
+import {
+  Trash2,
+  Plus,
+  Minus,
+  MapPin,
+  Ticket,
+  Building2,
+  Check,
   AlertTriangle,
   ArrowRight,
   ShoppingBag,
@@ -50,7 +50,7 @@ export default function CartView() {
 
   const [couponInput, setCouponInput] = useState("");
   const [couponFeedback, setCouponFeedback] = useState<{ type: 'success' | 'error', text: string } | null>(null);
-  
+
   // B2B state
   const [isB2B, setIsB2B] = useState(false);
   const [gstinInput, setGstinInput] = useState("");
@@ -82,7 +82,7 @@ export default function CartView() {
   // Tax = Subtotal - (Subtotal / 1.18)
   const taxableAmount = subtotal - discountAmount;
   const gstAmount = Math.round(taxableAmount - (taxableAmount / 1.18));
-  
+
   // Grand Total
   const grandTotal = taxableAmount + shippingCost;
 
@@ -108,7 +108,7 @@ export default function CartView() {
   const handleGstinValidate = (e: React.FocusEvent<HTMLInputElement>) => {
     const val = e.target.value.toUpperCase();
     setGstinInput(val);
-    
+
     // 15 Character GSTIN standard validation regex
     const regex = /\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}/;
     if (val && !regex.test(val)) {
@@ -122,9 +122,8 @@ export default function CartView() {
 
   const handleProceed = () => {
     if (cart.length === 0) return;
-    if (!pinDetail) {
-      // Prompt user to verify address PIN code
-      alert("PIN CODE REQUIRED: Please enter and verify your delivery PIN code before proceeding.");
+    if (!address.city || !address.state || !address.pincode) {
+      alert("DELIVERY DETAILS REQUIRED: Please fill in your city, state, and pincode.");
       return;
     }
 
@@ -138,21 +137,114 @@ export default function CartView() {
       return;
     }
 
-    setView('admin'); // Set view to checkout simulation
-    // Wait, let's open checkout view directly
-    // Let's create checkout tab or layout
-    // Let's create account view and checkout simulation in the store
-    // The store has no checkout view state, let's see. Oh, currentView has:
-    // 'home' | 'shop' | 'pdp' | 'cart' | 'account' | 'admin'
-    // Let's check how we navigate to checkout:
-    // In our layout we can render a checkout modal directly or view when they proceed!
-    // Let's implement checkout view inside the account view or as a sub-view in cart! That's super clean.
-    // Let's store an activeCartTab or activeCartView: 'cart' | 'checkout' inside CartView!
-    // Yes! Let's handle checkout right inside the CartView by switching a state `checkoutStep` to true!
-    // This keeps files highly modular and self-contained.
+    setCheckoutStep(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const [checkoutStep, setCheckoutStep] = useState(false);
+
+  // Dynamically load Razorpay SDK
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const scriptId = 'razorpay-checkout-js';
+      if (document.getElementById(scriptId)) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handlePlaceOrder = async (method: 'UPI' | 'Card' | 'COD') => {
+    if (method === 'COD') {
+      const store = useOrderStore.getState();
+      const order = store.createOrder(method);
+      setView('account');
+      setCheckoutStep(false);
+      clearCart();
+      setTimeout(() => alert(`Order ${order.id} placed via Cash on Delivery!`), 500);
+      return;
+    }
+
+    // Ensure Razorpay script is loaded dynamically right before we need it
+    const isScriptLoaded = await loadRazorpayScript();
+    if (!isScriptLoaded) {
+      alert("Failed to load Razorpay SDK. Please check your internet connection or adblocker.");
+      return;
+    }
+
+    try {
+      // Create order via our Next.js backend API
+      const res = await fetch('/api/razorpay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: grandTotal })
+      });
+
+      const orderData = await res.json();
+
+      if (!orderData || !orderData.id) {
+        alert("Payment initialization failed from backend. Please try again.");
+        return;
+      }
+
+      // Ensure NEXT_PUBLIC_RAZORPAY_KEY_ID is available (fallback to the string if env variable failed to load in browser)
+      const rzpKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_SoL1lxm6LzPqie";
+
+      // Initialize Razorpay Popup
+      const options = {
+        key: rzpKey,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "MARQUE Pitstop",
+        description: "RC Gear & Accessories Purchase",
+        image: "/hero_rc_car.png",
+        order_id: orderData.id,
+        handler: function (response: any) {
+          // Success Callback
+          const store = useOrderStore.getState();
+          const order = store.createOrder(method);
+          order.status = "Confirmed";
+          order.paymentMethod = method;
+
+          setView('account');
+          setCheckoutStep(false);
+          clearCart();
+          setTimeout(() => {
+            alert(`PAYMENT SUCCESSFUL! Razorpay Payment ID: ${response.razorpay_payment_id}. Your order ${order.id} is confirmed!`);
+          }, 500);
+        },
+        prefill: {
+          name: address.name,
+          contact: address.phone,
+        },
+        theme: {
+          color: "#ff4d00"
+        }
+      };
+
+      const RazorpayConstructor = (window as any).Razorpay;
+      if (!RazorpayConstructor) {
+        alert("Razorpay is not available on window. Please try again.");
+        return;
+      }
+
+      const rzp = new RazorpayConstructor(options);
+      rzp.on('payment.failed', function (response: any) {
+        alert(`Payment Failed: ${response.error.description}`);
+      });
+      rzp.open();
+
+    } catch (err: any) {
+      console.error("Razorpay trigger error:", err);
+      alert(`Error securely contacting payment gateway: ${err.message}`);
+    }
+  };
 
   // If in Checkout step, let's render the checkout page. We can handle it in the same file or write it dynamically!
   if (checkoutStep) {
@@ -160,7 +252,7 @@ export default function CartView() {
       <div className="space-y-8 pb-20">
         {/* Checkout Header */}
         <div className="rounded-2xl border border-brand-border bg-slate-900/10 p-6">
-          <button 
+          <button
             onClick={() => setCheckoutStep(false)}
             className="text-xs text-slate-400 hover:text-brand-orange uppercase font-bold flex items-center gap-1 mb-2"
           >
@@ -176,16 +268,16 @@ export default function CartView() {
 
         {/* Checkout grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Left Side: Address confirmation & Payment Simulation */}
           <div className="lg:col-span-7 space-y-6">
-            
+
             {/* Delivery address details card */}
             <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4">
               <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200 border-b border-brand-border pb-2">
                 1. Delivery Manifest & Destination
               </h3>
-              
+
               <div className="grid grid-cols-2 gap-4 text-xs">
                 <div>
                   <span className="text-slate-500 block uppercase font-bold text-[9px]">Receiver Name</span>
@@ -201,11 +293,11 @@ export default function CartView() {
                 </div>
                 <div>
                   <span className="text-slate-500 block uppercase font-bold text-[9px]">City</span>
-                  <span className="text-slate-200 font-bold">{pinDetail?.city}</span>
+                  <span className="text-slate-200 font-bold">{address.city}</span>
                 </div>
                 <div>
                   <span className="text-slate-500 block uppercase font-bold text-[9px]">State & Pincode</span>
-                  <span className="text-slate-200 font-bold">{pinDetail?.state} - {pinDetail?.pincode}</span>
+                  <span className="text-slate-200 font-bold">{address.state} - {address.pincode}</span>
                 </div>
                 {isB2B && address.gstin && (
                   <div className="col-span-2 p-2 bg-slate-900 rounded border border-brand-border/40 text-[10px] text-brand-gold">
@@ -259,19 +351,13 @@ export default function CartView() {
                 {/* COD option */}
                 <button
                   onClick={() => handlePlaceOrder('COD')}
-                  disabled={pinDetail ? !pinDetail.codAvailable : true}
-                  className={`p-4 rounded-xl border flex flex-col justify-between transition-all ${pinDetail && pinDetail.codAvailable ? 'border-brand-border bg-slate-950 hover:border-brand-orange hover:bg-slate-900 text-slate-200 cursor-pointer' : 'border-dashed border-slate-800 text-slate-600 bg-slate-950/20 cursor-not-allowed'}`}
+                  className="p-4 rounded-xl border flex flex-col justify-between transition-all border-brand-border bg-slate-950 hover:border-brand-orange hover:bg-slate-900 text-slate-200 cursor-pointer"
                 >
-                  <div className="flex justify-between w-full">
+                  <div className="flex justify-between w-full gap-2">
                     <span className="text-[10px] text-slate-500 font-bold uppercase">Cash on Delivery</span>
-                    {pinDetail && !pinDetail.codAvailable && (
-                      <span className="text-[8px] bg-red-950 text-red-400 font-bold uppercase px-1 rounded">
-                        Not eligible
-                      </span>
-                    )}
                   </div>
-                  <span className="text-xs font-bold mt-2 block">
-                    {pinDetail && pinDetail.codAvailable ? "Pay Cash to Courier" : "Prepaid Only in PIN"}
+                  <span className="text-xs font-bold mt-2 block text-left">
+                    Pay Cash to Courier
                   </span>
                 </button>
               </div>
@@ -337,91 +423,10 @@ export default function CartView() {
     );
   }
 
-  // Embed Razorpay Script
-  React.useEffect(() => {
-    const scriptId = 'razorpay-checkout-js';
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement('script');
-      script.id = scriptId;
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
-
-  const handlePlaceOrder = async (method: 'UPI' | 'Card' | 'COD') => {
-    if (method === 'COD') {
-      const store = useOrderStore.getState();
-      const order = store.createOrder(method);
-      setView('account');
-      setCheckoutStep(false);
-      clearCart();
-      setTimeout(() => alert(`Order ${order.id} placed via Cash on Delivery!`), 500);
-      return;
-    }
-
-    try {
-      // Create order via our Next.js backend API
-      const res = await fetch('/api/razorpay', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: grandTotal })
-      });
-      
-      const orderData = await res.json();
-      
-      if (!orderData || !orderData.id) {
-        alert("Payment initialization failed. Please try again.");
-        return;
-      }
-
-      // Initialize Razorpay Popup
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: orderData.amount,
-        currency: orderData.currency,
-        name: "MARQUE Pitstop",
-        description: "RC Gear & Accessories Purchase",
-        image: "/hero_rc_car.png",
-        order_id: orderData.id,
-        handler: function (response: any) {
-          // Success Callback
-          const store = useOrderStore.getState();
-          const order = store.createOrder(method);
-          order.status = "Confirmed";
-          order.paymentMethod = method;
-          
-          setView('account');
-          setCheckoutStep(false);
-          clearCart();
-          setTimeout(() => {
-            alert(`PAYMENT SUCCESSFUL! Razorpay Payment ID: ${response.razorpay_payment_id}. Your order ${order.id} is confirmed!`);
-          }, 500);
-        },
-        prefill: {
-          name: address.name,
-          contact: address.phone,
-        },
-        theme: {
-          color: "#ff4d00"
-        }
-      };
-
-      const rzp = new (window as any).Razorpay(options);
-      rzp.on('payment.failed', function (response: any) {
-        alert(`Payment Failed: ${response.error.description}`);
-      });
-      rzp.open();
-      
-    } catch (err) {
-      console.error("Razorpay trigger error:", err);
-      alert("Error securely contacting payment gateway.");
-    }
-  };
 
   return (
     <div className="space-y-8 pb-20">
-      
+
       {/* Page Header */}
       <div className="rounded-2xl border border-brand-border bg-slate-900/10 p-6">
         <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider block">Shopping Basket</span>
@@ -442,7 +447,7 @@ export default function CartView() {
           <p className="text-xs text-slate-400 max-w-sm mx-auto">
             Explore our collection of brushless monster trucks, street bashers, or scale crawlers to build your fleet.
           </p>
-          <button 
+          <button
             onClick={() => { setView('shop'); }}
             className="bg-brand-orange text-black font-bold text-xs uppercase px-5 py-2.5 rounded-lg hover:bg-brand-gold transition-colors"
           >
@@ -451,13 +456,13 @@ export default function CartView() {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Left Column: Cart Items list */}
           <div className="lg:col-span-7 space-y-6">
             <div className="rounded-2xl border border-brand-border bg-slate-950 overflow-hidden">
               <div className="p-4 bg-slate-900/60 border-b border-brand-border flex items-center justify-between text-xs font-bold text-slate-300">
                 <span>Racing Models ({cartCount})</span>
-                <button 
+                <button
                   onClick={clearCart}
                   className="text-slate-500 hover:text-brand-orange uppercase flex items-center gap-1 transition-colors"
                 >
@@ -473,13 +478,13 @@ export default function CartView() {
 
                   return (
                     <div key={item.id} className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      
+
                       {/* Left: Image & Titles */}
                       <div className="flex items-center gap-4">
-                        <img 
-                          src={item.product.images[0]} 
-                          alt={item.product.name} 
-                          className="h-16 w-16 rounded-xl object-cover border border-brand-border shrink-0" 
+                        <img
+                          src={item.product.images[0]}
+                          alt={item.product.name}
+                          className="h-16 w-16 rounded-xl object-cover border border-brand-border shrink-0"
                         />
                         <div className="space-y-1">
                           <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider block leading-none font-display">
@@ -550,13 +555,13 @@ export default function CartView() {
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                
+
                 {/* Name, Phone, and Address inputs */}
                 <div className="space-y-3 md:col-span-2">
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1.5">
                       <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Receiver Full Name</label>
-                      <input 
+                      <input
                         type="text"
                         required
                         value={address.name}
@@ -567,7 +572,7 @@ export default function CartView() {
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Contact Number (SMS tracking)</label>
-                      <input 
+                      <input
                         type="tel"
                         required
                         value={address.phone}
@@ -580,7 +585,7 @@ export default function CartView() {
 
                   <div className="space-y-1.5">
                     <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Street Address / Landmark</label>
-                    <input 
+                    <input
                       type="text"
                       required
                       value={address.addressLine}
@@ -591,61 +596,39 @@ export default function CartView() {
                   </div>
                 </div>
 
-                {/* PIN Code Check Form */}
-                <form onSubmit={handlePincodeSubmit} className="space-y-1.5">
-                  <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Indian Postal Pincode (6 Digits)</label>
-                  <div className="flex gap-2">
-                    <input 
-                      type="text" 
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">City</label>
+                    <input
+                      type="text"
+                      required
+                      value={address.city}
+                      onChange={(e) => setAddress({ city: e.target.value })}
+                      className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-slate-200 outline-none focus:border-brand-orange"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">State</label>
+                    <input
+                      type="text"
+                      required
+                      value={address.state}
+                      onChange={(e) => setAddress({ state: e.target.value })}
+                      className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-slate-200 outline-none focus:border-brand-orange"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Pincode (6 Digits)</label>
+                    <input
+                      type="text"
                       maxLength={6}
                       required
                       value={address.pincode}
                       onChange={(e) => setAddress({ pincode: e.target.value })}
-                      placeholder="e.g. 400001 (Mumbai), 560001 (Blr)"
+                      placeholder="e.g. 400001"
                       className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-slate-200 outline-none focus:border-brand-orange font-mono"
                     />
-                    <button 
-                      type="submit"
-                      disabled={pinLoading}
-                      className="bg-brand-orange text-black px-4 rounded-lg font-bold uppercase text-[10px] hover:bg-brand-gold disabled:bg-slate-800 disabled:text-slate-500 transition-colors"
-                    >
-                      {pinLoading ? "Querying..." : "Verify"}
-                    </button>
                   </div>
-                </form>
-
-                {/* Auto complete info block */}
-                <div className="flex flex-col justify-end">
-                  {pinLoading && (
-                    <div className="p-3 bg-slate-900 border border-brand-border rounded-lg text-slate-400 animate-pulse text-[10px]">
-                      Querying Indian Post Office database...
-                    </div>
-                  )}
-
-                  {pinError && (
-                    <div className="p-3 bg-red-950 border border-red-500 rounded-lg text-red-400 flex items-start gap-1.5 text-[10px] leading-relaxed">
-                      <AlertTriangle className="h-4 w-4 shrink-0" />
-                      <span>{pinError}</span>
-                    </div>
-                  )}
-
-                  {pinDetail && (
-                    <div className="p-3.5 bg-brand-orange/5 border border-brand-orange/30 rounded-lg text-slate-300 space-y-1.5 text-[10px] leading-relaxed">
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-white uppercase tracking-wider">✓ Pincode Serviceable</span>
-                        <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase font-mono ${pinDetail.codAvailable ? 'bg-green-950 text-green-400' : 'bg-amber-950 text-brand-gold'}`}>
-                          {pinDetail.codAvailable ? "COD Available" : "Prepaid Only"}
-                        </span>
-                      </div>
-                      <p>
-                        <strong>Delivery Hub:</strong> {pinDetail.city}, {pinDetail.state}
-                      </p>
-                      <p className="flex items-center gap-1 text-slate-400 mt-1">
-                        <Truck className="h-3.5 w-3.5 text-brand-orange" />
-                        <span>Estimated Delivery: <strong>{pinDetail.deliveryDays} Days</strong> via BlueDart Air</span>
-                      </p>
-                    </div>
-                  )}
                 </div>
 
               </div>
@@ -655,23 +638,23 @@ export default function CartView() {
 
           {/* Right Column: Checkout Invoicing Sidebar */}
           <div className="lg:col-span-5 space-y-6">
-            
+
             {/* Coupon Code section */}
             <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-3">
               <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block flex items-center gap-1">
                 <Ticket className="h-4 w-4 text-brand-orange" />
                 Apply Technical Promo Coupon
               </label>
-              
+
               <form onSubmit={handleCouponApply} className="flex gap-2">
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={couponInput}
                   onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
                   placeholder="e.g. MARQUE10, MAXBASH"
                   className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-xs text-slate-200 outline-none focus:border-brand-orange font-mono"
                 />
-                <button 
+                <button
                   type="submit"
                   className="bg-brand-orange text-black px-4 rounded-lg font-bold uppercase text-[10px] hover:bg-brand-gold transition-colors"
                 >
@@ -691,7 +674,7 @@ export default function CartView() {
                     <span>Coupon: {appliedCoupon.code}</span>
                     <span className="block text-[8px] text-slate-500 mt-0.5">{appliedCoupon.description}</span>
                   </div>
-                  <button 
+                  <button
                     onClick={removeCoupon}
                     className="text-red-400 hover:text-red-500 uppercase text-[9px] underline ml-2"
                   >
@@ -704,7 +687,7 @@ export default function CartView() {
             {/* B2B Invoicing section */}
             <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4">
               <div className="flex items-center gap-3">
-                <input 
+                <input
                   type="checkbox"
                   id="b2b-check"
                   checked={isB2B}
@@ -720,8 +703,8 @@ export default function CartView() {
                 <div className="space-y-3 text-xs pt-1">
                   <div className="space-y-1">
                     <label className="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Registered Corporate Entity Name</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
                       placeholder="e.g. Speedster RC Club Private Limited"
@@ -733,8 +716,8 @@ export default function CartView() {
                       <label className="text-[9px] text-slate-500 uppercase font-bold tracking-wider">15-Digit India GSTIN Number</label>
                       {gstinError && <span className="text-[8px] text-red-500 font-bold">{gstinError}</span>}
                     </div>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={gstinInput}
                       onChange={(e) => setGstinInput(e.target.value.toUpperCase())}
                       onBlur={handleGstinValidate}
@@ -780,7 +763,7 @@ export default function CartView() {
                 </div>
               </div>
 
-              <button 
+              <button
                 onClick={handleProceed}
                 className="w-full flex items-center justify-center gap-2 rounded-xl bg-brand-orange py-4 text-xs font-bold uppercase text-black hover:bg-brand-gold hover:shadow-glow transition-all"
               >

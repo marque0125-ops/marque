@@ -25,11 +25,11 @@ export default function Footer() {
           {/* Col 1: About */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 cursor-pointer group" onClick={() => { setSelectedProduct(null); setView('home'); }}>
-              <div className="relative flex h-8 w-8 items-center justify-center rounded bg-slate-950 overflow-hidden border border-brand-border/60 transition-colors group-hover:border-brand-orange">
+              <div className="relative flex h-10 w-28 items-center justify-center rounded bg-white overflow-hidden border border-brand-border/60 transition-colors group-hover:border-brand-orange p-1">
                 <img 
                   src="/marque-new-logo.jpg" 
                   alt="MARQUE Logo" 
-                  className="h-full w-full object-cover" 
+                  className="h-full w-full object-contain" 
                 />
               </div>
               <span className="font-display text-xl font-bold uppercase tracking-tighter text-white transition-colors group-hover:text-brand-orange">
@@ -143,8 +143,8 @@ export default function Footer() {
           </div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-brand-orange">Privacy Policy</a>
-            <a href="#" className="hover:text-brand-orange">Terms of Service</a>
-            <a href="#" className="hover:text-brand-orange">Shipping Rates</a>
+            <button onClick={() => { setView('terms'); window.scrollTo(0, 0); }} className="hover:text-brand-orange">Terms of Service</button>
+            <button onClick={() => { setView('shipping'); window.scrollTo(0, 0); }} className="hover:text-brand-orange">Shipping Rates</button>
             <a href="#" className="hover:text-brand-orange">Refund & Replacements</a>
           </div>
         </div>

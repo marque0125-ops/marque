@@ -1,14 +1,17 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Product, PRODUCTS, MOCK_REVIEWS, Review } from "../data/mockData";
+import { Product, PRODUCTS, MOCK_REVIEWS, Review, Category, MOCK_CATEGORIES, RCGuide, RC_GUIDES } from "../data/mockData";
 import { supabase } from "../utils/supabase";
 
 export interface ProductState {
+  categories: Category[];
+  guides: RCGuide[];
   products: Product[];
   reviews: Review[];
   wishlist: string[];
   searchQuery: string;
   filterBrand: string;
+  filterCategory: string;
   filterTerrain: string;
   filterScale: string;
   filterBuildType: string;
@@ -17,6 +20,7 @@ export interface ProductState {
 
   setSearchQuery: (q: string) => void;
   setFilterBrand: (brand: string) => void;
+  setFilterCategory: (category: string) => void;
   setFilterTerrain: (terrain: string) => void;
   setFilterScale: (scale: string) => void;
   setFilterBuildType: (build: string) => void;
@@ -31,6 +35,13 @@ export interface ProductState {
   updateProduct: (product: Product) => void;
   deleteProduct: (productId: string) => void;
   addProductReview: (review: Omit<Review, 'id' | 'date'>) => void;
+  addCategory: (category: Category) => void;
+  updateCategory: (category: Category) => void;
+  deleteCategory: (categoryId: string) => void;
+
+  addGuide: (guide: RCGuide) => void;
+  updateGuide: (guide: RCGuide) => void;
+  deleteGuide: (guideId: string) => void;
 }
 
 const normalizeProduct = (p: any): Product => ({
@@ -64,10 +75,13 @@ const normalizeProduct = (p: any): Product => ({
 export const useProductStore = create<ProductState>()(
   persist(
     (set, get) => ({
+      categories: MOCK_CATEGORIES,
+      guides: RC_GUIDES,
       products: PRODUCTS,
       reviews: MOCK_REVIEWS,
       wishlist: [],
       searchQuery: "",
+      filterCategory: "ALL",
       filterBrand: "ALL",
       filterTerrain: "ALL",
       filterScale: "ALL",
@@ -76,6 +90,7 @@ export const useProductStore = create<ProductState>()(
       sortBy: "newest",
 
       setSearchQuery: (q) => set({ searchQuery: q }),
+      setFilterCategory: (category) => set({ filterCategory: category }),
       setFilterBrand: (brand) => set({ filterBrand: brand }),
       setFilterTerrain: (terrain) => set({ filterTerrain: terrain }),
       setFilterScale: (scale) => set({ filterScale: scale }),
@@ -84,6 +99,7 @@ export const useProductStore = create<ProductState>()(
       setSortBy: (sort) => set({ sortBy: sort }),
       resetFilters: () => set({
         searchQuery: "",
+        filterCategory: "ALL",
         filterBrand: "ALL",
         filterTerrain: "ALL",
         filterScale: "ALL",
@@ -188,7 +204,25 @@ export const useProductStore = create<ProductState>()(
             products: state.products.map(p => p.id === review.productId ? { ...p, averageRating: avg, reviewCount: prodReviews.length } : p)
           };
         });
-      }
+      },
+
+      addCategory: (category) => set(state => ({ categories: [...state.categories, category] })),
+      updateCategory: (updatedCategory) => set(state => ({
+        categories: state.categories.map(c => c.id === updatedCategory.id ? updatedCategory : c)
+      })),
+      deleteCategory: (categoryId) => set(state => ({
+        categories: state.categories.filter(c => c.id !== categoryId)
+      })),
+
+      addGuide: (guide) => set(state => ({
+        guides: [...state.guides, guide]
+      })),
+      updateGuide: (guide) => set(state => ({
+        guides: state.guides.map(g => g.id === guide.id ? guide : g)
+      })),
+      deleteGuide: (guideId) => set(state => ({
+        guides: state.guides.filter(g => g.id !== guideId)
+      })),
     }),
     {
       name: "marque-product-storage",

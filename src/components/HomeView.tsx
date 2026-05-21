@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
 import { useUIStore } from "../store/useUIStore";
-import { BRANDS, RC_GUIDES, Product, RCGuide } from "../data/mockData";
+import { BRANDS, Product, RCGuide } from "../data/mockData";
 import {
   Trophy,
   Flame,
@@ -30,17 +30,22 @@ import {
   Truck,
   Heart
 } from "lucide-react";
+import { ProductCardItem } from "./ProductCardItem";
 
 export default function HomeView() {
   const { addToCart } = useCartStore();
-  const { 
+  const {
+    categories,
     products,
     reviews,
     wishlist,
     toggleWishlist,
     setFilterBrand,
     setFilterTerrain,
-    setSearchQuery
+    setSearchQuery,
+    setFilterCategory,
+    resetFilters,
+    guides
   } = useProductStore();
   const {
     setView,
@@ -61,7 +66,15 @@ export default function HomeView() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
 
   const handleBrandClick = (slug: string) => {
+    resetFilters();
     setFilterBrand(slug);
+    setSelectedProduct(null);
+    setView('shop');
+  };
+
+  const handleCategoryClick = (categoryId: string) => {
+    resetFilters();
+    setFilterCategory(categoryId);
     setSelectedProduct(null);
     setView('shop');
   };
@@ -169,10 +182,10 @@ export default function HomeView() {
           <div className="lg:col-span-5 relative w-full flex justify-center items-center">
             <div className="absolute -inset-1.5 rounded-2xl bg-gradient-to-r from-brand-orange to-brand-gold opacity-30 blur-lg pointer-events-none"></div>
             <div className="relative rounded-2xl border border-brand-border overflow-hidden bg-slate-950 group shadow-2xl">
-              <img 
-                src="/hero_rc_car.png" 
-                alt="Traxxas X-Maxx 8S High Performance RC Truck" 
-                className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500 rounded-2xl" 
+              <img
+                src="/hero_rc_car.png"
+                alt="Traxxas X-Maxx 8S High Performance RC Truck"
+                className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500 rounded-2xl"
               />
               <div className="absolute bottom-4 right-4 flex flex-col items-end gap-1 p-3 rounded-xl bg-slate-950/80 backdrop-blur border border-white/10 text-right">
                 <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Top Velocity Record</span>
@@ -259,51 +272,74 @@ export default function HomeView() {
         </div>
       </section>
 
-      {/* ==================== 3. BROWSE BY TYPE (Impel Circle Badges) ==================== */}
-      <section className="space-y-8">
-        <div className="text-center space-y-2">
+      {/* ==================== 3. BROWSE BY CATEGORY ==================== */}
+      <section className="space-y-12 py-8">
+        <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-orange uppercase tracking-widest">
             <Sliders className="h-4 w-4" />
-            Segment Selector
+            Shop by Category
           </div>
-          <h2 className="font-display text-2xl sm:text-4xl font-black uppercase tracking-tight text-white">
-            Browse By Segment
+          <h2 className="font-display text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+            Find Your Next Machine
           </h2>
-          <p className="text-slate-400 text-xs sm:text-sm max-w-lg mx-auto">
-            Choose your engineering blueprint built explicitly for speedways, dirt trails, or backyard bashers.
-          </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
-          {[
-            { name: "Crawler", label: "Crawler Rigs", icon: Compass, action: () => handleTerrainClick("Crawler") },
-            { name: "Drift", label: "Drifting", icon: Sliders, action: () => handleTerrainClick("Drift") },
-            { name: "On-Road", label: "Street Speed", icon: Zap, action: () => handleTerrainClick("On-Road") },
-            { name: "Off-Road", label: "Dirt Bashers", icon: Trophy, action: () => handleTerrainClick("Off-Road") },
-            { name: "Featured", label: "Speed Stars", icon: Sparkles, action: () => { setFilterBrand("ALL"); setView("shop"); } },
-            { name: "Brands", label: "Top Makers", icon: Car, action: () => { setFilterBrand("ALL"); setView("shop"); } }
-          ].map((cat, idx) => (
-            <div
-              key={idx}
-              onClick={cat.action}
-              className="group cursor-pointer rounded-2xl border border-brand-border bg-slate-900/10 p-5 text-center flex flex-col items-center gap-3.5 hover:border-brand-orange hover:bg-slate-950 transition-all duration-300 relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-b from-brand-orange/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="h-14 w-14 rounded-full bg-slate-900 border border-brand-border flex items-center justify-center text-slate-400 group-hover:text-brand-orange group-hover:border-brand-orange transition-all duration-300 relative z-10">
-                <cat.icon className="h-6 w-6 transform group-hover:scale-110 transition-transform" />
+        <div className="flex flex-col md:flex-row h-[350px] sm:h-[450px] w-full max-w-7xl mx-auto px-4 gap-2 sm:gap-4">
+          {categories.map((cat, idx) => {
+            const count = products.filter(p => p.categoryId === cat.id).length;
+
+            return (
+              <div
+                key={idx}
+                onClick={() => handleCategoryClick(cat.id)}
+                className="group relative flex-1 hover:flex-[3] transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] cursor-pointer rounded-2xl overflow-hidden bg-slate-900 border border-brand-border/30 hover:border-brand-orange shadow-lg"
+              >
+                {/* Background Image */}
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-60 group-hover:opacity-100 grayscale-[30%] group-hover:grayscale-0"
+                />
+
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent opacity-90 transition-opacity duration-500" />
+
+                {/* Default State (Collapsed) */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
+                  <h3
+                    className="font-display font-black text-base md:text-xl text-white uppercase tracking-wider drop-shadow-md text-center hidden md:block"
+                    style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+                  >
+                    {cat.name}
+                  </h3>
+                  <h3 className="font-display font-black text-sm text-white uppercase tracking-wider drop-shadow-md text-center md:hidden">
+                    {cat.name}
+                  </h3>
+                </div>
+
+                {/* Hovered State (Expanded) */}
+                <div className="absolute inset-0 flex flex-col items-start justify-end p-6 sm:p-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
+                  <span className="bg-brand-orange text-black font-black uppercase text-[10px] px-3 py-1 rounded shadow-lg mb-3">
+                    {count} Products
+                  </span>
+                  <h3 className="font-display font-black text-3xl sm:text-5xl text-white uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] leading-tight mb-2">
+                    {cat.name}
+                  </h3>
+                  <div className="flex items-center gap-2 text-brand-orange font-bold text-xs uppercase tracking-widest bg-black/40 backdrop-blur px-4 py-2 rounded border border-brand-orange/30">
+                    Explore Inventory <ArrowRight className="h-4 w-4" />
+                  </div>
+                </div>
               </div>
-              <span className="font-display text-xs font-black uppercase tracking-wider text-slate-300 group-hover:text-white transition-colors relative z-10">
-                {cat.label}
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
       {/* ==================== BRANDS INFINITY SCROLLING MARQUEE ==================== */}
       <section className="space-y-6 overflow-hidden">
         {/* Style block for reverse marquee animation keyframe */}
-        <style dangerouslySetInnerHTML={{__html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           @keyframes marquee-reverse {
             0% { transform: translateX(-50%); }
             100% { transform: translateX(0%); }
@@ -366,17 +402,17 @@ export default function HomeView() {
                     className="group cursor-pointer flex flex-col items-center justify-center relative w-48 shrink-0 transition-all duration-300 hover:-translate-y-1.5 py-4"
                   >
                     {/* Unique Ambient Pulsing Radial Backglow */}
-                    <div 
+                    <div
                       className="absolute h-28 w-28 rounded-full blur-2xl opacity-20 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                       style={{ backgroundColor: glowColor }}
                     />
-                    
+
                     {/* Huge Floating Logo Image */}
-                    <div className="relative z-10 h-16 w-28 flex items-center justify-center">
-                      <img 
-                        src={brand.logo} 
-                        alt={`${brand.name} Logo`} 
-                        className="h-full w-full object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-115 transition-all duration-500" 
+                    <div className="relative z-10 h-20 w-36 flex items-center justify-center">
+                      <img
+                        src={brand.logo}
+                        alt={`${brand.name} Logo`}
+                        className="h-full w-full object-contain group-hover:scale-115 transition-transform duration-500 drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]"
                       />
                     </div>
 
@@ -395,69 +431,55 @@ export default function HomeView() {
             </div>
           </div>
 
-          {/* Parallax Right-scrolling ribbon */}
-          <div className="flex w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]">
-            <div className="flex gap-8 shrink-0 animate-marquee-reverse hover:[animation-play-state:paused] py-2">
-              {[
-                { name: "HOT WHEELS", logo: "/logo_hotwheels.png", country: "USA", flag: "🇺🇸" },
-                { name: "MN MODEL", logo: "/logo_mnmodel.png", country: "China", flag: "🇨🇳" },
-                { name: "FMS", logo: "/logo_fms.png", country: "China", flag: "🇨🇳" },
-                { name: "MJX", logo: "/logo_mjx.png", country: "China", flag: "🇨🇳" },
-                { name: "RLAARLO", logo: "/logo_rlaarlo.png", country: "Hong Kong", flag: "🇭🇰" },
-                { name: "ARRMA", logo: "/logo_arrma.png", country: "UK", flag: "🇬🇧" },
-                { name: "TRAXXAS", logo: "/logo_traxxas.png", country: "USA", flag: "🇺🇸" }
-              ].concat([
-                { name: "HOT WHEELS", logo: "/logo_hotwheels.png", country: "USA", flag: "🇺🇸" },
-                { name: "MN MODEL", logo: "/logo_mnmodel.png", country: "China", flag: "🇨🇳" },
-                { name: "FMS", logo: "/logo_fms.png", country: "China", flag: "🇨🇳" },
-                { name: "MJX", logo: "/logo_mjx.png", country: "China", flag: "🇨🇳" },
-                { name: "RLAARLO", logo: "/logo_rlaarlo.png", country: "Hong Kong", flag: "🇭🇰" },
-                { name: "ARRMA", logo: "/logo_arrma.png", country: "UK", flag: "🇬🇧" },
-                { name: "TRAXXAS", logo: "/logo_traxxas.png", country: "USA", flag: "🇺🇸" }
-              ]).map((brand, idx) => {
-                let glowColor = "rgba(239, 68, 68, 0.25)"; 
-                if (brand.name === "ARRMA") glowColor = "rgba(220, 38, 38, 0.3)";
-                if (brand.name === "RLAARLO") glowColor = "rgba(34, 197, 94, 0.3)";
-                if (brand.name === "MJX") glowColor = "rgba(234, 179, 8, 0.3)";
-                if (brand.name === "FMS") glowColor = "rgba(16, 185, 129, 0.3)";
-                if (brand.name === "MN MODEL") glowColor = "rgba(245, 158, 11, 0.3)";
-                if (brand.name === "HOT WHEELS") glowColor = "rgba(249, 115, 22, 0.3)";
+        </div>
+      </section>
 
-                return (
-                  <div
-                    key={idx}
-                    onClick={() => handleBrandClick(brand.name.toLowerCase().replace(' ', '-'))}
-                    className="group cursor-pointer flex flex-col items-center justify-center relative w-48 shrink-0 transition-all duration-300 hover:-translate-y-1.5 py-4"
-                  >
-                    {/* Unique Ambient Pulsing Radial Backglow */}
-                    <div 
-                      className="absolute h-28 w-28 rounded-full blur-2xl opacity-20 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                      style={{ backgroundColor: glowColor }}
-                    />
-                    
-                    {/* Huge Floating Logo Image */}
-                    <div className="relative z-10 h-16 w-28 flex items-center justify-center">
-                      <img 
-                        src={brand.logo} 
-                        alt={`${brand.name} Logo`} 
-                        className="h-full w-full object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-115 transition-all duration-500" 
-                      />
-                    </div>
-
-                    {/* Minimalist Subtext */}
-                    <div className="relative z-10 mt-3 text-center space-y-0.5">
-                      <span className="font-display text-xs font-black tracking-widest text-slate-400 group-hover:text-white transition-colors block uppercase">
-                        {brand.name}
-                      </span>
-                      <span className="text-[9px] text-slate-600 font-bold uppercase tracking-wider group-hover:text-brand-orange transition-colors flex items-center justify-center gap-1">
-                        {brand.country} {brand.flag}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+      {/* ==================== 6. EXPLORE ALL VEHICLES / TABS (Impel Explore section) ==================== */}
+      <section className="space-y-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-brand-border pb-6">
+          <div className="space-y-2">
+            <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block">
+              Direct Garage Clearance
+            </span>
+            <h2 className="font-display text-2xl sm:text-3xl font-black uppercase text-white tracking-tight">
+              Explore All Vehicles
+            </h2>
           </div>
+
+          {/* Impel Category Tabs */}
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: 'ALL', name: 'All Vehicles' },
+              { id: 'Off-Road', name: 'Off-Road Bashers' },
+              { id: 'On-Road', name: 'On-Road Speed' },
+              { id: 'Crawler', name: 'Scale Crawlers' },
+              { id: 'Drift', name: 'Drift Spec' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setExploreTab(tab.id as any)}
+                className={`rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 ${exploreTab === tab.id
+                  ? "bg-brand-orange text-black font-black shadow-glow"
+                  : "border border-brand-border bg-slate-900/30 text-slate-400 hover:text-white hover:border-brand-orange"
+                  }`}
+              >
+                {tab.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Dynamic Products Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {exploreFilteredProducts.map((p) => (
+            <ProductCardItem 
+              key={p.id}
+              p={p}
+              wishlist={wishlist}
+              toggleWishlist={toggleWishlist}
+              onProductClick={handleProductClick}
+            />
+          ))}
         </div>
       </section>
 
@@ -554,138 +576,6 @@ export default function HomeView() {
               className="w-full h-full object-cover filter contrast-125 hover:scale-105 transition duration-500"
             />
           </div>
-        </div>
-      </section>
-
-      {/* ==================== 6. EXPLORE ALL VEHICLES / TABS (Impel Explore section) ==================== */}
-      <section className="space-y-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-brand-border pb-6">
-          <div className="space-y-2">
-            <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block">
-              Direct Garage Clearance
-            </span>
-            <h2 className="font-display text-2xl sm:text-3xl font-black uppercase text-white tracking-tight">
-              Explore All Vehicles
-            </h2>
-          </div>
-
-          {/* Impel Category Tabs */}
-          <div className="flex flex-wrap gap-2">
-            {[
-              { id: 'ALL', name: 'All Vehicles' },
-              { id: 'Off-Road', name: 'Off-Road Bashers' },
-              { id: 'On-Road', name: 'On-Road Speed' },
-              { id: 'Crawler', name: 'Scale Crawlers' },
-              { id: 'Drift', name: 'Drift Spec' }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setExploreTab(tab.id as any)}
-                className={`rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
-                  exploreTab === tab.id
-                    ? "bg-brand-orange text-black font-black shadow-glow"
-                    : "border border-brand-border bg-slate-900/30 text-slate-400 hover:text-white hover:border-brand-orange"
-                }`}
-              >
-                {tab.name}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Dynamic Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {exploreFilteredProducts.map((p) => {
-            const variant = p.variants[0];
-            const brand = BRANDS.find((b) => b.id === p.brandId);
-
-            return (
-              <div
-                key={p.id}
-                onClick={() => handleProductClick(p)}
-                className="group cursor-pointer flex flex-col rounded-2xl border border-brand-border bg-slate-950 overflow-hidden hover:border-brand-orange hover:shadow-2xl transition-all duration-300 relative"
-              >
-                {/* Image Section */}
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-900 border-b border-brand-border">
-                  <img
-                    src={p.images[0]}
-                    alt={p.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-
-                  {/* Absolute Badges */}
-                  <div className="absolute top-3 left-3 flex flex-col gap-1 z-10">
-                    <span className="rounded bg-slate-950/80 px-2 py-0.5 text-[8px] font-bold text-brand-orange border border-brand-orange/30 uppercase tracking-wider">
-                      {p.scale} Scale
-                    </span>
-                    <span className="rounded bg-slate-950/80 px-2 py-0.5 text-[8px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
-                      {p.speedKmh}+ KM/H
-                    </span>
-                  </div>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleWishlist(p.id);
-                    }}
-                    className="absolute top-3 right-3 z-10 rounded-full bg-slate-950/80 p-2 border border-slate-800 text-slate-400 hover:text-brand-orange hover:scale-110 transition-all"
-                  >
-                    <Heart className={`h-3.5 w-3.5 ${wishlist.includes(p.id) ? 'fill-brand-orange text-brand-orange' : ''}`} />
-                  </button>
-                </div>
-
-                {/* Info Section */}
-                <div className="p-5 flex-1 flex flex-col justify-between gap-4">
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[9px] text-brand-orange font-bold uppercase tracking-wider font-display">
-                        {brand?.name}
-                      </span>
-                      <span className="text-base font-black text-brand-gold font-display">
-                        ₹{p.price.toLocaleString('en-IN')}
-                      </span>
-                    </div>
-                    <h3 className="font-display text-sm font-black text-white line-clamp-1 group-hover:text-brand-orange transition-colors">
-                      {p.name}
-                    </h3>
-                    <p className="text-xs text-slate-400 line-clamp-2">
-                      {p.description}
-                    </p>
-                  </div>
-
-                  {/* Impel styled car specs row */}
-                  <div className="grid grid-cols-3 gap-2 border-t border-brand-border pt-4 text-center">
-                    <div className="bg-slate-900/50 rounded-lg p-2 border border-brand-border">
-                      <span className="text-[8px] text-slate-500 block uppercase font-bold">Terrain</span>
-                      <span className="text-[10px] text-slate-300 font-extrabold block uppercase truncate">{p.terrainType}</span>
-                    </div>
-                    <div className="bg-slate-900/50 rounded-lg p-2 border border-brand-border">
-                      <span className="text-[8px] text-slate-500 block uppercase font-bold">Build</span>
-                      <span className="text-[10px] text-slate-300 font-extrabold block uppercase truncate">{p.buildType}</span>
-                    </div>
-                    <div className="bg-slate-900/50 rounded-lg p-2 border border-brand-border">
-                      <span className="text-[8px] text-slate-500 block uppercase font-bold">ESC Max</span>
-                      <span className="text-[10px] text-slate-300 font-extrabold block uppercase truncate">{p.variants[0]?.attributes?.battery?.split(' ')[0] || "LiPo"}</span>
-                    </div>
-                  </div>
-
-                  {/* Cart Action */}
-                  <div className="border-t border-brand-border pt-4 flex items-center justify-between">
-                    <span className="text-[9px] text-slate-500 line-through">
-                      ₹{p.comparePrice.toLocaleString('en-IN')}
-                    </span>
-                    <button
-                      onClick={(e) => handleQuickAdd(e, p)}
-                      className="rounded-lg bg-brand-orange hover:bg-brand-gold text-black font-black uppercase px-4 py-2 text-xs transition-colors flex items-center gap-1"
-                    >
-                      <Car className="h-3.5 w-3.5" />
-                      Buy Rig
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
         </div>
       </section>
 
@@ -811,9 +701,8 @@ export default function HomeView() {
               <button
                 key={idx}
                 onClick={() => setTestimonialIndex(idx)}
-                className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${
-                  testimonialIndex === idx ? "bg-brand-orange w-6" : "bg-slate-800"
-                }`}
+                className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${testimonialIndex === idx ? "bg-brand-orange w-6" : "bg-slate-800"
+                  }`}
               />
             ))}
           </div>
@@ -837,7 +726,7 @@ export default function HomeView() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {RC_GUIDES.map((guide) => (
+          {guides.map((guide) => (
             <div
               key={guide.id}
               onClick={() => setActiveGuide(guide)}

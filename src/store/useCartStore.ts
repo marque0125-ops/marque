@@ -34,7 +34,7 @@ export const useCartStore = create<CartState>()(
           const updatedQty = existing.qty + qty;
           if (updatedQty > variant.stockQty) return;
           set({
-            cart: currentCart.map(item => 
+            cart: currentCart.map(item =>
               item.id === cartItemId ? { ...item, qty: updatedQty } : item
             )
           });
@@ -74,9 +74,9 @@ export const useCartStore = create<CartState>()(
         }
 
         if (subtotal < found.minOrder) {
-          return { 
-            success: false, 
-            message: `MINIMUM_ORDER_NOT_MET: This coupon requires a minimum purchase of ₹${found.minOrder.toLocaleString('en-IN')}.` 
+          return {
+            success: false,
+            message: `MINIMUM_ORDER_NOT_MET: This coupon requires a minimum purchase of ₹${found.minOrder.toLocaleString('en-IN')}.`
           };
         }
 

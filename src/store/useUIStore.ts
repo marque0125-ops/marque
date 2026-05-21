@@ -3,8 +3,8 @@ import { persist } from "zustand/middleware";
 import { Product, PinCodeDetail, PIN_CODES } from "../data/mockData";
 
 export interface UIState {
-  currentView: 'home' | 'shop' | 'accessories' | 'pdp' | 'cart' | 'account' | 'admin';
-  setView: (view: 'home' | 'shop' | 'accessories' | 'pdp' | 'cart' | 'account' | 'admin') => void;
+  currentView: 'home' | 'shop' | 'accessories' | 'pdp' | 'cart' | 'account' | 'admin' | 'terms' | 'shipping';
+  setView: (view: 'home' | 'shop' | 'accessories' | 'pdp' | 'cart' | 'account' | 'admin' | 'terms' | 'shipping') => void;
   selectedProduct: Product | null;
   setSelectedProduct: (product: Product | null) => void;
 

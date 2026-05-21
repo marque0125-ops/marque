@@ -2,11 +2,13 @@
 
 import React, { useState } from "react";
 import { AnalyticsTab } from "./admin/AnalyticsTab";
+import { CategoriesTab } from "./admin/CategoriesTab";
 import { InventoryTab } from "./admin/InventoryTab";
 import { OrdersTab } from "./admin/OrdersTab";
+import BlogTab from "./admin/BlogTab";
 
 export default function AdminView() {
-  const [activeTab, setActiveTab] = useState<'analytics' | 'inventory' | 'orders'>('analytics');
+  const [activeTab, setActiveTab] = useState<'analytics' | 'categories' | 'inventory' | 'orders' | 'blog'>('analytics');
 
   return (
     <div className="space-y-10 pb-20">
@@ -26,8 +28,10 @@ export default function AdminView() {
         <div className="flex gap-2">
           {[
             { id: 'analytics', label: 'Analytics' },
+            { id: 'categories', label: 'Categories' },
             { id: 'inventory', label: 'Inventory (CRUD)' },
-            { id: 'orders', label: 'Order Dispatch' }
+            { id: 'orders', label: 'Order Dispatch' },
+            { id: 'blog', label: 'Blog Articles' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -41,8 +45,10 @@ export default function AdminView() {
       </div>
 
       {activeTab === 'analytics' && <AnalyticsTab />}
+      {activeTab === 'categories' && <CategoriesTab />}
       {activeTab === 'inventory' && <InventoryTab />}
       {activeTab === 'orders' && <OrdersTab />}
+      {activeTab === 'blog' && <BlogTab />}
     </div>
   );
 }

@@ -5,23 +5,26 @@ import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
 import { useUIStore } from "../store/useUIStore";
 import { BRANDS, Product } from "../data/mockData";
-import { 
-  Heart, 
-  Star, 
-  RotateCcw, 
+import {
+  Heart,
+  Star,
+  RotateCcw,
   SlidersHorizontal,
   ChevronRight,
   TrendingUp,
   Sliders,
   DollarSign
 } from "lucide-react";
+import { ProductCardItem } from "./ProductCardItem";
 
 export default function ShopView() {
   const { addToCart } = useCartStore();
-  const { 
+  const {
     products,
     searchQuery,
     setSearchQuery,
+    filterCategory,
+    setFilterCategory,
     filterBrand,
     setFilterBrand,
     filterTerrain,
@@ -72,6 +75,11 @@ export default function ShopView() {
       if (!brand || brand.slug !== filterBrand) return false;
     }
 
+    // Category filter
+    if (filterCategory !== "ALL") {
+      if (p.categoryId !== filterCategory) return false;
+    }
+
     // Terrain filter
     if (filterTerrain !== "ALL") {
       if (p.terrainType !== filterTerrain) return false;
@@ -109,7 +117,8 @@ export default function ShopView() {
     }
   });
 
-  const activeFiltersCount = 
+  const activeFiltersCount =
+    (filterCategory !== "ALL" ? 1 : 0) +
     (filterBrand !== "ALL" ? 1 : 0) +
     (filterTerrain !== "ALL" ? 1 : 0) +
     (filterScale !== "ALL" ? 1 : 0) +
@@ -119,7 +128,7 @@ export default function ShopView() {
 
   return (
     <div className="space-y-8 pb-12">
-      
+
       {/* Search status header banner */}
       <div className="rounded-2xl border border-brand-border bg-slate-900/10 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -135,7 +144,7 @@ export default function ShopView() {
         {/* Sorting controls */}
         <div className="flex items-center gap-3 self-start sm:self-center">
           <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Sort By</span>
-          <select 
+          <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
             className="rounded-lg border border-brand-border bg-slate-900 px-3 py-2 text-xs font-bold text-slate-200 focus:border-brand-orange outline-none"
@@ -149,16 +158,16 @@ export default function ShopView() {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8 items-start">
-        
+
         {/* LEFT FILTER SIDEBAR */}
-        <aside className="w-full lg:w-64 shrink-0 rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-6">
+        <aside className="w-full lg:w-72 shrink-0 rounded-2xl border border-brand-border/50 bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-xl p-6 space-y-6 sticky top-28 shadow-[0_10px_40px_rgba(0,0,0,0.6)] z-20 max-h-[calc(100vh-7rem)] overflow-y-auto custom-scrollbar">
           <div className="flex items-center justify-between border-b border-brand-border pb-3">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
               <SlidersHorizontal className="h-4 w-4 text-brand-orange" />
               Tune Filters
             </span>
             {activeFiltersCount > 0 && (
-              <button 
+              <button
                 onClick={resetFilters}
                 className="text-[10px] text-brand-orange font-bold uppercase hover:underline flex items-center gap-0.5"
               >
@@ -170,22 +179,22 @@ export default function ShopView() {
           {/* Search Query field in sidebar */}
           <div className="space-y-2">
             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Model Search</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="e.g. brushless, 8s..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-xs text-slate-200 outline-none focus:border-brand-orange"
+              className="w-full rounded-xl border border-brand-border/50 bg-slate-950/50 py-2.5 px-3 text-xs text-slate-200 outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange/50 transition-all shadow-inner"
             />
           </div>
 
           {/* Filter Brand */}
           <div className="space-y-2">
             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Brand</label>
-            <select 
+            <select
               value={filterBrand}
               onChange={(e) => setFilterBrand(e.target.value)}
-              className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-xs text-slate-200 focus:border-brand-orange outline-none"
+              className="w-full rounded-xl border border-brand-border/50 bg-slate-950/50 py-2.5 px-3 text-xs text-slate-200 focus:border-brand-orange focus:ring-1 focus:ring-brand-orange/50 transition-all shadow-inner outline-none"
             >
               <option value="ALL">All Brands</option>
               {BRANDS.map(b => (
@@ -197,10 +206,10 @@ export default function ShopView() {
           {/* Filter Scale */}
           <div className="space-y-2">
             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Chassis Scale</label>
-            <select 
+            <select
               value={filterScale}
               onChange={(e) => setFilterScale(e.target.value)}
-              className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-xs text-slate-200 focus:border-brand-orange outline-none"
+              className="w-full rounded-xl border border-brand-border/50 bg-slate-950/50 py-2.5 px-3 text-xs text-slate-200 focus:border-brand-orange focus:ring-1 focus:ring-brand-orange/50 transition-all shadow-inner outline-none"
             >
               <option value="ALL">All Scales</option>
               <option value="1:8">1:8 (Giant Heavy Duty)</option>
@@ -214,10 +223,10 @@ export default function ShopView() {
           {/* Filter Terrain */}
           <div className="space-y-2">
             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Terrain Specialization</label>
-            <select 
+            <select
               value={filterTerrain}
               onChange={(e) => setFilterTerrain(e.target.value)}
-              className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-xs text-slate-200 focus:border-brand-orange outline-none"
+              className="w-full rounded-xl border border-brand-border/50 bg-slate-950/50 py-2.5 px-3 text-xs text-slate-200 focus:border-brand-orange focus:ring-1 focus:ring-brand-orange/50 transition-all shadow-inner outline-none"
             >
               <option value="ALL">All Terrains</option>
               <option value="Off-Road">Off-Road (Basher)</option>
@@ -249,9 +258,9 @@ export default function ShopView() {
               <span>Max Budget</span>
               <span className="text-brand-gold">₹{priceRange[1].toLocaleString('en-IN')}</span>
             </div>
-            <input 
-              type="range" 
-              min={5000} 
+            <input
+              type="range"
+              min={5000}
               max={150000}
               step={5000}
               value={priceRange[1]}
@@ -274,6 +283,11 @@ export default function ShopView() {
               {searchQuery && (
                 <span className="rounded bg-slate-900 border border-brand-border px-2 py-0.5 text-[10px] text-slate-200">
                   Search: "{searchQuery}"
+                </span>
+              )}
+              {filterCategory !== "ALL" && (
+                <span className="rounded bg-slate-900 border border-brand-border px-2 py-0.5 text-[10px] text-slate-200 uppercase">
+                  Category: {filterCategory}
                 </span>
               )}
               {filterBrand !== "ALL" && (
@@ -314,7 +328,7 @@ export default function ShopView() {
               <p className="text-xs text-slate-400 max-w-sm mx-auto">
                 Try widening your budget, clearing search queries, or exploring a different terrain configuration.
               </p>
-              <button 
+              <button
                 onClick={resetFilters}
                 className="bg-brand-orange text-black font-bold text-xs uppercase px-5 py-2.5 rounded-lg hover:bg-brand-gold transition-colors"
               >
@@ -323,127 +337,15 @@ export default function ShopView() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sortedProducts.map((p) => {
-                const brand = BRANDS.find(b => b.id === p.brandId);
-                const isWished = wishlist.includes(p.id);
-
-                return (
-                  <div 
-                    key={p.id}
-                    onClick={() => handleProductClick(p)}
-                    className="group cursor-pointer relative flex flex-col rounded-2xl border border-brand-border bg-slate-900/30 overflow-hidden hover:border-brand-orange hover:bg-slate-900/80 transition-all duration-300 shadow-lg hover:shadow-glow"
-                  >
-                    {/* Primary Image Container */}
-                    <div className="relative aspect-square w-full overflow-hidden bg-slate-950">
-                      <img 
-                        src={p.images[0]} 
-                        alt={p.name}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-
-                      {/* Scale and Speed Badges */}
-                      <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-                        <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-orange border border-brand-orange/30 uppercase tracking-wider">
-                          {p.categoryId === 'accessories' ? 'Accessory' : `${p.scale} Scale`}
-                        </span>
-                        {p.categoryId === 'accessories' ? (
-                          p.specs.Pieces && (
-                            <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
-                              {p.specs.Pieces}
-                            </span>
-                          )
-                        ) : (
-                          <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
-                            {p.speedKmh}+ KM/H
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Wishlist button */}
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleWishlist(p.id);
-                        }}
-                        className="absolute top-3 right-3 z-10 rounded-full bg-slate-950/80 p-2 border border-slate-800 text-slate-400 hover:text-brand-orange transition-colors"
-                      >
-                        <Heart className={`h-4.5 w-4.5 ${isWished ? 'fill-brand-orange text-brand-orange' : 'text-slate-300'}`} />
-                      </button>
-
-                      {/* Stock Badge */}
-                      <div className="absolute bottom-3 left-3 z-10">
-                        {p.stockQty === 0 ? (
-                          <span className="rounded bg-red-600 px-2 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider">
-                            Out of stock
-                          </span>
-                        ) : p.stockQty < 3 ? (
-                          <span className="rounded bg-brand-orange px-2 py-0.5 text-[9px] font-bold text-black uppercase tracking-wider animate-pulse">
-                            Only {p.stockQty} Left!
-                          </span>
-                        ) : (
-                          <span className="rounded bg-slate-950/80 border border-slate-800 px-2 py-0.5 text-[9px] font-bold text-green-400 uppercase tracking-wider">
-                            In Stock
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Specifications detail text */}
-                    <div className="p-4 flex-1 flex flex-col justify-between gap-3">
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider font-display">
-                            {brand?.name}
-                          </span>
-                          <span className="text-[10px] text-slate-500 font-semibold">
-                            SKU: {p.sku.slice(0, 8)}
-                          </span>
-                        </div>
-                        <h3 className="font-display text-sm font-bold text-white line-clamp-1 group-hover:text-brand-orange transition-colors">
-                          {p.name}
-                        </h3>
-                        <p className="text-xs text-slate-400 line-clamp-2">
-                          {p.description}
-                        </p>
-                      </div>
-
-                      {/* Star rating and key spec */}
-                      <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 border-t border-brand-border pt-2">
-                        <span className="flex items-center gap-0.5 text-brand-gold">
-                          <Star className="h-3 w-3 fill-brand-gold" />
-                          {p.averageRating} ({p.reviewCount})
-                        </span>
-                        {p.categoryId === 'accessories' ? (
-                          <span>{p.specs["Age Range"] ? `Ages ${p.specs["Age Range"]}` : 'Accessory'} • {p.buildType}</span>
-                        ) : (
-                          <span>{p.terrainType} • {p.buildType}</span>
-                        )}
-                      </div>
-
-                      {/* Price Section */}
-                      <div className="flex items-center justify-between border-t border-brand-border pt-3">
-                        <div>
-                          <span className="text-[10px] text-slate-500 line-through block leading-none">
-                            ₹{p.comparePrice.toLocaleString('en-IN')}
-                          </span>
-                          <span className="text-base font-black text-brand-gold font-display leading-none block mt-1">
-                            ₹{p.price.toLocaleString('en-IN')}
-                          </span>
-                        </div>
-                        
-                        <button 
-                          onClick={(e) => handleQuickAdd(e, p)}
-                          disabled={p.stockQty === 0}
-                          className="rounded-lg bg-brand-orange text-black px-3 py-2 text-xs font-bold uppercase hover:bg-brand-gold disabled:bg-slate-800 disabled:text-slate-600 transition-colors"
-                        >
-                          {p.stockQty === 0 ? "Out" : (p.categoryId === 'accessories' ? "Buy Item" : "Buy Rig")}
-                        </button>
-                      </div>
-                    </div>
-
-                  </div>
-                );
-              })}
+              {sortedProducts.map((p) => (
+                <ProductCardItem 
+                  key={p.id}
+                  p={p}
+                  wishlist={wishlist}
+                  toggleWishlist={toggleWishlist}
+                  onProductClick={handleProductClick}
+                />
+              ))}
             </div>
           )}
         </div>

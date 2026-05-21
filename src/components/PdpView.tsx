@@ -81,16 +81,50 @@ export default function PdpView() {
   const isWished = wishlist.includes(selectedProduct.id);
 
   // Find variant matching current attributes
-  const handleAttributeChange = (color: string, battery: string) => {
-    setSelectedColor(color);
-    setSelectedBattery(battery);
-    const found = selectedProduct.variants.find(
-      v => (v.attributes.color === color || !v.attributes.color) && 
-           (v.attributes.battery === battery || !v.attributes.battery)
+  const handleAttributeChange = (newColor: string, newBattery: string) => {
+    let found = selectedProduct.variants.find(
+      v => (v.attributes.color === newColor || !v.attributes.color) && 
+           (v.attributes.battery === newBattery || !v.attributes.battery)
     );
+
+    if (!found) {
+      if (newColor !== selectedColor) {
+        found = selectedProduct.variants.find(v => v.attributes.color === newColor);
+        if (found) newBattery = found.attributes.battery || "";
+      } else if (newBattery !== selectedBattery) {
+        found = selectedProduct.variants.find(v => v.attributes.battery === newBattery);
+        if (found) newColor = found.attributes.color || "";
+      }
+    }
+
+    setSelectedColor(newColor);
+    setSelectedBattery(newBattery);
+
     if (found) {
       setActiveVariant(found);
+      if (found.imageUrl) {
+        const idx = selectedProduct.images.indexOf(found.imageUrl);
+        if (idx !== -1) {
+          setActiveImageIndex(idx);
+        } else {
+          setActiveImageIndex(-1);
+        }
+      }
     }
+  };
+
+  const getEmbedUrl = (url: string) => {
+    if (!url) return '';
+    if (url.startsWith('data:video')) return url;
+    if (url.includes('youtube.com/watch?v=')) {
+      const id = url.split('v=')[1].split('&')[0];
+      return `https://www.youtube.com/embed/${id}`;
+    }
+    if (url.includes('youtu.be/')) {
+      const id = url.split('youtu.be/')[1].split('?')[0];
+      return `https://www.youtube.com/embed/${id}`;
+    }
+    return url;
   };
 
   // Get active price
@@ -203,7 +237,7 @@ export default function PdpView() {
             {/* View Mode: STANDARD vs 360 */}
             {viewMode === 'standard' ? (
               <img 
-                src={selectedProduct.images[activeImageIndex]} 
+                src={activeImageIndex === -1 ? activeVariant?.imageUrl : selectedProduct.images[activeImageIndex]} 
                 alt={selectedProduct.name}
                 className="w-full h-full object-cover"
               />
@@ -234,22 +268,7 @@ export default function PdpView() {
             )}
           </div>
 
-          {/* Toggle buttons between Standard View vs 360 Rotator */}
-          <div className="flex gap-4 items-center justify-center bg-slate-900/40 p-3 rounded-xl border border-brand-border">
-            <button 
-              onClick={() => setViewMode('standard')}
-              className={`px-4 py-2 rounded-lg text-xs font-bold uppercase transition-all flex items-center gap-1.5 ${viewMode === 'standard' ? 'bg-slate-950 border border-brand-orange text-brand-orange' : 'text-slate-400 hover:text-white'}`}
-            >
-              <Eye className="h-4 w-4" /> Photography Gallery
-            </button>
-            
-            <button 
-              onClick={() => setViewMode('360')}
-              className={`px-4 py-2 rounded-lg text-xs font-bold uppercase transition-all flex items-center gap-1.5 ${viewMode === '360' ? 'bg-slate-950 border border-brand-orange text-brand-orange' : 'text-slate-400 hover:text-white'}`}
-            >
-              <RotateCw className="h-4 w-4" /> 360° Spin Rotator
-            </button>
-          </div>
+
 
           {/* Controls depending on mode */}
           {viewMode === 'standard' ? (
@@ -768,13 +787,22 @@ export default function PdpView() {
             >
               <X className="h-5 w-5" />
             </button>
-            <iframe 
-              src={selectedProduct.videoUrl} 
-              title="YouTube video player" 
-              className="w-full h-full border-none"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-              allowFullScreen
-            />
+            {selectedProduct.videoUrl.startsWith('data:video') ? (
+              <video 
+                src={selectedProduct.videoUrl} 
+                className="w-full h-full object-contain"
+                controls
+                autoPlay
+              />
+            ) : (
+              <iframe 
+                src={getEmbedUrl(selectedProduct.videoUrl)} 
+                title="Video player" 
+                className="w-full h-full border-none"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowFullScreen
+              />
+            )}
           </div>
         </div>
       )}
