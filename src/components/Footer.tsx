@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { useUIStore } from "../store/useUIStore";
 import { useProductStore } from "../store/useProductStore";
 import { Car, Mail, Phone, ShieldCheck, MapPin, Truck, HelpCircle } from "lucide-react";
@@ -26,10 +27,12 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-2 cursor-pointer group" onClick={() => { setSelectedProduct(null); setView('home'); }}>
               <div className="relative flex h-10 w-28 items-center justify-center rounded bg-white overflow-hidden border border-brand-border/60 transition-colors group-hover:border-brand-orange p-1">
-                <img 
+                <Image 
                   src="/marque-new-logo.jpg" 
                   alt="MARQUE Logo" 
-                  className="h-full w-full object-contain" 
+                  fill
+                  sizes="112px"
+                  className="object-contain mix-blend-multiply" 
                 />
               </div>
               <span className="font-display text-xl font-bold uppercase tracking-tighter text-white transition-colors group-hover:text-brand-orange">

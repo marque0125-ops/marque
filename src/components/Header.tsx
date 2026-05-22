@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
 import { useAuthStore } from "../store/useAuthStore";
@@ -79,10 +80,12 @@ export default function Header() {
             className="flex cursor-pointer items-center gap-2 group"
           >
             <div className="relative flex h-12 w-32 items-center justify-center rounded-lg bg-white overflow-hidden border border-brand-border/60 shadow-glow transition-all duration-300 group-hover:border-brand-orange p-1">
-              <img 
+              <Image 
                 src="/marque-new-logo.jpg" 
                 alt="MARQUE Logo" 
-                className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105" 
+                fill
+                sizes="128px"
+                className="object-contain mix-blend-multiply"
               />
             </div>
             <div>

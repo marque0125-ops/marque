@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
 import { useUIStore } from "../store/useUIStore";
@@ -236,17 +237,21 @@ export default function PdpView() {
             
             {/* View Mode: STANDARD vs 360 */}
             {viewMode === 'standard' ? (
-              <img 
-                src={activeImageIndex === -1 ? activeVariant?.imageUrl : selectedProduct.images[activeImageIndex]} 
+              <Image 
+                src={(activeImageIndex === -1 && activeVariant ? activeVariant.imageUrl : selectedProduct.images[activeImageIndex === -1 ? 0 : activeImageIndex]) || ""} 
                 alt={selectedProduct.name}
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
               />
             ) : (
               <div className="w-full h-full relative">
-                <img 
+                <Image 
                   src={selectedProduct.images[rotatorAngle % selectedProduct.images.length]} 
                   alt="360 rotation view"
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
                 />
                 
                 {/* 360 degree radial scanner overlay effect */}
@@ -277,9 +282,9 @@ export default function PdpView() {
                 <button
                   key={idx}
                   onClick={() => setActiveImageIndex(idx)}
-                  className={`aspect-square w-full rounded-xl overflow-hidden border bg-slate-950 transition-all ${activeImageIndex === idx ? 'border-brand-orange shadow-glow' : 'border-brand-border opacity-70 hover:opacity-100'}`}
+                  className={`relative aspect-square w-full rounded-xl overflow-hidden border bg-slate-950 transition-all ${activeImageIndex === idx ? 'border-brand-orange shadow-glow' : 'border-brand-border opacity-70 hover:opacity-100'}`}
                 >
-                  <img src={img} alt="thumbnail" className="h-full w-full object-cover" />
+                  <Image src={img} alt="thumbnail" fill sizes="100px" className="object-cover" />
                 </button>
               ))}
             </div>
@@ -545,7 +550,7 @@ export default function PdpView() {
                 <div key={r.id} className="p-5 rounded-2xl border border-brand-border bg-slate-900/20 space-y-3.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <img src={r.avatar} alt={r.userName} className="h-9 w-9 rounded-full object-cover border border-brand-border" />
+                      <Image src={r.avatar} alt={r.userName} width={36} height={36} className="rounded-full object-cover border border-brand-border" />
                       <div>
                         <span className="text-xs font-bold text-white block">{r.userName}</span>
                         <span className="text-[9px] text-slate-500 block font-mono">{r.date}</span>
@@ -670,10 +675,12 @@ export default function PdpView() {
                 >
                   {/* Primary Image Container */}
                   <div className="relative aspect-square w-full overflow-hidden bg-slate-950">
-                    <img 
+                    <Image 
                       src={p.images[0]} 
                       alt={p.name}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
 
                     {/* Scale and Speed Badges */}

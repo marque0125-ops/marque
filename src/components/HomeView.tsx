@@ -1,6 +1,5 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
 import { useUIStore } from "../store/useUIStore";
@@ -166,10 +165,12 @@ export default function HomeView() {
                 idx === currentPromoSlide ? "opacity-100 z-10" : "opacity-0 z-0"
               }`}
             >
-              <img 
+              <Image 
                 src={slide.imageUrl} 
                 alt={slide.titleMain || "Promo Banner"} 
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                fill
+                sizes="(max-width: 1152px) 100vw, 1152px"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
               />
               {/* Optional Text Overlay */}
               {(slide.badgeText || slide.titleMain || slide.titleSub) && (
@@ -252,10 +253,13 @@ export default function HomeView() {
                   className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
                     }`}
                 >
-                  <img
+                  <Image
                     src={slide.imageUrl}
-                    alt={slide.titleMain}
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    alt={slide.titleMain || "Banner"}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    priority={idx === 0}
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
                   <div className="absolute bottom-4 right-4 flex flex-col items-end gap-1 p-3 rounded-xl bg-slate-950/80 backdrop-blur border border-white/10 text-right">
                     <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{slide.badgeText}</span>
@@ -381,10 +385,12 @@ export default function HomeView() {
                 className="group relative flex-1 hover:flex-[3] transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] cursor-pointer rounded-2xl overflow-hidden bg-slate-900 border border-brand-border/30 hover:border-brand-orange shadow-lg"
               >
                 {/* Background Image */}
-                <img
+                <Image
                   src={cat.image}
                   alt={cat.name}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-60 group-hover:opacity-100 grayscale-[30%] group-hover:grayscale-0"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-60 group-hover:opacity-100 grayscale-[30%] group-hover:grayscale-0"
                 />
 
                 {/* Gradient Overlay */}
@@ -495,10 +501,12 @@ export default function HomeView() {
 
                     {/* Huge Floating Logo Image */}
                     <div className="relative z-10 h-20 w-36 flex items-center justify-center">
-                      <img
+                      <Image
                         src={brand.logo}
                         alt={`${brand.name} Logo`}
-                        className="h-full w-full object-contain group-hover:scale-115 transition-transform duration-500 drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]"
+                        fill
+                        sizes="144px"
+                        className="object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]"
                       />
                     </div>
 
@@ -670,10 +678,12 @@ export default function HomeView() {
           </div>
 
           <div className="order-1 lg:order-2 relative w-full aspect-square sm:aspect-[4/3] rounded-[2rem] overflow-hidden group border border-white/5 shadow-2xl">
-            <img
+            <Image
               src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80"
               alt="Premium RC Engineering"
-              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover transition-transform duration-1000 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80 pointer-events-none" />
             
@@ -793,10 +803,12 @@ export default function HomeView() {
               "{testimonials[testimonialIndex].quote}"
             </blockquote>
             <div className="flex items-center justify-center gap-3">
-              <img
+              <Image
                 src={testimonials[testimonialIndex].avatar}
                 alt={testimonials[testimonialIndex].name}
-                className="h-10 w-10 rounded-full border border-brand-border object-cover"
+                width={40}
+                height={40}
+                className="rounded-full border border-brand-border object-cover"
               />
               <div className="text-left">
                 <span className="font-bold text-white block text-xs sm:text-sm">
@@ -848,10 +860,12 @@ export default function HomeView() {
             >
               <div>
                 <div className="relative h-48 overflow-hidden bg-slate-900 border-b border-brand-border">
-                  <img
+                  <Image
                     src={guide.imageUrl}
                     alt={guide.title}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <span className="absolute bottom-3 left-3 bg-slate-950/80 border border-brand-border text-[8px] font-bold text-brand-orange uppercase px-2 py-0.5 rounded">
                     {guide.category}
@@ -896,11 +910,14 @@ export default function HomeView() {
               <h2 className="font-display text-2xl md:text-3xl font-extrabold text-white leading-tight">
                 {activeGuide.title}
               </h2>
-              <img
-                src={activeGuide.imageUrl}
-                alt={activeGuide.title}
-                className="w-full h-56 object-cover rounded-xl border border-brand-border"
-              />
+              <div className="relative w-full h-56 rounded-xl border border-brand-border overflow-hidden">
+                <Image
+                  src={activeGuide.imageUrl}
+                  alt={activeGuide.title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed whitespace-pre-line">
                 {activeGuide.content}
               </p>
