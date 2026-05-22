@@ -6,9 +6,10 @@ import { CategoriesTab } from "./admin/CategoriesTab";
 import { InventoryTab } from "./admin/InventoryTab";
 import { OrdersTab } from "./admin/OrdersTab";
 import BlogTab from "./admin/BlogTab";
+import { BannersTab } from "./admin/BannersTab";
 
 export default function AdminView() {
-  const [activeTab, setActiveTab] = useState<'analytics' | 'categories' | 'inventory' | 'orders' | 'blog'>('analytics');
+  const [activeTab, setActiveTab] = useState<'analytics' | 'categories' | 'inventory' | 'orders' | 'blog' | 'banners'>('analytics');
 
   return (
     <div className="space-y-10 pb-20">
@@ -31,7 +32,8 @@ export default function AdminView() {
             { id: 'categories', label: 'Categories' },
             { id: 'inventory', label: 'Inventory (CRUD)' },
             { id: 'orders', label: 'Order Dispatch' },
-            { id: 'blog', label: 'Blog Articles' }
+            { id: 'blog', label: 'Blog Articles' },
+            { id: 'banners', label: 'Hero Banners' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -49,6 +51,7 @@ export default function AdminView() {
       {activeTab === 'inventory' && <InventoryTab />}
       {activeTab === 'orders' && <OrdersTab />}
       {activeTab === 'blog' && <BlogTab />}
+      {activeTab === 'banners' && <BannersTab />}
     </div>
   );
 }

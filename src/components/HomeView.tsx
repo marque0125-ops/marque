@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
 import { useUIStore } from "../store/useUIStore";
@@ -49,8 +49,29 @@ export default function HomeView() {
   } = useProductStore();
   const {
     setView,
-    setSelectedProduct
+    setSelectedProduct,
+    heroBanners,
+    promoBanners
   } = useUIStore();
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentPromoSlide, setCurrentPromoSlide] = useState(0);
+
+  useEffect(() => {
+    if (!heroBanners || heroBanners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % heroBanners.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [heroBanners]);
+
+  useEffect(() => {
+    if (!promoBanners || promoBanners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentPromoSlide(prev => (prev + 1) % promoBanners.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [promoBanners]);
 
   const [activeGuide, setActiveGuide] = useState<RCGuide | null>(null);
 
@@ -133,7 +154,50 @@ export default function HomeView() {
   ];
 
   return (
+
     <div className="space-y-24 pb-24">
+      {/* ==================== 6.5 STANDALONE PROMO BANNER ==================== */}
+      {promoBanners && promoBanners.length > 0 && (
+        <section className="relative w-full max-w-6xl mx-auto rounded-3xl overflow-hidden shadow-2xl group cursor-pointer aspect-[16/9] sm:aspect-[2.5/1] lg:aspect-[3/1] bg-slate-950 border border-white/5">
+          {promoBanners.map((slide, idx) => (
+            <div
+              key={slide.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                idx === currentPromoSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+              }`}
+            >
+              <img 
+                src={slide.imageUrl} 
+                alt={slide.titleMain || "Promo Banner"} 
+                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+              {/* Optional Text Overlay */}
+              {(slide.badgeText || slide.titleMain || slide.titleSub) && (
+                <div className="absolute bottom-4 left-6 p-4 rounded-xl bg-slate-950/80 backdrop-blur border border-brand-border text-left">
+                  {slide.badgeText && <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider block mb-1">{slide.badgeText}</span>}
+                  {slide.titleMain && <span className="font-display text-2xl sm:text-3xl font-black text-white leading-none block mb-1">{slide.titleMain}</span>}
+                  {slide.titleSub && <span className="text-xs text-slate-300 block">{slide.titleSub}</span>}
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* Slider Dots */}
+          {promoBanners.length > 1 && (
+            <div className="absolute bottom-4 right-6 flex gap-2 z-20">
+              {promoBanners.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentPromoSlide(idx)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    idx === currentPromoSlide ? "bg-brand-orange w-6" : "bg-black/50 w-2 hover:bg-white/50"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {/* ==================== 1. HERO SPOTLIGHT BANNER ==================== */}
       <section className="relative carbon-overlay overflow-hidden rounded-3xl border border-brand-border bg-slate-950 py-12 px-8 sm:px-12 lg:px-16 lg:py-16">
@@ -178,20 +242,42 @@ export default function HomeView() {
             </div>
           </div>
 
-          {/* Right Column (Attractive Image Display) */}
-          <div className="lg:col-span-5 relative w-full flex justify-center items-center">
-            <div className="absolute -inset-1.5 rounded-2xl bg-gradient-to-r from-brand-orange to-brand-gold opacity-30 blur-lg pointer-events-none"></div>
-            <div className="relative rounded-2xl border border-brand-border overflow-hidden bg-slate-950 group shadow-2xl">
-              <img
-                src="/hero_rc_car.png"
-                alt="Traxxas X-Maxx 8S High Performance RC Truck"
-                className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500 rounded-2xl"
-              />
-              <div className="absolute bottom-4 right-4 flex flex-col items-end gap-1 p-3 rounded-xl bg-slate-950/80 backdrop-blur border border-white/10 text-right">
-                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Top Velocity Record</span>
-                <span className="font-display text-xl font-black text-brand-gold leading-none">134+ KM/H</span>
-                <span className="text-[9px] text-slate-300">Arrma Infraction 6S BLX</span>
-              </div>
+          {/* Right Column (Attractive Image Slider) */}
+          <div className="lg:col-span-5 relative w-full flex justify-center items-center h-[350px] lg:h-[400px] cursor-pointer">
+            <div className="absolute -inset-1.5 rounded-3xl bg-gradient-to-r from-brand-orange to-brand-gold opacity-30 blur-lg pointer-events-none"></div>
+            <div className="relative w-full h-full rounded-3xl border border-white/5 overflow-hidden bg-slate-950 group shadow-2xl">
+              {heroBanners.map((slide, idx) => (
+                <div
+                  key={slide.id}
+                  className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+                    }`}
+                >
+                  <img
+                    src={slide.imageUrl}
+                    alt={slide.titleMain}
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                  <div className="absolute bottom-4 right-4 flex flex-col items-end gap-1 p-3 rounded-xl bg-slate-950/80 backdrop-blur border border-white/10 text-right">
+                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{slide.badgeText}</span>
+                    <span className="font-display text-xl font-black text-brand-gold leading-none">{slide.titleMain}</span>
+                    <span className="text-[9px] text-slate-300">{slide.titleSub}</span>
+                  </div>
+                </div>
+              ))}
+
+              {/* Slider Dots */}
+              {heroBanners.length > 1 && (
+                <div className="absolute bottom-4 left-4 flex gap-2 z-20">
+                  {heroBanners.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentSlide(idx)}
+                      className={`h-2 rounded-full transition-all duration-300 ${idx === currentSlide ? "bg-brand-orange w-6" : "bg-white/30 w-2 hover:bg-white/50"
+                        }`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -472,7 +558,7 @@ export default function HomeView() {
         {/* Dynamic Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {exploreFilteredProducts.map((p) => (
-            <ProductCardItem 
+            <ProductCardItem
               key={p.id}
               p={p}
               wishlist={wishlist}
@@ -483,99 +569,127 @@ export default function HomeView() {
         </div>
       </section>
 
+
+
       {/* ==================== 4. DUAL CALL-TO-ACTION CARDS (Impel Looking for Car / Sell) ==================== */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
         {/* Card 1: Ready-To-Run */}
-        <div className="relative rounded-3xl border border-brand-border overflow-hidden bg-slate-950 py-12 px-8 flex flex-col justify-between min-h-[220px]">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-brand-orange/10 rounded-full blur-[40px] pointer-events-none" />
-          <div className="space-y-3 relative z-10">
-            <span className="text-[9px] font-bold text-brand-orange uppercase border border-brand-orange/30 px-2 py-0.5 rounded bg-brand-orange/10 tracking-widest inline-block">
-              Casual & Expert Drivers
-            </span>
-            <h3 className="font-display text-xl sm:text-2xl font-black uppercase tracking-tight text-white">
-              Are You Looking For a Ready-To-Run Rig?
-            </h3>
-            <p className="text-slate-400 text-xs sm:text-sm max-w-sm">
-              Ready-To-Run (RTR) models come fully assembled and painted. Just plug in your battery and shred the tarmac!
-            </p>
+        <div className="group relative rounded-3xl overflow-hidden border border-brand-orange/20 bg-slate-950 hover:border-brand-orange transition-all duration-500 shadow-xl hover:shadow-[0_0_40px_rgba(249,115,22,0.15)] flex flex-col justify-between min-h-[260px] cursor-pointer" onClick={() => { setFilterBrand("ALL"); setView("shop"); }}>
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-orange/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute -top-10 -right-10 w-64 h-64 bg-brand-orange/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-brand-orange/30 transition-colors duration-500" />
+          
+          <div className="relative z-10 p-8 sm:p-10 flex flex-col h-full justify-between gap-8">
+            <div className="space-y-4">
+              <span className="text-[10px] font-bold text-brand-orange uppercase border border-brand-orange/30 px-3 py-1 rounded-full bg-brand-orange/10 tracking-widest inline-block shadow-sm">
+                Casual & Expert Drivers
+              </span>
+              <h3 className="font-display text-2xl sm:text-3xl font-black uppercase tracking-tight text-white group-hover:text-brand-orange transition-colors duration-300">
+                Looking For a Ready-To-Run Rig?
+              </h3>
+              <p className="text-slate-400 text-sm max-w-md leading-relaxed">
+                Ready-To-Run (RTR) models come fully assembled and painted. Just plug in your battery and shred the tarmac!
+              </p>
+            </div>
+            
+            <button className="inline-flex items-center justify-center gap-2 text-sm font-black uppercase text-black bg-brand-orange group-hover:bg-brand-gold px-6 py-3.5 rounded-xl transition-all duration-300 tracking-wider w-fit shadow-[0_0_20px_rgba(249,115,22,0.2)] group-hover:shadow-[0_0_30px_rgba(249,115,22,0.4)]">
+              Explore RTR Garage <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </button>
           </div>
-          <button
-            onClick={() => { setFilterBrand("ALL"); setView("shop"); }}
-            className="mt-6 inline-flex items-center gap-1 text-xs font-black uppercase text-brand-orange hover:text-brand-gold transition-colors tracking-widest w-fit"
-          >
-            Explore RTR Garage <ChevronRight className="h-4 w-4" />
-          </button>
         </div>
 
         {/* Card 2: Hardcore Builders */}
-        <div className="relative rounded-3xl border border-brand-border overflow-hidden bg-slate-950 py-12 px-8 flex flex-col justify-between min-h-[220px]">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-brand-gold/10 rounded-full blur-[40px] pointer-events-none" />
-          <div className="space-y-3 relative z-10">
-            <span className="text-[9px] font-bold text-brand-gold uppercase border border-brand-gold/30 px-2 py-0.5 rounded bg-brand-gold/10 tracking-widest inline-block">
-              Scale Builders & Tuners
-            </span>
-            <h3 className="font-display text-xl sm:text-2xl font-black uppercase tracking-tight text-white">
-              Do You Want to Build Custom Kits?
-            </h3>
-            <p className="text-slate-400 text-xs sm:text-sm max-w-sm">
-              We stock raw chassis kits, carbon fiber upgrade parts, high-torque servos, and brushless motors for ultimate tuners.
-            </p>
+        <div className="group relative rounded-3xl overflow-hidden border border-brand-gold/20 bg-slate-950 hover:border-brand-gold transition-all duration-500 shadow-xl hover:shadow-[0_0_40px_rgba(234,179,8,0.15)] flex flex-col justify-between min-h-[260px] cursor-pointer" onClick={() => { setFilterBrand("ALL"); setView("shop"); }}>
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-gold/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute -top-10 -right-10 w-64 h-64 bg-brand-gold/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-brand-gold/30 transition-colors duration-500" />
+          
+          <div className="relative z-10 p-8 sm:p-10 flex flex-col h-full justify-between gap-8">
+            <div className="space-y-4">
+              <span className="text-[10px] font-bold text-brand-gold uppercase border border-brand-gold/30 px-3 py-1 rounded-full bg-brand-gold/10 tracking-widest inline-block shadow-sm">
+                Scale Builders & Tuners
+              </span>
+              <h3 className="font-display text-2xl sm:text-3xl font-black uppercase tracking-tight text-white group-hover:text-brand-gold transition-colors duration-300">
+                Want to Build Custom Kits?
+              </h3>
+              <p className="text-slate-400 text-sm max-w-md leading-relaxed">
+                We stock raw chassis kits, carbon fiber upgrade parts, high-torque servos, and brushless motors for ultimate tuners.
+              </p>
+            </div>
+            
+            <button className="inline-flex items-center justify-center gap-2 text-sm font-black uppercase text-black bg-brand-gold group-hover:bg-brand-orange px-6 py-3.5 rounded-xl transition-all duration-300 tracking-wider w-fit shadow-[0_0_20px_rgba(234,179,8,0.2)] group-hover:shadow-[0_0_30px_rgba(234,179,8,0.4)]">
+              Browse Tuning Kits <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </button>
           </div>
-          <button
-            onClick={() => { setFilterBrand("ALL"); setView("shop"); }}
-            className="mt-6 inline-flex items-center gap-1 text-xs font-black uppercase text-brand-gold hover:text-brand-orange transition-colors tracking-widest w-fit"
-          >
-            Browse Tuning Kits <ChevronRight className="h-4 w-4" />
-          </button>
         </div>
       </section>
 
       {/* ==================== 5. WELCOME ABOUT SECTION (Impel Welcome block) ==================== */}
-      <section className="relative max-w-6xl mx-auto rounded-3xl border border-brand-border bg-slate-950/40 p-8 sm:p-12 overflow-hidden">
-        <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-brand-orange/5 rounded-full blur-[60px]" />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <span className="text-[10px] text-brand-orange font-bold uppercase tracking-widest block">
-                Welcome to MARQUE Premium RC India
+      <section className="relative max-w-6xl mx-auto py-16 sm:py-24 px-4 sm:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+          
+          <div className="order-2 lg:order-1 space-y-8">
+            <div className="space-y-6">
+              <span className="flex items-center gap-3 text-xs text-brand-orange font-bold uppercase tracking-[0.2em]">
+                <span className="w-8 h-px bg-brand-orange/50"></span>
+                Welcome to MARQUE
               </span>
-              <h2 className="font-display text-2xl sm:text-4xl font-black uppercase tracking-tight text-white leading-tight">
-                Sleek Rigs, Smart Prices.<br />
-                Your Ideal Car Is A Click Away.
+              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-[1.05]">
+                Sleek Rigs,<br />Smart Prices.<br />
+                <span className="text-slate-400 font-medium tracking-normal normal-case text-2xl sm:text-3xl block mt-4">
+                  Your ideal car is a click away.
+                </span>
               </h2>
             </div>
-            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-              MARQUE is India's dedicated hub for authentic, hobby-grade remote control scale engineering and premium accessories. We source directly from elite international manufacturers, providing bash-tested rigs, performance upgrades, and spare parts with comprehensive catalogs.
+            
+            <p className="text-slate-300 text-base leading-relaxed max-w-lg">
+              MARQUE is India's dedicated hub for authentic, hobby-grade remote control scale engineering and premium accessories. We source directly from elite international manufacturers, providing bash-tested rigs, performance upgrades, and spare parts.
             </p>
 
-            <ul className="space-y-3">
+            <ul className="space-y-4 pt-2">
               {[
                 "100% Genuine models with sealed manufacturer pack guarantees.",
                 "18% Inclusive GST billing with business HSN inputs.",
-                "Dedicated Madipakkam technical support for repairs and tuning advice."
+                "Dedicated Madipakkam technical support for repairs."
               ].map((bullet, idx) => (
-                <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-300 leading-relaxed">
-                  <CheckCircle2 className="h-4 w-4 text-brand-orange mt-0.5 shrink-0" />
-                  <span>{bullet}</span>
+                <li key={idx} className="flex items-start gap-4">
+                  <div className="mt-1 bg-brand-orange rounded-full p-0.5 shrink-0">
+                    <CheckCircle2 className="h-3 w-3 text-black" />
+                  </div>
+                  <span className="text-sm text-slate-200">{bullet}</span>
                 </li>
               ))}
             </ul>
 
-            <button
-              onClick={() => { setFilterBrand("ALL"); setView("shop"); }}
-              className="rounded-xl bg-brand-orange hover:bg-brand-gold text-black font-black uppercase tracking-wider px-6 py-3.5 text-xs transition-all duration-300 inline-block"
-            >
-              Explore Vehicles
-            </button>
+            <div className="pt-4">
+              <button
+                onClick={() => { setFilterBrand("ALL"); setView("shop"); }}
+                className="group inline-flex items-center justify-center gap-3 text-sm font-bold uppercase text-white bg-transparent border border-white/20 hover:border-brand-orange hover:bg-brand-orange hover:text-black px-8 py-4 rounded-full transition-all duration-300 tracking-widest"
+              >
+                Explore Vehicles <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
-          <div className="relative rounded-2xl border border-brand-border overflow-hidden bg-slate-950 max-h-[350px] shadow-2xl flex items-center justify-center">
+          <div className="order-1 lg:order-2 relative w-full aspect-square sm:aspect-[4/3] rounded-[2rem] overflow-hidden group border border-white/5 shadow-2xl">
             <img
               src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80"
-              alt="Hobbyists tuning brushless motor"
-              className="w-full h-full object-cover filter contrast-125 hover:scale-105 transition duration-500"
+              alt="Premium RC Engineering"
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80 pointer-events-none" />
+            
+            <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 z-10">
+              <div className="inline-flex items-center gap-4 backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-4 shadow-xl">
+                <div className="w-12 h-12 rounded-full bg-brand-orange flex items-center justify-center shrink-0">
+                  <Trophy className="h-6 w-6 text-black" />
+                </div>
+                <div>
+                  <p className="text-white font-bold text-sm sm:text-base tracking-wide">Premium Quality</p>
+                  <p className="text-slate-300 text-xs sm:text-sm font-medium">Guaranteed Performance</p>
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
       </section>
 

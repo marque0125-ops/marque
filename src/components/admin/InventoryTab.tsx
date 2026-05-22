@@ -184,7 +184,7 @@ export function InventoryTab() {
             </h4>
             <button type="button" onClick={resetProductForm} className="text-slate-500 hover:text-red-500"><X className="h-5 w-5" /></button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-300">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-xs text-slate-300">
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Model Name</label><input type="text" value={formName} onChange={(e) => setFormName(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Chassis SKU Code</label><input type="text" value={formSku} onChange={(e) => setFormSku(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Brand Manufacturer</label><select value={formBrandId} onChange={(e) => setFormBrandId(e.target.value)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange">{BRANDS.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}</select></div>
@@ -200,8 +200,11 @@ export function InventoryTab() {
                 ))}
               </select>
             </div>
-            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Price</label><input type="number" value={formPrice || ""} onChange={(e) => setFormPrice(parseInt(e.target.value) || 0)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
-            <div className="space-y-1.5 md:col-span-3">
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Sale Price</label><input type="number" value={formPrice || ""} onChange={(e) => setFormPrice(parseInt(e.target.value) || 0)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">MRP (Compare Price)</label><input type="number" value={formComparePrice || ""} onChange={(e) => setFormComparePrice(parseInt(e.target.value) || 0)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Scale (e.g. 1:10)</label><input type="text" value={formScale} onChange={(e) => setFormScale(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Top Speed (KM/H)</label><input type="number" value={formSpeedKmh || ""} onChange={(e) => setFormSpeedKmh(parseInt(e.target.value) || 0)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5 md:col-span-4">
               <label className="text-[10px] text-slate-400 font-bold uppercase block">Product Gallery Images</label>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-wrap gap-4">

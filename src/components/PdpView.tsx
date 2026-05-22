@@ -787,7 +787,7 @@ export default function PdpView() {
             >
               <X className="h-5 w-5" />
             </button>
-            {selectedProduct.videoUrl.startsWith('data:video') ? (
+            {selectedProduct.videoUrl?.startsWith('data:video') ? (
               <video 
                 src={selectedProduct.videoUrl} 
                 className="w-full h-full object-contain"
@@ -796,7 +796,7 @@ export default function PdpView() {
               />
             ) : (
               <iframe 
-                src={getEmbedUrl(selectedProduct.videoUrl)} 
+                src={getEmbedUrl(selectedProduct.videoUrl || '')} 
                 title="Video player" 
                 className="w-full h-full border-none"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 

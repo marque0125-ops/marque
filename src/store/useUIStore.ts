@@ -2,6 +2,14 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { Product, PinCodeDetail, PIN_CODES } from "../data/mockData";
 
+export interface BannerSlide {
+  id: string;
+  imageUrl: string;
+  badgeText: string;
+  titleMain: string;
+  titleSub: string;
+}
+
 export interface UIState {
   currentView: 'home' | 'shop' | 'accessories' | 'pdp' | 'cart' | 'account' | 'admin' | 'terms' | 'shipping';
   setView: (view: 'home' | 'shop' | 'accessories' | 'pdp' | 'cart' | 'account' | 'admin' | 'terms' | 'shipping') => void;
@@ -21,6 +29,16 @@ export interface UIState {
 
   announcementText: string;
   setAnnouncementText: (text: string) => void;
+
+  heroBanners: BannerSlide[];
+  addHeroBanner: (banner: BannerSlide) => void;
+  updateHeroBanner: (banner: BannerSlide) => void;
+  removeHeroBanner: (id: string) => void;
+
+  promoBanners: BannerSlide[];
+  addPromoBanner: (banner: BannerSlide) => void;
+  updatePromoBanner: (banner: BannerSlide) => void;
+  removePromoBanner: (id: string) => void;
 }
 
 export const useUIStore = create<UIState>()(
@@ -64,12 +82,55 @@ export const useUIStore = create<UIState>()(
 
       announcementText: "⚡ EXTREME 8S BRUSHLESS ACTION • GST-INCLUSIVE PRICES • FREE SHIPPING ABOVE ₹10,000 ⚡",
       setAnnouncementText: (text) => set({ announcementText: text }),
+
+      heroBanners: [
+        {
+          id: "banner-1",
+          imageUrl: "/hero_rc_car.png",
+          badgeText: "Top Velocity Record",
+          titleMain: "134+ KM/H",
+          titleSub: "Arrma Infraction 6S BLX"
+        },
+        {
+          id: "banner-2",
+          imageUrl: "/marque-banner-img.webp",
+          badgeText: "Premium Parts",
+          titleMain: "CUSTOM TUNING",
+          titleSub: "Upgrade Your Arsenal"
+        }
+      ],
+      addHeroBanner: (banner) => set((state) => ({ heroBanners: [...state.heroBanners, banner] })),
+      updateHeroBanner: (banner) => set((state) => ({
+        heroBanners: state.heroBanners.map((b) => b.id === banner.id ? banner : b)
+      })),
+      removeHeroBanner: (id) => set((state) => ({
+        heroBanners: state.heroBanners.filter((b) => b.id !== id)
+      })),
+
+      promoBanners: [
+        {
+          id: "promo-1",
+          imageUrl: "/marque-banner-img.webp",
+          badgeText: "",
+          titleMain: "",
+          titleSub: ""
+        }
+      ],
+      addPromoBanner: (banner) => set((state) => ({ promoBanners: [...state.promoBanners, banner] })),
+      updatePromoBanner: (banner) => set((state) => ({
+        promoBanners: state.promoBanners.map((b) => b.id === banner.id ? banner : b)
+      })),
+      removePromoBanner: (id) => set((state) => ({
+        promoBanners: state.promoBanners.filter((b) => b.id !== id)
+      })),
     }),
     {
       name: "marque-ui-storage",
       partialize: (state) => ({
         lowStockAlerts: state.lowStockAlerts,
-        announcementText: state.announcementText
+        announcementText: state.announcementText,
+        heroBanners: state.heroBanners,
+        promoBanners: state.promoBanners
       })
     }
   )

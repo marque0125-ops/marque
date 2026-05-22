@@ -209,7 +209,7 @@ export default function CartView() {
           // Success Callback
           const store = useOrderStore.getState();
           const order = store.createOrder(method);
-          order.status = "Confirmed";
+          order.status = "confirmed";
           order.paymentMethod = method;
 
           setView('account');
