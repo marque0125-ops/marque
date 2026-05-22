@@ -1,31 +1,35 @@
 import React, { useState } from "react";
-import { Plus, Edit2, Trash2, X, Save, FileText, Image as ImageIcon, Clock, Hash } from "lucide-react";
+import { Plus, Edit2, Trash2, X, Save, FileText, Image as ImageIcon, Clock, Hash, Loader2 } from "lucide-react";
 import { useProductStore } from "../../store/useProductStore";
+import { useUIStore } from "../../store/useUIStore";
+import { uploadImageToCloudinary } from "../../utils/cloudinary";
 import { RCGuide } from "../../data/mockData";
 
 export default function BlogTab() {
   const { guides, addGuide, updateGuide, deleteGuide } = useProductStore();
+  const { showDialog } = useUIStore();
   const [isEditing, setIsEditing] = useState(false);
   const [editingGuide, setEditingGuide] = useState<Partial<RCGuide>>({});
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 1024 * 1024) {
-        alert("File size exceeds 1MB limit. Please choose a smaller image.");
-        return;
+      setIsUploading(true);
+      try {
+        const url = await uploadImageToCloudinary(file);
+        setEditingGuide({ ...editingGuide, imageUrl: url });
+      } catch (error) {
+        showDialog({ title: 'Upload Failed', message: 'Failed to upload image. Please try again.' });
+      } finally {
+        setIsUploading(false);
       }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEditingGuide({ ...editingGuide, imageUrl: reader.result as string });
-      };
-      reader.readAsDataURL(file);
     }
   };
 
   const handleSave = () => {
     if (!editingGuide.title || !editingGuide.content || !editingGuide.category) {
-      alert("Please fill all required fields (Title, Content, Category)");
+      showDialog({ title: 'Validation Error', message: 'Please fill all required fields (Title, Content, Category)' });
       return;
     }
 
@@ -60,9 +64,12 @@ export default function BlogTab() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this article?")) {
-      deleteGuide(id);
-    }
+    showDialog({
+      type: 'confirm',
+      title: 'Delete Article',
+      message: 'Are you sure you want to delete this article?',
+      onConfirm: () => deleteGuide(id)
+    });
   };
 
   if (isEditing) {
@@ -143,14 +150,20 @@ export default function BlogTab() {
                     <ImageIcon className="h-6 w-6" />
                   </div>
                 )}
-                <div className="flex-1">
+                <div className="flex-1 relative">
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
-                    className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:uppercase file:bg-brand-orange file:text-black hover:file:bg-brand-gold file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
+                    disabled={isUploading}
+                    className={`w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:uppercase file:bg-brand-orange file:text-black hover:file:bg-brand-gold file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   />
-                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-bold tracking-wider">Max size: 1MB. Recommended: JPG, PNG, WEBP.</p>
+                  {isUploading && (
+                    <div className="absolute inset-y-0 right-4 flex items-center">
+                      <Loader2 className="h-5 w-5 animate-spin text-brand-orange" />
+                    </div>
+                  )}
+                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-bold tracking-wider">Recommended: JPG, PNG, WEBP.</p>
                 </div>
               </div>
             </div>

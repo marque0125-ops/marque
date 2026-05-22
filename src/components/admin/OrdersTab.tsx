@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useOrderStore } from "../../store/useOrderStore";
+import { Loader2 } from "lucide-react";
+import { OrderTrackingMap } from "../OrderTrackingMap";
 
 export function OrdersTab() {
-  const { orders, advanceOrderStatus, cancelOrder } = useOrderStore();
+  const { orders, isLoading, advanceOrderStatus, cancelOrder, fetchOrders } = useOrderStore();
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
+
+  if (isLoading && orders.length === 0) {
+    return (
+      <div className="flex justify-center items-center py-20 text-brand-orange">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -55,7 +69,11 @@ export function OrdersTab() {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center gap-4">
+              <div className="pt-2 border-t border-brand-border/40">
+                <OrderTrackingMap status={order.status} />
+              </div>
+
+              <div className="flex justify-between items-center gap-4 pt-2">
                 <span className="text-[10px] text-slate-500 font-mono">AWB Code: {order.trackingNumber}</span>
                 <div className="flex gap-2">
                   {order.status !== 'delivered' && order.status !== 'cancelled' && (

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Layers, Plus, Car, X, Trash2, Edit2 } from "lucide-react";
 import { useProductStore } from "../../store/useProductStore";
+import { useUIStore } from "../../store/useUIStore";
 import { BRANDS } from "../../data/mockData";
 
 export function InventoryTab() {
+  const { showDialog } = useUIStore();
   const { products, categories, addProduct, updateProduct, deleteProduct, updateProductStock } = useProductStore();
 
   const [isAddingProduct, setIsAddingProduct] = useState(false);
@@ -111,7 +113,7 @@ export function InventoryTab() {
 
   const handleSaveProduct = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formName || !formSku || formPrice <= 0) return alert("Please fill in Name, SKU, and a valid Price.");
+    if (!formName || !formSku || formPrice <= 0) return showDialog({ title: 'Validation Error', message: 'Please fill in Name, SKU, and a valid Price.' });
     const isEdit = !!selectedProductId;
     const finalProductId = isEdit ? selectedProductId! : `p-${Date.now()}`;
     const totalStock = formVariants.reduce((sum, v) => sum + v.stockQty, 0);
@@ -131,8 +133,8 @@ export function InventoryTab() {
       reviewCount: isEdit ? (products.find(p => p.id === selectedProductId)?.reviewCount || 1) : 0
     };
 
-    if (isEdit) { updateProduct(productData); alert(`Success: ${formName} updated!`); }
-    else { addProduct(productData); alert(`Success: ${formName} added!`); }
+    if (isEdit) { updateProduct(productData); showDialog({ title: 'Success', message: `Success: ${formName} updated!` }); }
+    else { addProduct(productData); showDialog({ title: 'Success', message: `Success: ${formName} added!` }); }
     resetProductForm();
   };
 
@@ -149,7 +151,7 @@ export function InventoryTab() {
   const handleRemoveVariant = (id: string) => setFormVariants(formVariants.filter(v => v.id !== id));
 
   const handleDeleteProductClick = (id: string, name: string) => {
-    if (confirm(`CRITICAL DELETION: Remove ${name}?`)) { deleteProduct(id); alert(`Deleted ${name}.`); }
+    showDialog({ type: 'confirm', title: 'Delete Product', message: `CRITICAL DELETION: Remove ${name}?`, onConfirm: () => { deleteProduct(id); showDialog({ title: 'Success', message: `Deleted ${name}.` }); } });
   };
 
   const handleStockUpdate = (productId: string, variantId: string) => {
@@ -288,9 +290,17 @@ export function InventoryTab() {
             </div>
             <div className="grid grid-cols-2 gap-2">
               {formVariants.map((v, i) => (
-                <div key={i} className="p-2 border border-brand-border bg-slate-900 flex justify-between rounded">
-                  <div><span className="font-bold text-white block">{v.name}</span><span className="text-[8px] text-brand-orange">Stock: {v.stockQty}</span></div>
-                  <button type="button" onClick={() => handleRemoveVariant(v.id)} className="text-red-500"><Trash2 className="h-3 w-3" /></button>
+                <div key={i} className="p-2 border border-brand-border bg-slate-900 flex items-center justify-between rounded">
+                  <div className="flex items-center gap-3">
+                      {v.imageUrl && (
+                        <img src={v.imageUrl} alt={v.name} className="w-8 h-8 object-cover rounded border border-brand-border" />
+                      )}
+                      <div>
+                        <span className="font-bold text-white block text-xs">{v.name}</span>
+                        <span className="text-[9px] text-brand-orange uppercase font-bold tracking-wider">Stock: {v.stockQty}</span>
+                      </div>
+                    </div>
+                  <button type="button" onClick={() => handleRemoveVariant(v.id)} className="text-red-500 hover:text-red-400 transition-colors p-1"><Trash2 className="h-4 w-4" /></button>
                 </div>
               ))}
             </div>

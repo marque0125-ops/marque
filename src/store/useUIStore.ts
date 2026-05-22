@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { Product, PinCodeDetail, PIN_CODES } from "../data/mockData";
 
 export interface BannerSlide {
@@ -10,11 +10,26 @@ export interface BannerSlide {
   titleSub: string;
 }
 
+export interface DialogOptions {
+  isOpen: boolean;
+  type: 'alert' | 'confirm';
+  title: string;
+  message: string;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  confirmText?: string;
+  cancelText?: string;
+}
+
 export interface UIState {
   currentView: 'home' | 'shop' | 'accessories' | 'pdp' | 'cart' | 'account' | 'admin' | 'terms' | 'shipping';
   setView: (view: 'home' | 'shop' | 'accessories' | 'pdp' | 'cart' | 'account' | 'admin' | 'terms' | 'shipping') => void;
   selectedProduct: Product | null;
   setSelectedProduct: (product: Product | null) => void;
+
+  dialog: DialogOptions;
+  showDialog: (options: Partial<DialogOptions>) => void;
+  closeDialog: () => void;
 
   pincode: string;
   pinDetail: PinCodeDetail | null;
@@ -41,6 +56,27 @@ export interface UIState {
   removePromoBanner: (id: string) => void;
 }
 
+const safeStorage = {
+  getItem: (name: string) => {
+    try { return localStorage.getItem(name); } catch { return null; }
+  },
+  setItem: (name: string, value: string) => {
+    try {
+      localStorage.setItem(name, value);
+    } catch (e) {
+      console.warn("Storage quota exceeded! Attempting to recover...", e);
+      try {
+        localStorage.removeItem(name);
+      } catch (err) {
+        console.error("Recovery failed", err);
+      }
+    }
+  },
+  removeItem: (name: string) => {
+    try { localStorage.removeItem(name); } catch {}
+  }
+};
+
 export const useUIStore = create<UIState>()(
   persist(
     (set, get) => ({
@@ -48,6 +84,19 @@ export const useUIStore = create<UIState>()(
       setView: (view) => set({ currentView: view }),
       selectedProduct: null,
       setSelectedProduct: (product) => set({ selectedProduct: product, currentView: product ? 'pdp' : 'shop' }),
+
+      dialog: {
+        isOpen: false,
+        type: 'alert',
+        title: '',
+        message: ''
+      },
+      showDialog: (options) => set(state => ({
+        dialog: { ...state.dialog, ...options, isOpen: true }
+      })),
+      closeDialog: () => set(state => ({
+        dialog: { ...state.dialog, isOpen: false }
+      })),
 
       pincode: "",
       pinDetail: null,
@@ -126,6 +175,7 @@ export const useUIStore = create<UIState>()(
     }),
     {
       name: "marque-ui-storage",
+      storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({
         lowStockAlerts: state.lowStockAlerts,
         announcementText: state.announcementText,

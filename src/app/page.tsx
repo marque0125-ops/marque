@@ -16,6 +16,7 @@ import { AdminLogin } from "../components/admin/AdminLogin";
 import AccessoriesView from "../components/AccessoriesView";
 import TermsView from "../components/TermsView";
 import ShippingView from "../components/ShippingView";
+import { GlobalDialog } from "../components/GlobalDialog";
 
 export default function Home() {
   const { currentView } = useUIStore();
@@ -64,6 +65,9 @@ export default function Home() {
 
       {/* Corporate Declarations Footer */}
       <Footer />
+
+      {/* Global Modals */}
+      <GlobalDialog />
     </div>
   );
 }

@@ -3,10 +3,12 @@ import { User, AlertCircle, Loader2 } from "lucide-react";
 import { supabase } from '../../utils/supabase';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useUIStore } from '../../store/useUIStore';
+import { useProductStore } from '../../store/useProductStore';
 
 export function AuthPanel() {
   const { login, loginWithSession } = useAuthStore();
   const { setView } = useUIStore();
+  const { setWishlist } = useProductStore();
 
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
   const [signInEmail, setSignInEmail] = useState("");
@@ -54,6 +56,9 @@ export function AuthPanel() {
         if (authData?.user) {
           const { data: profile } = await supabase.from("profiles").select("*").eq("id", authData.user.id).maybeSingle();
           const prof = profile as any;
+          if (prof?.wishlist) {
+            setWishlist(prof.wishlist);
+          }
           const name = prof?.name || authData.user.user_metadata?.full_name || email.split("@")[0];
           const phone = prof?.phone || authData.user.user_metadata?.phone || "9999999999";
           const token = authData.session?.access_token || "";

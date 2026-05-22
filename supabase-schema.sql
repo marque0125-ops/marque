@@ -37,10 +37,12 @@ CREATE TABLE IF NOT EXISTS public.products (
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 
 -- Allow anonymous read access (customers can browse catalog)
+DROP POLICY IF EXISTS "Allow public read access" ON public.products;
 CREATE POLICY "Allow public read access" ON public.products
     FOR SELECT TO public USING (true);
 
 -- Allow full access to authenticated admins & seeding triggers
+DROP POLICY IF EXISTS "Allow public upsert for seeding" ON public.products;
 CREATE POLICY "Allow public upsert for seeding" ON public.products
     FOR ALL TO public USING (true) WITH CHECK (true);
 
@@ -55,15 +57,23 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     state TEXT,
     pincode TEXT,
     gstin TEXT,
+    wishlist JSONB DEFAULT '[]'::jsonb NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
 -- Enable RLS
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
--- Allow all operations for profile synchronization
-CREATE POLICY "Allow public profiles sync" ON public.profiles
-    FOR ALL TO public USING (true) WITH CHECK (true);
+-- Allow insert during signup
+DROP POLICY IF EXISTS "Allow public profiles sync" ON public.profiles;
+DROP POLICY IF EXISTS "Allow profile insert" ON public.profiles;
+CREATE POLICY "Allow profile insert" ON public.profiles FOR INSERT TO public WITH CHECK (true);
+
+-- Allow users to read and update their own profile
+DROP POLICY IF EXISTS "Allow user read own profile" ON public.profiles;
+CREATE POLICY "Allow user read own profile" ON public.profiles FOR SELECT TO authenticated USING (id = auth.uid());
+DROP POLICY IF EXISTS "Allow user update own profile" ON public.profiles;
+CREATE POLICY "Allow user update own profile" ON public.profiles FOR UPDATE TO authenticated USING (id = auth.uid());
 
 
 -- 3. INITIALIZE ORDERS TABLE
@@ -88,6 +98,13 @@ CREATE TABLE IF NOT EXISTS public.orders (
 -- Enable RLS
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 
--- Allow order tracking and backup registration
-CREATE POLICY "Allow public order placement and access" ON public.orders
-    FOR ALL TO public USING (true) WITH CHECK (true);
+-- Allow public order placement (guest checkout)
+DROP POLICY IF EXISTS "Allow public order placement and access" ON public.orders;
+DROP POLICY IF EXISTS "Allow public order insert" ON public.orders;
+CREATE POLICY "Allow public order insert" ON public.orders FOR INSERT TO public WITH CHECK (true);
+
+-- Restrict read/update access strictly to the Admin
+DROP POLICY IF EXISTS "Allow admin read orders" ON public.orders;
+CREATE POLICY "Allow admin read orders" ON public.orders FOR SELECT TO authenticated USING (auth.jwt() ->> 'email' = '2002dineshmurugan@gmail.com');
+DROP POLICY IF EXISTS "Allow admin update orders" ON public.orders;
+CREATE POLICY "Allow admin update orders" ON public.orders FOR UPDATE TO authenticated USING (auth.jwt() ->> 'email' = '2002dineshmurugan@gmail.com');

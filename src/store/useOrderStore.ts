@@ -9,15 +9,61 @@ import { useProductStore } from "./useProductStore";
 
 export interface OrderState {
   orders: Order[];
+  isLoading: boolean;
   createOrder: (paymentMethod: 'UPI' | 'Card' | 'COD', paymentId?: string) => Order;
   advanceOrderStatus: (orderId: string) => void;
   cancelOrder: (orderId: string) => void;
+  fetchOrders: () => Promise<void>;
 }
 
 export const useOrderStore = create<OrderState>()(
   persist(
     (set, get) => ({
       orders: [],
+      isLoading: false,
+      fetchOrders: async () => {
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (!isConfigured) return;
+
+        set({ isLoading: true });
+        try {
+          const { data, error } = await supabase
+            .from("orders")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+          if (error) {
+            console.error("Supabase Error fetching orders:", error.message);
+            return;
+          }
+
+          if (data && data.length > 0) {
+            const mappedOrders: Order[] = (data as any[]).map(o => ({
+              id: o.id,
+              items: o.items as any,
+              subtotal: o.subtotal,
+              gstAmount: o.gst_amount,
+              shippingAmount: o.shipping_amount,
+              discountAmount: o.discount_amount,
+              totalAmount: o.total_amount,
+              status: o.status,
+              paymentStatus: o.payment_status,
+              paymentMethod: o.payment_method,
+              paymentId: o.payment_id,
+              trackingNumber: o.tracking_number,
+              shippingAddress: o.shipping_address as any,
+              createdAt: o.created_at,
+              logs: o.logs as any || []
+            }));
+            
+            set({ orders: mappedOrders });
+          }
+        } catch (err) {
+          console.error("Failed to fetch orders from Supabase", err);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
       createOrder: (paymentMethod, paymentId) => {
         const cartState = useCartStore.getState();
         const authState = useAuthStore.getState();
@@ -104,6 +150,21 @@ export const useOrderStore = create<OrderState>()(
                 shipping_address: newOrder.shippingAddress as any,
                 logs: newOrder.logs as any
               }] as any);
+            }
+
+            // Trigger Email Receipt via Resend API
+            if (authState.userEmail) {
+              await fetch('/api/email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  orderId: newOrder.id,
+                  email: authState.userEmail,
+                  name: newOrder.shippingAddress.name,
+                  totalAmount: newOrder.totalAmount,
+                  items: newOrder.items
+                })
+              }).catch(e => console.error("Email API network error:", e));
             }
           } catch (err) {
             console.warn("☁️ Supabase Cloud Sync Info: Orders table is not initialized yet.", err);

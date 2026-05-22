@@ -4,10 +4,12 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { useOrderStore } from "../../store/useOrderStore";
 import { useProductStore } from "../../store/useProductStore";
 import { useUIStore } from "../../store/useUIStore";
+import { OrderTrackingMap } from "../OrderTrackingMap";
 
 export function Dashboard() {
   const { userEmail, address, setAddress, logout } = useAuthStore();
-  const { orders, cancelOrder } = useOrderStore();
+  const { orders, fetchOrders, cancelOrder } = useOrderStore();
+  const { showDialog } = useUIStore();
   const { products, wishlist } = useProductStore();
   const { setView, setSelectedProduct } = useUIStore();
 
@@ -204,36 +206,17 @@ export function Dashboard() {
               <div className="flex justify-between"><span className="text-slate-400">Destination PIN</span><span className="text-slate-200">{activeOrder.shippingAddress.pincode} ({activeOrder.shippingAddress.city})</span></div>
             </div>
 
-            <div className="space-y-4 relative">
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Shipment Timeline Nodes</span>
-              <div className="absolute top-1/2 left-3 right-3 h-0.5 bg-slate-800 -translate-y-1/2 pointer-events-none" />
-              <div className="flex justify-between relative z-10 text-[9px] font-bold">
-                {[
-                  { key: 'placed', label: 'Placed' },
-                  { key: 'confirmed', label: 'Confirmed' },
-                  { key: 'dispatched', label: 'Dispatched' },
-                  { key: 'out-of-delivery', label: 'Outbound' },
-                  { key: 'delivered', label: 'Delivered' }
-                ].map((node, idx) => {
-                  const statusOrder = ['placed', 'confirmed', 'dispatched', 'out-of-delivery', 'delivered', 'cancelled'];
-                  const activeIndex = statusOrder.indexOf(activeOrder.status);
-                  const nodeIndex = statusOrder.indexOf(node.key);
-                  const isPassed = nodeIndex <= activeIndex && activeOrder.status !== 'cancelled';
-                  const isCurrent = node.key === activeOrder.status;
-
-                  return (
-                    <div key={idx} className="flex flex-col items-center gap-1.5">
-                      <div className={`h-6.5 w-6.5 rounded-full border-2 flex items-center justify-center font-bold text-[9px] transition-all ${isPassed ? 'bg-brand-orange border-brand-orange text-black shadow-glow' : 'bg-slate-950 border-slate-800 text-slate-500'} ${isCurrent && 'animate-ping absolute h-6.5 w-6.5 bg-brand-orange/30'}`} />
-                      {isCurrent && <div className="h-6.5 w-6.5 rounded-full border-2 bg-brand-orange border-brand-orange text-black flex items-center justify-center font-bold text-[9px] z-20">{idx + 1}</div>}
-                      <span className={`uppercase font-display tracking-tighter ${isPassed ? 'text-brand-orange' : 'text-slate-500'}`}>{node.label}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            <OrderTrackingMap status={activeOrder.status} />
 
             {activeOrder.status !== 'delivered' && activeOrder.status !== 'cancelled' && (
-              <button onClick={() => { if (confirm("Are you sure you want to cancel this order?")) cancelOrder(activeOrder.id); }} className="w-full text-center text-[10px] text-red-400 hover:text-red-500 font-bold uppercase tracking-wider underline block pt-2">
+              <button onClick={() => { 
+                showDialog({
+                  type: 'confirm',
+                  title: 'Cancel Order',
+                  message: 'Are you sure you want to cancel this order? This action cannot be undone.',
+                  onConfirm: () => cancelOrder(activeOrder.id)
+                });
+              }} className="w-full text-center text-[10px] text-red-400 hover:text-red-500 font-bold uppercase tracking-wider underline block pt-2">
                 Cancel Order and Request Refund
               </button>
             )}

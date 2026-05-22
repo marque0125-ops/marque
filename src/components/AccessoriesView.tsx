@@ -29,7 +29,8 @@ export default function AccessoriesView() {
   } = useProductStore();
   const {
     setSelectedProduct,
-    setView
+    setView,
+    showDialog
   } = useUIStore();
 
   const [activeBrandTab, setActiveBrandTab] = useState<"ALL" | "LEGO" | "MARQUE">("ALL");
@@ -61,9 +62,15 @@ export default function AccessoriesView() {
     e.stopPropagation();
     if (product.variants && product.variants.length > 0) {
       addToCart(product, product.variants[0], 1);
-      alert(`Success: ${product.name} added to cart!`);
+      showDialog({
+        title: 'Added to Cart',
+        message: `${product.name} added to cart!`
+      });
     } else {
-      alert("Error: No retail variants defined for this accessory.");
+      showDialog({
+        title: 'Error',
+        message: 'No retail variants defined for this accessory.'
+      });
     }
   };
 

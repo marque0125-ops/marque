@@ -16,6 +16,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'wtxxavngcnyyfxjoxxce.supabase.co', // Default Supabase for testing if any
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
       // allow all hostnames for now, since it's an e-commerce dashboard with arbitrary URLs
       {
         protocol: 'https',

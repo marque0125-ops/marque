@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { FolderTree, Plus, X, Trash2, Edit2 } from "lucide-react";
+import { FolderTree, Plus, X, Trash2, Edit2, Loader2, Image as ImageIcon } from "lucide-react";
 import { useProductStore } from "../../store/useProductStore";
+import { useUIStore } from "../../store/useUIStore";
+import { uploadImageToCloudinary } from "../../utils/cloudinary";
 
 export function CategoriesTab() {
+  const { showDialog } = useUIStore();
   const { categories, addCategory, updateCategory, deleteCategory, products } = useProductStore();
 
   const [isAdding, setIsAdding] = useState(false);
@@ -11,17 +14,20 @@ export function CategoriesTab() {
   const [formId, setFormId] = useState("");
   const [formName, setFormName] = useState("");
   const [formImage, setFormImage] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 1024 * 1024) {
-        alert("File size exceeds 1MB limit.");
-        return;
+      setIsUploading(true);
+      try {
+        const url = await uploadImageToCloudinary(file);
+        setFormImage(url);
+      } catch (error) {
+        showDialog({ title: 'Upload Failed', message: 'Failed to upload image. Please try again.' });
+      } finally {
+        setIsUploading(false);
       }
-      const reader = new FileReader();
-      reader.onloadend = () => setFormImage(reader.result as string);
-      reader.readAsDataURL(file);
     }
   };
 
@@ -43,11 +49,11 @@ export function CategoriesTab() {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formId || !formName || !formImage) return alert("Please fill in all fields.");
+    if (!formId || !formName || !formImage) return showDialog({ title: 'Validation Error', message: 'Please fill in all fields.' });
     
     // Prevent overriding existing IDs when adding new
     if (isAdding && categories.some(c => c.id === formId)) {
-      return alert("A category with this ID already exists.");
+      return showDialog({ title: 'Error', message: 'A category with this ID already exists.' });
     }
 
     const categoryData = {
@@ -58,10 +64,10 @@ export function CategoriesTab() {
 
     if (isEditing) {
       updateCategory(categoryData);
-      alert(`Success: ${formName} category updated!`);
+      showDialog({ title: 'Success', message: `Success: ${formName} category updated!` });
     } else {
       addCategory(categoryData);
-      alert(`Success: ${formName} category added!`);
+      showDialog({ title: 'Success', message: `Success: ${formName} category added!` });
     }
     resetForm();
   };
@@ -69,14 +75,19 @@ export function CategoriesTab() {
   const handleDeleteClick = (id: string, name: string) => {
     const activeProducts = products.filter(p => p.categoryId === id);
     if (activeProducts.length > 0) {
-      alert(`Cannot delete ${name}. There are ${activeProducts.length} product(s) assigned to this category. Reassign them first.`);
+      showDialog({ title: 'Cannot Delete', message: `Cannot delete ${name}. There are ${activeProducts.length} product(s) assigned to this category. Reassign them first.` });
       return;
     }
 
-    if (confirm(`CRITICAL DELETION: Remove Category "${name}"?`)) {
-      deleteCategory(id);
-      alert(`Deleted ${name}.`);
-    }
+    showDialog({
+      type: 'confirm',
+      title: 'Delete Category',
+      message: `CRITICAL DELETION: Remove Category "${name}"?`,
+      onConfirm: () => {
+        deleteCategory(id);
+        showDialog({ title: 'Success', message: `Deleted ${name}.` });
+      }
+    });
   };
 
   return (
@@ -127,15 +138,21 @@ export function CategoriesTab() {
                     </button>
                   </div>
                 )}
-                <div className="flex-1">
+                <div className="flex-1 relative">
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
-                    className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:uppercase file:bg-brand-orange file:text-black hover:file:bg-brand-gold file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
+                    disabled={isUploading}
+                    className={`w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:uppercase file:bg-brand-orange file:text-black hover:file:bg-brand-gold file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   />
-                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-bold tracking-wider">Max size: 1MB. Square format recommended.</p>
+                  {isUploading && (
+                    <div className="absolute inset-y-0 right-4 flex items-center">
+                      <Loader2 className="h-5 w-5 animate-spin text-brand-orange" />
+                    </div>
+                  )}
                 </div>
+                <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-bold tracking-wider">Max size: 1MB. Square format recommended.</p>
               </div>
             </div>
           </div>

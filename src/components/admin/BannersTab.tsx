@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Image, Plus, Trash2, Edit2, X, Save, Layers } from "lucide-react";
+import { Image as ImageIcon, Plus, Trash2, Edit2, X, Save, Layers, Loader2 } from "lucide-react";
 import { useUIStore, BannerSlide } from "../../store/useUIStore";
+import { uploadImageToCloudinary } from "../../utils/cloudinary";
 
 export function BannersTab() {
+  const { showDialog } = useUIStore();
   const { 
     heroBanners, addHeroBanner, updateHeroBanner, removeHeroBanner,
     promoBanners, addPromoBanner, updatePromoBanner, removePromoBanner
@@ -12,6 +14,7 @@ export function BannersTab() {
 
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const [formImageUrl, setFormImageUrl] = useState("");
   const [formBadgeText, setFormBadgeText] = useState("");
@@ -36,22 +39,25 @@ export function BannersTab() {
     setIsAdding(false);
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 1024 * 1024 * 5) {
-      alert("File exceeds 5MB limit.");
-      return;
+
+    setIsUploading(true);
+    try {
+      const url = await uploadImageToCloudinary(file);
+      setFormImageUrl(url);
+    } catch (error) {
+      showDialog({ title: 'Upload Failed', message: 'Failed to upload image. Please try again.' });
+    } finally {
+      setIsUploading(false);
     }
-    const reader = new FileReader();
-    reader.onloadend = () => setFormImageUrl(reader.result as string);
-    reader.readAsDataURL(file);
   };
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formImageUrl) {
-      alert("Please provide an image.");
+      showDialog({ title: 'Validation Error', message: 'Please provide an image.' });
       return;
     }
     
@@ -71,15 +77,20 @@ export function BannersTab() {
       else addPromoBanner(newSlide);
     }
 
-    alert(`Banner ${isEditing ? 'updated' : 'added'} successfully!`);
+    showDialog({ title: 'Success', message: `Banner ${isEditing ? 'updated' : 'added'} successfully!` });
     resetForm();
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to remove this banner slide?")) {
-      if (activeTab === 'hero') removeHeroBanner(id);
-      else removePromoBanner(id);
-    }
+    showDialog({
+      type: 'confirm',
+      title: 'Remove Banner',
+      message: 'Are you sure you want to remove this banner slide?',
+      onConfirm: () => {
+        if (activeTab === 'hero') removeHeroBanner(id);
+        else removePromoBanner(id);
+      }
+    });
   };
 
   const currentBanners = activeTab === 'hero' ? heroBanners : promoBanners;
@@ -104,8 +115,22 @@ export function BannersTab() {
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-950 p-6 rounded-2xl border border-brand-border">
         <div className="space-y-1">
+          <label className={`absolute inset-0 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-800/50 transition-colors ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+            {isUploading ? (
+              <>
+                <Loader2 className="h-8 w-8 text-brand-orange mb-2 animate-spin" />
+                <span className="text-sm font-medium text-slate-300">Uploading to Cloudinary...</span>
+              </>
+            ) : (
+              <>
+                <ImageIcon className="h-8 w-8 text-slate-500 mb-2" />
+                <span className="text-sm font-medium text-slate-300">Click to upload image</span>
+              </>
+            )}
+            <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploading} />
+          </label>
           <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
-            <Image className="h-4.5 w-4.5 text-brand-orange" /> 
+            <ImageIcon className="h-4.5 w-4.5 text-brand-orange" /> 
             {activeTab === 'hero' ? "Top Hero Banners" : "Promo Banners"}
           </h3>
           <p className="text-xs text-slate-500">
@@ -141,14 +166,22 @@ export function BannersTab() {
                   </button>
                 </div>
               )}
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 relative">
                 <input type="text" value={formImageUrl} onChange={(e) => setFormImageUrl(e.target.value)} placeholder="Or paste image URL here (e.g. /marque-banner-img.webp)" className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 file:transition-colors file:cursor-pointer border border-brand-border rounded-lg bg-slate-900/50"
-                />
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={isUploading}
+                    className={`w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 file:transition-colors file:cursor-pointer border border-brand-border rounded-lg bg-slate-900/50 ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  />
+                  {isUploading && (
+                    <div className="absolute inset-y-0 right-4 flex items-center">
+                      <Loader2 className="h-4 w-4 animate-spin text-brand-orange" />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 

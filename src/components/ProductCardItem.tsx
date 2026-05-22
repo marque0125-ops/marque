@@ -5,6 +5,7 @@ import { Heart, Car } from "lucide-react";
 import { Product } from "../data/mockData";
 import { BRANDS } from "../data/mockData";
 import { useCartStore } from "../store/useCartStore";
+import { useUIStore } from "../store/useUIStore";
 
 interface ProductCardItemProps {
   p: Product;
@@ -29,13 +30,17 @@ const getColorHex = (colorName: string): string => {
 
 export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }: ProductCardItemProps) {
   const { addToCart } = useCartStore();
+  const { showDialog } = useUIStore();
   const brand = BRANDS.find((b) => b.id === p.brandId);
   const [selectedVariant, setSelectedVariant] = useState(p.variants[0]);
 
   const handleQuickAdd = (e: React.MouseEvent, product: Product) => {
     e.stopPropagation();
     addToCart(product, selectedVariant, 1);
-    alert(`Added ${product.name} (${selectedVariant.attributes.color || "Standard"}) to cart!`);
+    showDialog({
+      title: 'Added to Cart',
+      message: `${product.name} (${selectedVariant.attributes.color || "Standard"}) has been added to your cart.`
+    });
   };
 
   const handleColorClick = (e: React.MouseEvent, color: string) => {

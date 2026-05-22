@@ -39,7 +39,8 @@ export default function ShopView() {
     setSortBy,
     resetFilters,
     wishlist,
-    toggleWishlist
+    toggleWishlist,
+    isLoading
   } = useProductStore();
   const {
     setView,
@@ -337,15 +338,36 @@ export default function ShopView() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sortedProducts.map((p) => (
-                <ProductCardItem 
-                  key={p.id}
-                  p={p}
-                  wishlist={wishlist}
-                  toggleWishlist={toggleWishlist}
-                  onProductClick={handleProductClick}
-                />
-              ))}
+              {isLoading && products.length === 0 ? (
+                Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-brand-border bg-slate-950/50 p-4 transition-all hover:border-brand-orange/50 hover:shadow-glow min-h-[420px] animate-pulse">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="h-4 w-16 bg-slate-800 rounded"></div>
+                      <div className="h-8 w-8 bg-slate-800 rounded-full"></div>
+                    </div>
+                    <div className="relative mb-6 h-40 w-full overflow-hidden rounded-xl bg-slate-800"></div>
+                    <div className="flex-1 flex flex-col justify-end">
+                      <div className="h-6 w-3/4 bg-slate-800 rounded mb-2"></div>
+                      <div className="h-4 w-1/2 bg-slate-800 rounded mb-4"></div>
+                      <div className="h-8 w-1/3 bg-slate-800 rounded mb-4"></div>
+                      <div className="flex gap-2">
+                        <div className="h-10 flex-1 bg-slate-800 rounded-lg"></div>
+                        <div className="h-10 flex-1 bg-slate-800 rounded-lg"></div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                sortedProducts.map((p) => (
+                  <ProductCardItem 
+                    key={p.id}
+                    p={p}
+                    wishlist={wishlist}
+                    toggleWishlist={toggleWishlist}
+                    onProductClick={handleProductClick}
+                  />
+                ))
+              )}
             </div>
           )}
         </div>

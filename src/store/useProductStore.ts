@@ -2,8 +2,10 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { Product, PRODUCTS, MOCK_REVIEWS, Review, Category, MOCK_CATEGORIES, RCGuide, RC_GUIDES } from "../data/mockData";
 import { supabase } from "../utils/supabase";
+import { useAuthStore } from "./useAuthStore";
 
 export interface ProductState {
+  isLoading: boolean;
   categories: Category[];
   guides: RCGuide[];
   products: Product[];
@@ -27,6 +29,7 @@ export interface ProductState {
   setPriceRange: (range: [number, number]) => void;
   setSortBy: (sort: 'newest' | 'price-asc' | 'price-desc' | 'rating') => void;
   resetFilters: () => void;
+  setWishlist: (wishlist: string[]) => void;
 
   toggleWishlist: (productId: string) => void;
   fetchProducts: () => Promise<void>;
@@ -78,6 +81,7 @@ export const useProductStore = create<ProductState>()(
       categories: MOCK_CATEGORIES,
       guides: RC_GUIDES,
       products: PRODUCTS,
+      isLoading: false,
       reviews: MOCK_REVIEWS,
       wishlist: [],
       searchQuery: "",
@@ -108,19 +112,43 @@ export const useProductStore = create<ProductState>()(
         sortBy: "newest"
       }),
 
-      toggleWishlist: (productId) => set(state => ({
-        wishlist: state.wishlist.includes(productId) 
+      setWishlist: (wishlist) => set({ wishlist }),
+
+      toggleWishlist: (productId) => {
+        const state = get();
+        const authState = useAuthStore.getState();
+        const newWishlist = state.wishlist.includes(productId) 
           ? state.wishlist.filter(id => id !== productId)
-          : [...state.wishlist, productId]
-      })),
+          : [...state.wishlist, productId];
+        
+        set({ wishlist: newWishlist });
+
+        // Sync to cloud if authenticated
+        if (authState.isAuthenticated) {
+          (async () => {
+            try {
+              const { data: { session } } = await supabase.auth.getSession();
+              if (session?.user?.id) {
+                // @ts-ignore
+                await (supabase.from("profiles") as any)
+                  .update({ wishlist: newWishlist })
+                  .eq("id", session.user.id);
+              }
+            } catch (err) {
+              console.warn("Could not sync wishlist to cloud", err);
+            }
+          })();
+        }
+      },
 
       fetchProducts: async () => {
+        set({ isLoading: true });
         const isConfigured = 
           process.env.NEXT_PUBLIC_SUPABASE_URL && 
           !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
 
         if (!isConfigured) {
-          set({ products: PRODUCTS });
+          set({ products: PRODUCTS, isLoading: false });
           return;
         }
 
@@ -161,6 +189,8 @@ export const useProductStore = create<ProductState>()(
         } catch (err: any) {
           console.error("Supabase error:", err.message);
           set({ products: PRODUCTS });
+        } finally {
+          set({ isLoading: false });
         }
       },
 

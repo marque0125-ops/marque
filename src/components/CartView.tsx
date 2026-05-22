@@ -40,7 +40,8 @@ export default function CartView() {
     pinDetail,
     pinLoading,
     pinError,
-    checkPincode
+    checkPincode,
+    showDialog
   } = useUIStore();
 
   const {
@@ -123,17 +124,17 @@ export default function CartView() {
   const handleProceed = () => {
     if (cart.length === 0) return;
     if (!address.city || !address.state || !address.pincode) {
-      alert("DELIVERY DETAILS REQUIRED: Please fill in your city, state, and pincode.");
+      showDialog({ title: 'Notice', message: "DELIVERY DETAILS REQUIRED: Please fill in your city, state, and pincode." });
       return;
     }
 
     if (!address.name || !address.phone || !address.addressLine) {
-      alert("DELIVERY DETAILS REQUIRED: Please fill in receiver's name, phone, and complete street address.");
+      showDialog({ title: 'Notice', message: "DELIVERY DETAILS REQUIRED: Please fill in receiver's name, phone, and complete street address." });
       return;
     }
 
     if (isB2B && (!gstinInput || gstinError)) {
-      alert("B2B INVOICING: Please supply a valid GSTIN or uncheck business billing.");
+      showDialog({ title: 'Notice', message: "B2B INVOICING: Please supply a valid GSTIN or uncheck business billing." });
       return;
     }
 
@@ -167,14 +168,14 @@ export default function CartView() {
       setView('account');
       setCheckoutStep(false);
       clearCart();
-      setTimeout(() => alert(`Order ${order.id} placed via Cash on Delivery!`), 500);
+      setTimeout(() => showDialog({ title: 'Notice', message: `Order ${order.id} placed via Cash on Delivery!` }), 500);
       return;
     }
 
     // Ensure Razorpay script is loaded dynamically right before we need it
     const isScriptLoaded = await loadRazorpayScript();
     if (!isScriptLoaded) {
-      alert("Failed to load Razorpay SDK. Please check your internet connection or adblocker.");
+      showDialog({ title: 'Notice', message: "Failed to load Razorpay SDK. Please check your internet connection or adblocker." });
       return;
     }
 
@@ -189,7 +190,7 @@ export default function CartView() {
       const orderData = await res.json();
 
       if (!orderData || !orderData.id) {
-        alert("Payment initialization failed from backend. Please try again.");
+        showDialog({ title: 'Notice', message: "Payment initialization failed from backend. Please try again." });
         return;
       }
 
@@ -216,7 +217,7 @@ export default function CartView() {
           setCheckoutStep(false);
           clearCart();
           setTimeout(() => {
-            alert(`PAYMENT SUCCESSFUL! Razorpay Payment ID: ${response.razorpay_payment_id}. Your order ${order.id} is confirmed!`);
+            showDialog({ title: 'Notice', message: `PAYMENT SUCCESSFUL! Razorpay Payment ID: ${response.razorpay_payment_id}. Your order ${order.id} is confirmed!` });
           }, 500);
         },
         prefill: {
@@ -230,19 +231,19 @@ export default function CartView() {
 
       const RazorpayConstructor = (window as any).Razorpay;
       if (!RazorpayConstructor) {
-        alert("Razorpay is not available on window. Please try again.");
+        showDialog({ title: 'Notice', message: "Razorpay is not available on window. Please try again." });
         return;
       }
 
       const rzp = new RazorpayConstructor(options);
       rzp.on('payment.failed', function (response: any) {
-        alert(`Payment Failed: ${response.error.description}`);
+        showDialog({ title: 'Notice', message: `Payment Failed: ${response.error.description}` });
       });
       rzp.open();
 
     } catch (err: any) {
       console.error("Razorpay trigger error:", err);
-      alert(`Error securely contacting payment gateway: ${err.message}`);
+      showDialog({ title: 'Notice', message: `Error securely contacting payment gateway: ${err.message}` });
     }
   };
 

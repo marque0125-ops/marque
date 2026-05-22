@@ -4,6 +4,7 @@ import { useOrderStore } from "../../store/useOrderStore";
 import { useUIStore } from "../../store/useUIStore";
 
 export function AnalyticsTab() {
+  const { showDialog } = useUIStore();
   const orders = useOrderStore(state => state.orders);
   const { lowStockAlerts, clearLowStockAlerts, announcementText, setAnnouncementText } = useUIStore();
   const [announcementInput, setAnnouncementInput] = useState(announcementText);
@@ -16,11 +17,11 @@ export function AnalyticsTab() {
 
   const handleUpdateAnnouncement = () => {
     if (!announcementInput.trim()) {
-      alert("Announcement ticker text cannot be empty!");
+      showDialog({ title: 'Validation Error', message: 'Announcement ticker text cannot be empty!' });
       return;
     }
     setAnnouncementText(announcementInput);
-    alert("Ticker content broadcasted successfully! Marquee updated on all pages.");
+    showDialog({ title: 'Success', message: 'Ticker content broadcasted successfully! Marquee updated on all pages.' });
   };
 
   return (
