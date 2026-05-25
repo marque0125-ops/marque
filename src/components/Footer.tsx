@@ -17,34 +17,34 @@ export default function Footer() {
   };
 
   return (
-    <footer className="border-t border-brand-border bg-slate-950/80 pt-16 pb-8 text-slate-400">
+    <footer className="border-t border-[#1e293b] bg-[#020617] pt-16 pb-8 text-[#9ca3af]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Footer Top Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-brand-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-[#1e293b]">
           
           {/* Col 1: About */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2 cursor-pointer group" onClick={() => { setSelectedProduct(null); setView('home'); }}>
-              <div className="relative flex h-10 w-28 items-center justify-center rounded bg-white overflow-hidden border border-brand-border/60 transition-colors group-hover:border-brand-orange p-1">
+            <div className="flex flex-col gap-2 cursor-pointer group" onClick={() => { setSelectedProduct(null); setView('home'); }}>
+              <div className="relative flex h-14 w-36 items-center justify-center rounded-xl bg-[#ffffff] overflow-hidden transition-transform duration-300 group-hover:scale-105 p-2">
                 <Image 
                   src="/marque-new-logo.png" 
                   alt="MARQUE Logo" 
                   fill
-                  sizes="112px"
+                  sizes="144px"
                   className="object-contain mix-blend-multiply" 
                 />
               </div>
-              <span className="font-display text-xl font-bold uppercase tracking-tighter text-white transition-colors group-hover:text-brand-orange">
+              <span className="font-display text-xl font-bold uppercase tracking-tighter text-[#ffffff] transition-colors group-hover:text-brand-orange mt-2">
                 MARQUE
               </span>
             </div>
-            <p className="text-xs leading-relaxed">
+            <p className="text-xs leading-relaxed text-[#9ca3af]">
               India's premier e-commerce portal for hobby-grade remote control cars and performance accessories. Stocking international legends: Traxxas, Arrma, FMS, and Rlaarlo. We deliver track-ready engineering straight to your door with certified GST-inclusive pricing.
             </p>
             <div className="pt-2 flex flex-col gap-2">
-              <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Payments Security</span>
-              <div className="flex items-center gap-2 text-xs text-slate-300">
+              <span className="text-[10px] uppercase font-bold text-[#64748b] tracking-wider">Payments Security</span>
+              <div className="flex items-center gap-2 text-xs text-[#cbd5e1]">
                 <ShieldCheck className="h-4 w-4 text-brand-gold" />
                 <span>PCI-Compliant Razorpay Gateway</span>
               </div>
@@ -53,10 +53,10 @@ export default function Footer() {
 
           {/* Col 2: Brands */}
           <div className="space-y-4">
-            <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200">
+            <h3 className="font-display text-sm font-bold uppercase tracking-wider text-[#e2e8f0]">
               Elite Brands
             </h3>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2 text-xs text-[#9ca3af]">
               <li>
                 <button onClick={() => selectBrand('traxxas')} className="hover:text-brand-orange transition-colors">
                   Traxxas High-Performance
@@ -87,10 +87,10 @@ export default function Footer() {
 
           {/* Col 3: India Operations */}
           <div className="space-y-4">
-            <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200">
+            <h3 className="font-display text-sm font-bold uppercase tracking-wider text-[#e2e8f0]">
               GST & Shipping Rules
             </h3>
-            <ul className="space-y-3 text-xs">
+            <ul className="space-y-3 text-xs text-[#9ca3af]">
               <li className="flex items-start gap-2">
                 <Truck className="h-4.5 w-4.5 text-brand-orange shrink-0 mt-0.5" />
                 <span>
@@ -114,13 +114,13 @@ export default function Footer() {
 
           {/* Col 4: Contact Support */}
           <div className="space-y-4">
-            <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200">
+            <h3 className="font-display text-sm font-bold uppercase tracking-wider text-[#e2e8f0]">
               MARQUE Technical Garage
             </h3>
-            <p className="text-xs">
+            <p className="text-xs text-[#9ca3af]">
               Need technical support or custom part compatibility advice? Our expert RC pilots are ready to help.
             </p>
-            <div className="space-y-2.5 text-xs text-slate-300">
+            <div className="space-y-2.5 text-xs text-[#cbd5e1]">
               <a href="tel:+918754498038" className="flex items-center gap-2 hover:text-brand-orange transition-colors">
                 <Phone className="h-4 w-4 text-brand-orange" />
                 <span>+91 87544 98038</span>
@@ -129,7 +129,7 @@ export default function Footer() {
                 <Mail className="h-4 w-4 text-brand-orange" />
                 <span>marque0125@gmail.com</span>
               </a>
-              <p className="text-[10px] text-slate-500">
+              <p className="text-[10px] text-[#64748b]">
                 Mon - Sat: 10:00 AM - 7:00 PM IST
               </p>
             </div>
@@ -138,10 +138,10 @@ export default function Footer() {
         </div>
 
         {/* Footer Bottom */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#9ca3af]">
           <div className="flex flex-col md:flex-row items-center gap-2">
-            <p>© 2026 <a href="https://marque.co.in" target="_blank" rel="noopener noreferrer" className="hover:text-brand-orange font-bold">MARQUE</a> Premium RC India. All rights reserved.</p>
-            <span className="hidden md:inline text-slate-700">|</span>
+            <p>© 2026 <a href="https://marque.co.in" target="_blank" rel="noopener noreferrer" className="hover:text-brand-orange font-bold text-[#ffffff]">MARQUE</a> Premium RC India. All rights reserved.</p>
+            <span className="hidden md:inline text-[#334155]">|</span>
             <a href="https://marque.co.in" target="_blank" rel="noopener noreferrer" className="text-brand-orange hover:text-brand-gold font-semibold">marque.co.in</a>
           </div>
           <div className="flex gap-6">

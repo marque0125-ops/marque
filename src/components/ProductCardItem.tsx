@@ -90,26 +90,28 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
 
       {/* Info Section */}
       <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between gap-3 sm:gap-4">
-        <div className="space-y-1.5">
-          <div className="flex justify-between items-start gap-1">
-            <span className="text-[9px] text-brand-orange font-bold uppercase tracking-wider font-display">
-              {brand?.name}
-            </span>
-            <span className="text-sm sm:text-base font-black text-brand-gold font-display whitespace-nowrap">
+        <div className="flex flex-col items-center text-center space-y-1">
+          <h3 className="text-[13px] sm:text-[15px] font-semibold text-white line-clamp-1 group-hover:text-brand-orange transition-colors">
+            {p.name}
+          </h3>
+          <span className="text-[11px] sm:text-xs font-medium text-slate-400">
+            {p.terrainType}
+          </span>
+          <div className="flex items-center justify-center gap-2 pt-1">
+            {p.comparePrice > p.price && (
+              <span className="text-[11px] sm:text-xs font-medium text-slate-500 line-through">
+                ₹{p.comparePrice.toLocaleString('en-IN')}
+              </span>
+            )}
+            <span className="text-sm sm:text-base font-bold text-white whitespace-nowrap">
               ₹{p.price.toLocaleString('en-IN')}
             </span>
           </div>
-          <h3 className="font-display text-xs sm:text-sm font-black text-white line-clamp-2 group-hover:text-brand-orange transition-colors">
-            {p.name}
-          </h3>
-          <p className="text-xs text-slate-400 line-clamp-2 hidden sm:block">
-            {p.description}
-          </p>
         </div>
 
         {/* Color Swatches — hidden on mobile */}
         {uniqueColors.length > 0 && (
-          <div className="hidden sm:flex items-center gap-2 pt-2">
+          <div className="hidden sm:flex items-center justify-center gap-2 pt-1">
             {uniqueColors.map((color, idx) => {
               const isSelected = selectedVariant.attributes.color === color;
               return (
@@ -142,13 +144,11 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
         </div>
 
         {/* Cart Action */}
-        <div className="border-t border-brand-border pt-3 flex items-center justify-between gap-2">
-          <span className="text-[9px] text-slate-500 line-through hidden sm:block">
-            ₹{p.comparePrice.toLocaleString('en-IN')}
-          </span>
+        <div className="border-t border-brand-border pt-3 w-full">
           <button
             onClick={(e) => handleQuickAdd(e, p)}
-            className="w-full sm:w-auto rounded-lg bg-brand-orange hover:bg-brand-gold text-black font-black uppercase px-3 py-2 text-[10px] sm:text-xs transition-colors flex items-center justify-center gap-1"
+            className="w-full rounded-lg bg-brand-orange hover:bg-brand-gold font-black uppercase px-3 py-2 text-[10px] sm:text-xs transition-colors flex items-center justify-center gap-1"
+            style={{ color: '#ffffff' }}
           >
             <Car className="h-3.5 w-3.5" />
             Buy Rig

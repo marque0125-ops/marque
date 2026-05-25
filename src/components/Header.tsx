@@ -88,14 +88,14 @@ export default function Header() {
           {/* Logo */}
           <div
             onClick={() => { setSelectedProduct(null); setView('home'); }}
-            className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex cursor-pointer items-center gap-2 group"
+            className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex cursor-pointer items-center justify-center group"
           >
-            <div className="relative flex h-10 w-28 sm:h-12 sm:w-32 items-center justify-center rounded-lg bg-white overflow-hidden border border-brand-border/60 shadow-glow transition-all duration-300 group-hover:border-brand-orange p-1">
+            <div className="relative flex h-14 w-36 sm:h-16 sm:w-48 items-center justify-center rounded-xl bg-white overflow-hidden transition-transform duration-300 group-hover:scale-105 p-2">
               <Image
                 src="/marque-new-logo.png"
                 alt="MARQUE Logo"
                 fill
-                sizes="(max-width: 640px) 112px, 128px"
+                sizes="(max-width: 640px) 144px, 192px"
                 className="object-contain mix-blend-multiply"
               />
             </div>
