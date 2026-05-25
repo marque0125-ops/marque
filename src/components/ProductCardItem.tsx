@@ -45,14 +45,14 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
 
   const handleColorClick = (e: React.MouseEvent, color: string) => {
     e.stopPropagation();
-    const variantForColor = p.variants.find(v => v.attributes.color === color);
+    const variantForColor = p.variants.find(v => (v.attributes?.color || v.name.split('/')[0].trim()) === color);
     if (variantForColor) {
       setSelectedVariant(variantForColor);
     }
   };
 
   const currentImage = selectedVariant?.imageUrl || p.images[0];
-  const uniqueColors = Array.from(new Set(p.variants.map(v => v.attributes.color).filter(Boolean))) as string[];
+  const uniqueColors = Array.from(new Set(p.variants.map(v => v.attributes?.color || v.name.split('/')[0].trim()).filter(Boolean))) as string[];
 
   return (
     <div
@@ -109,9 +109,9 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
           </div>
         </div>
 
-        {/* Color Swatches — hidden on mobile */}
+        {/* Color Swatches */}
         {uniqueColors.length > 0 && (
-          <div className="hidden sm:flex items-center justify-center gap-2 pt-1">
+          <div className="flex items-center justify-center flex-wrap gap-2 pt-1 pb-1">
             {uniqueColors.map((color, idx) => {
               const isSelected = selectedVariant.attributes.color === color;
               return (

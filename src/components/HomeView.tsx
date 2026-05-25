@@ -157,7 +157,7 @@ export default function HomeView() {
     <div className="space-y-8 sm:space-y-24 pb-12 sm:pb-24">
       {/* ==================== 6.5 STANDALONE PROMO BANNER ==================== */}
       {promoBanners && promoBanners.length > 0 && (
-        <section className="relative w-screen ml-[calc(50%-50vw)] -mt-10 overflow-hidden group cursor-pointer h-[160px] sm:h-auto sm:aspect-[2.5/1] lg:aspect-[4/1] bg-slate-950">
+        <section className="relative w-screen ml-[calc(50%-50vw)] overflow-hidden group cursor-pointer h-[160px] sm:h-auto sm:aspect-[2.5/1] lg:aspect-[4/1] bg-slate-950">
           {promoBanners.map((slide, idx) => (
             <div
               key={slide.id}
