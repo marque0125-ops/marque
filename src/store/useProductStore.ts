@@ -148,6 +148,11 @@ export const useProductStore = create<ProductState>()(
           !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
 
         if (!isConfigured) {
+          const currentProducts = get().products;
+          if (currentProducts.length > 0 && currentProducts !== PRODUCTS) {
+            set({ isLoading: false });
+            return;
+          }
           set({ products: PRODUCTS, isLoading: false });
           return;
         }
@@ -167,11 +172,6 @@ export const useProductStore = create<ProductState>()(
           if (data && data.length > 0) {
             const dbProducts = data.map(normalizeProduct);
             const mergedProducts = dbProducts.map(dbProd => {
-              // Priority: If mockData has this exact product ID, force-sync the updated local images
-              const mockEquivalent = PRODUCTS.find(p => p.id === dbProd.id);
-              if (mockEquivalent) {
-                return { ...dbProd, images: mockEquivalent.images };
-              }
               return dbProd;
             });
             
@@ -209,13 +209,61 @@ export const useProductStore = create<ProductState>()(
         }));
       },
 
-      addProduct: (product) => set(state => ({ products: [...state.products, product] })),
-      updateProduct: (updatedProduct) => set(state => ({
-        products: state.products.map(p => p.id === updatedProduct.id ? updatedProduct : p)
-      })),
-      deleteProduct: (productId) => set(state => ({
-        products: state.products.filter(p => p.id !== productId)
-      })),
+      addProduct: (product) => {
+        set(state => ({ products: [...state.products, product] }));
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (isConfigured) {
+          (async () => {
+            try {
+              const dbProduct = {
+                id: product.id, name: product.name, slug: product.slug, description: product.description,
+                price: product.price, compare_price: product.comparePrice, sku: product.sku, weight_grams: product.weightGrams,
+                scale: product.scale, terrain_type: product.terrainType, is_featured: product.isFeatured, is_active: product.isActive,
+                speed_kmh: product.speedKmh, build_type: product.buildType, images: product.images, video_url: product.videoUrl,
+                whats_in_the_box: product.whatsInTheBox, specs: product.specs, compatible_parts: product.compatibleParts,
+                variants: product.variants, stock_qty: product.stockQty, average_rating: product.averageRating, review_count: product.reviewCount,
+                brand_id: product.brandId, category_id: product.categoryId
+              };
+              await supabase.from("products").insert(dbProduct);
+            } catch (err) {}
+          })();
+        }
+      },
+      updateProduct: (updatedProduct) => {
+        set(state => ({
+          products: state.products.map(p => p.id === updatedProduct.id ? updatedProduct : p)
+        }));
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (isConfigured) {
+          (async () => {
+            try {
+              const dbProduct = {
+                name: updatedProduct.name, slug: updatedProduct.slug, description: updatedProduct.description,
+                price: updatedProduct.price, compare_price: updatedProduct.comparePrice, sku: updatedProduct.sku, weight_grams: updatedProduct.weightGrams,
+                scale: updatedProduct.scale, terrain_type: updatedProduct.terrainType, is_featured: updatedProduct.isFeatured, is_active: updatedProduct.isActive,
+                speed_kmh: updatedProduct.speedKmh, build_type: updatedProduct.buildType, images: updatedProduct.images, video_url: updatedProduct.videoUrl,
+                whats_in_the_box: updatedProduct.whatsInTheBox, specs: updatedProduct.specs, compatible_parts: updatedProduct.compatibleParts,
+                variants: updatedProduct.variants, stock_qty: updatedProduct.stockQty, average_rating: updatedProduct.averageRating, review_count: updatedProduct.reviewCount,
+                brand_id: updatedProduct.brandId, category_id: updatedProduct.categoryId
+              };
+              await supabase.from("products").update(dbProduct).eq("id", updatedProduct.id);
+            } catch (err) {}
+          })();
+        }
+      },
+      deleteProduct: (productId) => {
+        set(state => ({
+          products: state.products.filter(p => p.id !== productId)
+        }));
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (isConfigured) {
+          (async () => {
+            try {
+              await supabase.from("products").delete().eq("id", productId);
+            } catch (err) {}
+          })();
+        }
+      },
 
       addProductReview: (review) => {
         const newReview: Review = {
@@ -257,7 +305,9 @@ export const useProductStore = create<ProductState>()(
     {
       name: "marque-product-storage",
       partialize: (state) => ({
-        wishlist: state.wishlist
+        wishlist: state.wishlist,
+        products: state.products,
+        categories: state.categories
       })
     }
   )
