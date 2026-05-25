@@ -15,12 +15,12 @@ export interface Category {
 }
 
 export const MOCK_CATEGORIES: Category[] = [
-  { id: "crawler", name: "RC Crawlers", image: "/f.png" },
-  { id: "mini-car", name: "Mini RC Car", image: "/a.png" },
-  { id: "accessories", name: "RC Car Accessories", image: "/b.png" },
-  { id: "helicopter", name: "RC Helicopter", image: "/c.png" },
-  { id: "excavator", name: "RC Excavator", image: "/d.png" },
-  { id: "RCBoat", name: "RC Boat", image: "/e.png" }
+  { id: "crawler", name: "RC Crawlers", image: "/61fyHVbcNqL._SX466_.jpg" },
+  { id: "mini-car", name: "Mini RC Car", image: "/remote-control-car-high-speed-mini-type-c-usb-rechargeable-rc-original-imahegx4pnfv2p3d.webp" },
+  { id: "accessories", name: "RC Car Accessories", image: "/accessories1-600x600.png" },
+  { id: "helicopter", name: "RC Helicopter", image: "/3-5-ch-metal-romote-control-helicopter-toys-436.jpg" },
+  { id: "excavator", name: "RC Excavator", image: "/71xPrnxkAhL.jpg" },
+  { id: "RCBoat", name: "RC Boat", image: "/shopping.webp" }
 ];
 
 export interface Review {
@@ -164,7 +164,7 @@ export const BRANDS: Brand[] = [
     id: "b9",
     name: "MARQUE SHOWCASE",
     slug: "marque-showcase",
-    logoUrl: "/marque-new-logo.jpg",
+    logoUrl: "/marque-new-logo.png",
     description: "Premium custom accessories designed by MARQUE, including acrylic showcase enclosures and display stands tailored for high-end hobby gear and collectibles.",
     country: "India",
     established: "2026"

@@ -121,3 +121,56 @@ h1, h2, h3, h4, h5, h6, .font-display {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Mobile White Theme Overrides */
+@media (max-width: 639px) {
+  body {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+  }
+
+  /* Force dark backgrounds to white/light */
+  [class*="bg-slate-9"],
+  [class*="bg-black"],
+  [class*="bg-brand-dark"],
+  [class*="bg-brand-card"] {
+    background-color: #ffffff !important;
+  }
+  
+  [class*="bg-slate-8"] {
+    background-color: #f3f4f6 !important;
+  }
+
+  /* Force light text to dark */
+  [class*="text-white"],
+  [class*="text-slate-1"],
+  [class*="text-slate-2"],
+  [class*="text-slate-3"] {
+    color: #111827 !important;
+  }
+
+  [class*="text-slate-4"],
+  [class*="text-slate-5"],
+  [class*="text-slate-6"],
+  [class*="text-slate-7"] {
+    color: #4b5563 !important;
+  }
+
+  /* Force borders to light */
+  [class*="border-brand-border"],
+  [class*="border-slate-8"],
+  [class*="border-white/"] {
+    border-color: #e5e7eb !important;
+  }
+  
+  /* Fix specific components */
+  .glass-panel, .glass-panel-heavy {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #e5e7eb !important;
+  }
+  
+  .carbon-overlay::before {
+    opacity: 0.03 !important;
+  }
+}

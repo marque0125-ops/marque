@@ -308,7 +308,8 @@ export const useProductStore = create<ProductState>()(
         wishlist: state.wishlist,
         products: state.products,
         categories: state.categories
-      })
+      }),
+      version: 1
     }
   )
 );

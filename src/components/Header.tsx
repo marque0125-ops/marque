@@ -75,7 +75,7 @@ export default function Header() {
       </div>
 
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between gap-1 sm:gap-4">
+        <div className="relative flex h-20 items-center justify-between gap-1 sm:gap-4">
 
           {/* Mobile Menu Toggle */}
           <button 
@@ -88,24 +88,16 @@ export default function Header() {
           {/* Logo */}
           <div
             onClick={() => { setSelectedProduct(null); setView('home'); }}
-            className="flex cursor-pointer items-center gap-2 group"
+            className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex cursor-pointer items-center gap-2 group"
           >
-            <div className="relative hidden sm:flex h-12 w-32 items-center justify-center rounded-lg bg-white overflow-hidden border border-brand-border/60 shadow-glow transition-all duration-300 group-hover:border-brand-orange p-1">
+            <div className="relative flex h-10 w-28 sm:h-12 sm:w-32 items-center justify-center rounded-lg bg-white overflow-hidden border border-brand-border/60 shadow-glow transition-all duration-300 group-hover:border-brand-orange p-1">
               <Image
-                src="/marque-new-logo.jpg"
+                src="/marque-new-logo.png"
                 alt="MARQUE Logo"
                 fill
-                sizes="128px"
+                sizes="(max-width: 640px) 112px, 128px"
                 className="object-contain mix-blend-multiply"
               />
-            </div>
-            <div>
-              <span className="font-display text-2xl font-black uppercase tracking-tighter text-white transition-colors group-hover:text-brand-orange">
-                MARQUE
-              </span>
-              <span className="ml-1 text-[9px] font-bold uppercase tracking-widest text-brand-orange block leading-none">
-                RC CARS & ACCESSORIES
-              </span>
             </div>
           </div>
 
@@ -188,7 +180,7 @@ export default function Header() {
             </button>
 
             {/* Low stock Warning alerts indicator */}
-            <div className="relative">
+            <div className="relative hidden sm:block">
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
                 className={`relative p-1.5 sm:p-2 rounded-full transition-colors ${lowStockAlerts.length > 0 ? 'text-brand-gold animate-bounce' : 'text-slate-300 hover:text-brand-orange'}`}
@@ -250,7 +242,7 @@ export default function Header() {
             {/* User Account */}
             <button
               onClick={() => { setSelectedProduct(null); setView('account'); }}
-              className={`relative p-1.5 sm:p-2.5 rounded-xl border transition-all ${currentView === 'account' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
+              className={`hidden sm:block relative p-1.5 sm:p-2.5 rounded-xl border transition-all ${currentView === 'account' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
               title={isAuthenticated ? "Pilot Dashboard (Authorized)" : "Pilot Authorization Login"}
             >
               <User className={`h-5 w-5 ${isAuthenticated ? "text-brand-orange" : ""}`} />
@@ -263,7 +255,7 @@ export default function Header() {
             {isAdmin && (
               <button
                 onClick={() => { setSelectedProduct(null); setView('admin'); }}
-                className={`p-1.5 sm:p-2.5 rounded-xl border transition-all ${currentView === 'admin' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
+                className={`hidden sm:block p-1.5 sm:p-2.5 rounded-xl border transition-all ${currentView === 'admin' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
                 title="Admin Panel"
               >
                 <Settings className="h-5 w-5" />
@@ -322,6 +314,20 @@ export default function Header() {
               >
                 Accessories & Parts
               </button>
+              <button 
+                onClick={() => { setSelectedProduct(null); setView('account'); setShowMobileMenu(false); }}
+                className={`text-left uppercase hover:text-brand-orange transition-colors ${currentView === 'account' ? 'text-brand-orange' : 'text-slate-300'}`}
+              >
+                {isAuthenticated ? "Dashboard" : "Login / Account"}
+              </button>
+              {isAdmin && (
+                <button 
+                  onClick={() => { setSelectedProduct(null); setView('admin'); setShowMobileMenu(false); }}
+                  className={`text-left uppercase hover:text-brand-orange transition-colors ${currentView === 'admin' ? 'text-brand-orange' : 'text-slate-300'}`}
+                >
+                  Admin Panel
+                </button>
+              )}
             </nav>
           </div>
         </div>

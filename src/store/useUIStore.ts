@@ -135,14 +135,14 @@ export const useUIStore = create<UIState>()(
       heroBanners: [
         {
           id: "banner-1",
-          imageUrl: "/hero_rc_car.png",
+          imageUrl: "/banner234.png",
           badgeText: "Top Velocity Record",
           titleMain: "134+ KM/H",
           titleSub: "Arrma Infraction 6S BLX"
         },
         {
           id: "banner-2",
-          imageUrl: "/marque-banner-img.webp",
+          imageUrl: "/banner34.png",
           badgeText: "Premium Parts",
           titleMain: "CUSTOM TUNING",
           titleSub: "Upgrade Your Arsenal"
@@ -159,7 +159,7 @@ export const useUIStore = create<UIState>()(
       promoBanners: [
         {
           id: "promo-1",
-          imageUrl: "/marque-banner-img.webp",
+          imageUrl: "/banner12.png",
           badgeText: "",
           titleMain: "",
           titleSub: ""
@@ -181,7 +181,8 @@ export const useUIStore = create<UIState>()(
         announcementText: state.announcementText,
         heroBanners: state.heroBanners,
         promoBanners: state.promoBanners
-      })
+      }),
+      version: 1
     }
   )
 );

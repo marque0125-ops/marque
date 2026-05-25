@@ -28,7 +28,7 @@ export default function Footer() {
             <div className="flex items-center gap-2 cursor-pointer group" onClick={() => { setSelectedProduct(null); setView('home'); }}>
               <div className="relative flex h-10 w-28 items-center justify-center rounded bg-white overflow-hidden border border-brand-border/60 transition-colors group-hover:border-brand-orange p-1">
                 <Image 
-                  src="/marque-new-logo.jpg" 
+                  src="/marque-new-logo.png" 
                   alt="MARQUE Logo" 
                   fill
                   sizes="112px"
