@@ -89,27 +89,27 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
       </div>
 
       {/* Info Section */}
-      <div className="p-5 flex-1 flex flex-col justify-between gap-4">
+      <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between gap-3 sm:gap-4">
         <div className="space-y-1.5">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-start gap-1">
             <span className="text-[9px] text-brand-orange font-bold uppercase tracking-wider font-display">
               {brand?.name}
             </span>
-            <span className="text-base font-black text-brand-gold font-display">
+            <span className="text-sm sm:text-base font-black text-brand-gold font-display whitespace-nowrap">
               ₹{p.price.toLocaleString('en-IN')}
             </span>
           </div>
-          <h3 className="font-display text-sm font-black text-white line-clamp-1 group-hover:text-brand-orange transition-colors">
+          <h3 className="font-display text-xs sm:text-sm font-black text-white line-clamp-2 group-hover:text-brand-orange transition-colors">
             {p.name}
           </h3>
-          <p className="text-xs text-slate-400 line-clamp-2">
+          <p className="text-xs text-slate-400 line-clamp-2 hidden sm:block">
             {p.description}
           </p>
         </div>
 
-        {/* Color Swatches */}
+        {/* Color Swatches — hidden on mobile */}
         {uniqueColors.length > 0 && (
-          <div className="flex items-center gap-2 pt-2">
+          <div className="hidden sm:flex items-center gap-2 pt-2">
             {uniqueColors.map((color, idx) => {
               const isSelected = selectedVariant.attributes.color === color;
               return (
@@ -125,8 +125,8 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
           </div>
         )}
 
-        {/* Impel styled car specs row */}
-        <div className="grid grid-cols-3 gap-2 border-t border-brand-border pt-4 text-center">
+        {/* Specs row — hidden on mobile */}
+        <div className="hidden sm:grid grid-cols-3 gap-2 border-t border-brand-border pt-4 text-center">
           <div className="bg-slate-900/50 rounded-lg p-2 border border-brand-border">
             <span className="text-[8px] text-slate-500 block uppercase font-bold">Terrain</span>
             <span className="text-[10px] text-slate-300 font-extrabold block uppercase truncate">{p.terrainType}</span>
@@ -142,13 +142,13 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
         </div>
 
         {/* Cart Action */}
-        <div className="border-t border-brand-border pt-4 flex items-center justify-between">
-          <span className="text-[9px] text-slate-500 line-through">
+        <div className="border-t border-brand-border pt-3 flex items-center justify-between gap-2">
+          <span className="text-[9px] text-slate-500 line-through hidden sm:block">
             ₹{p.comparePrice.toLocaleString('en-IN')}
           </span>
           <button
             onClick={(e) => handleQuickAdd(e, p)}
-            className="rounded-lg bg-brand-orange hover:bg-brand-gold text-black font-black uppercase px-4 py-2 text-xs transition-colors flex items-center gap-1"
+            className="w-full sm:w-auto rounded-lg bg-brand-orange hover:bg-brand-gold text-black font-black uppercase px-3 py-2 text-[10px] sm:text-xs transition-colors flex items-center justify-center gap-1"
           >
             <Car className="h-3.5 w-3.5" />
             Buy Rig

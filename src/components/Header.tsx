@@ -7,21 +7,22 @@ import { useProductStore } from "../store/useProductStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { useUIStore } from "../store/useUIStore";
 import { BRANDS } from "../data/mockData";
-import { 
-  ShoppingBag, 
-  User, 
-  Settings, 
-  Search, 
-  Heart, 
-  Bell, 
-  Car, 
+import {
+  ShoppingBag,
+  User,
+  Settings,
+  Search,
+  Heart,
+  Bell,
+  Car,
   AlertTriangle,
-  X 
+  X,
+  Menu
 } from "lucide-react";
 
 export default function Header() {
   const { cart } = useCartStore();
-  const { 
+  const {
     wishlist,
     searchQuery,
     setSearchQuery,
@@ -41,9 +42,10 @@ export default function Header() {
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSearchBox, setShowSearchBox] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
-  
+
   const handleBrandClick = (slug: string) => {
     setFilterBrand(slug);
     setSelectedProduct(null);
@@ -58,7 +60,8 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-brand-border bg-brand-dark/85 backdrop-blur-md">
+    <>
+      <header className="sticky top-0 z-50 w-full border-b border-brand-border bg-brand-dark/85 backdrop-blur-md">
       {/* Dynamic Promotion Ticker Marquee */}
       <div className="w-full bg-gradient-to-r from-brand-orange to-brand-gold py-1.5 text-[11px] font-bold uppercase tracking-wider text-black overflow-hidden select-none">
         <div className="flex whitespace-nowrap animate-marquee gap-8">
@@ -71,18 +74,26 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between gap-4">
-          
+      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between gap-1 sm:gap-4">
+
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="md:hidden p-1.5 text-slate-300 hover:text-brand-orange"
+            onClick={() => setShowMobileMenu(true)}
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+
           {/* Logo */}
-          <div 
-            onClick={() => { setSelectedProduct(null); setView('home'); }} 
+          <div
+            onClick={() => { setSelectedProduct(null); setView('home'); }}
             className="flex cursor-pointer items-center gap-2 group"
           >
-            <div className="relative flex h-12 w-32 items-center justify-center rounded-lg bg-white overflow-hidden border border-brand-border/60 shadow-glow transition-all duration-300 group-hover:border-brand-orange p-1">
-              <Image 
-                src="/marque-new-logo.jpg" 
-                alt="MARQUE Logo" 
+            <div className="relative hidden sm:flex h-12 w-32 items-center justify-center rounded-lg bg-white overflow-hidden border border-brand-border/60 shadow-glow transition-all duration-300 group-hover:border-brand-orange p-1">
+              <Image
+                src="/marque-new-logo.jpg"
+                alt="MARQUE Logo"
                 fill
                 sizes="128px"
                 className="object-contain mix-blend-multiply"
@@ -100,13 +111,13 @@ export default function Header() {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium tracking-wide">
-            <button 
+            <button
               onClick={() => { setSelectedProduct(null); setView('home'); }}
               className={`hover:text-brand-orange transition-colors ${currentView === 'home' ? 'text-brand-orange font-bold' : 'text-slate-300'}`}
             >
               Home
             </button>
-            
+
             {/* Shop Mega-menu dropdown */}
             <div className="relative group py-2">
               <button
@@ -129,7 +140,7 @@ export default function Header() {
               </div>
             </div>
 
-            <button 
+            <button
               onClick={() => { setSelectedProduct(null); setView('accessories'); }}
               className={`hover:text-brand-orange transition-colors ${currentView === 'accessories' ? 'text-brand-orange font-bold' : 'text-slate-300'}`}
             >
@@ -138,13 +149,13 @@ export default function Header() {
           </nav>
 
           {/* Search bar middle */}
-          <form 
+          <form
             onSubmit={handleSearchSubmit}
             className="hidden lg:flex relative max-w-md w-full items-center"
           >
             <Search className="absolute left-3.5 h-4.5 w-4.5 text-slate-400" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search legendary crawlers, bashers, street racers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -153,18 +164,18 @@ export default function Header() {
           </form>
 
           {/* Icons Right */}
-          <div className="flex items-center gap-4">
-            
+          <div className="flex items-center gap-1.5 sm:gap-4">
+
             {/* Mobile Search Toggle */}
-            <button 
+            <button
               onClick={() => setShowSearchBox(!showSearchBox)}
-              className="p-2 text-slate-300 hover:text-brand-orange transition-colors lg:hidden"
+              className="p-1.5 sm:p-2 text-slate-300 hover:text-brand-orange transition-colors lg:hidden"
             >
               <Search className="h-5 w-5" />
             </button>
 
             {/* Wishlist */}
-            <button 
+            <button
               onClick={() => { setSelectedProduct(null); setView('shop'); }}
               className="relative p-2 text-slate-300 hover:text-brand-orange transition-colors hidden sm:block"
             >
@@ -178,9 +189,9 @@ export default function Header() {
 
             {/* Low stock Warning alerts indicator */}
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className={`relative p-2 rounded-full transition-colors ${lowStockAlerts.length > 0 ? 'text-brand-gold animate-bounce' : 'text-slate-300 hover:text-brand-orange'}`}
+                className={`relative p-1.5 sm:p-2 rounded-full transition-colors ${lowStockAlerts.length > 0 ? 'text-brand-gold animate-bounce' : 'text-slate-300 hover:text-brand-orange'}`}
               >
                 <Bell className="h-5 w-5" />
                 {lowStockAlerts.length > 0 && (
@@ -197,7 +208,7 @@ export default function Header() {
                       Live Alerts ({lowStockAlerts.length})
                     </span>
                     {lowStockAlerts.length > 0 && (
-                      <button 
+                      <button
                         onClick={clearLowStockAlerts}
                         className="text-[10px] text-slate-400 hover:text-brand-orange transition-colors underline"
                       >
@@ -224,9 +235,9 @@ export default function Header() {
             </div>
 
             {/* Cart Button */}
-            <button 
+            <button
               onClick={() => { setSelectedProduct(null); setView('cart'); }}
-              className={`relative p-2.5 rounded-xl border transition-all ${currentView === 'cart' ? 'bg-brand-orange border-brand-orange text-black' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
+              className={`relative p-1.5 sm:p-2.5 rounded-xl border transition-all ${currentView === 'cart' ? 'bg-brand-orange border-brand-orange text-black' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
             >
               <ShoppingBag className="h-5 w-5" />
               {cartCount > 0 && (
@@ -237,9 +248,9 @@ export default function Header() {
             </button>
 
             {/* User Account */}
-            <button 
+            <button
               onClick={() => { setSelectedProduct(null); setView('account'); }}
-              className={`relative p-2.5 rounded-xl border transition-all ${currentView === 'account' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
+              className={`relative p-1.5 sm:p-2.5 rounded-xl border transition-all ${currentView === 'account' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
               title={isAuthenticated ? "Pilot Dashboard (Authorized)" : "Pilot Authorization Login"}
             >
               <User className={`h-5 w-5 ${isAuthenticated ? "text-brand-orange" : ""}`} />
@@ -250,9 +261,9 @@ export default function Header() {
 
             {/* Admin Controls */}
             {isAdmin && (
-              <button 
+              <button
                 onClick={() => { setSelectedProduct(null); setView('admin'); }}
-                className={`p-2.5 rounded-xl border transition-all ${currentView === 'admin' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
+                className={`p-1.5 sm:p-2.5 rounded-xl border transition-all ${currentView === 'admin' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
                 title="Admin Panel"
               >
                 <Settings className="h-5 w-5" />
@@ -264,12 +275,12 @@ export default function Header() {
 
         {/* Mobile Search Overlay Input */}
         {showSearchBox && (
-          <form 
+          <form
             onSubmit={handleSearchSubmit}
             className="py-3 border-t border-brand-border flex gap-2 lg:hidden"
           >
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search crawlers, parts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -282,5 +293,39 @@ export default function Header() {
         )}
       </div>
     </header>
+
+      {/* Mobile Menu Drawer */}
+      {showMobileMenu && (
+        <div className="fixed inset-0 z-[100] flex sm:hidden">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowMobileMenu(false)} />
+          <div className="relative w-64 h-[100dvh] bg-slate-950 border-r border-brand-border flex flex-col p-6 shadow-2xl">
+            <button onClick={() => setShowMobileMenu(false)} className="absolute top-4 right-4 text-slate-400 hover:text-brand-orange">
+              <X className="h-6 w-6" />
+            </button>
+            <div className="text-xl font-display font-black text-white mb-8 border-b border-brand-border pb-4 tracking-wider mt-4">MENU</div>
+            <nav className="flex flex-col gap-6 font-bold tracking-wide text-sm">
+              <button 
+                onClick={() => { setSelectedProduct(null); setView('home'); setShowMobileMenu(false); }}
+                className={`text-left uppercase hover:text-brand-orange transition-colors ${currentView === 'home' ? 'text-brand-orange' : 'text-slate-300'}`}
+              >
+                Home
+              </button>
+              <button 
+                onClick={() => { setSelectedProduct(null); setView('shop'); setShowMobileMenu(false); }}
+                className={`text-left uppercase hover:text-brand-orange transition-colors ${currentView === 'shop' ? 'text-brand-orange' : 'text-slate-300'}`}
+              >
+                Shop All Models
+              </button>
+              <button 
+                onClick={() => { setSelectedProduct(null); setView('accessories'); setShowMobileMenu(false); }}
+                className={`text-left uppercase hover:text-brand-orange transition-colors ${currentView === 'accessories' ? 'text-brand-orange' : 'text-slate-300'}`}
+              >
+                Accessories & Parts
+              </button>
+            </nav>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

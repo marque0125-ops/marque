@@ -115,20 +115,7 @@ export function BannersTab() {
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-950 p-6 rounded-2xl border border-brand-border">
         <div className="space-y-1">
-          <label className={`absolute inset-0 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-800/50 transition-colors ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
-            {isUploading ? (
-              <>
-                <Loader2 className="h-8 w-8 text-brand-orange mb-2 animate-spin" />
-                <span className="text-sm font-medium text-slate-300">Uploading to Cloudinary...</span>
-              </>
-            ) : (
-              <>
-                <ImageIcon className="h-8 w-8 text-slate-500 mb-2" />
-                <span className="text-sm font-medium text-slate-300">Click to upload image</span>
-              </>
-            )}
-            <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploading} />
-          </label>
+
           <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
             <ImageIcon className="h-4.5 w-4.5 text-brand-orange" /> 
             {activeTab === 'hero' ? "Top Hero Banners" : "Promo Banners"}

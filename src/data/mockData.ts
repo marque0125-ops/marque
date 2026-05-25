@@ -1146,7 +1146,7 @@ export const PRODUCTS: Product[] = [
         sku: "SD-AL-ORN",
         stockQty: 7,
         attributes: { color: "Blaze Orange" },
-        imageUrl: "/rc_alloy_truck.png"
+        imageUrl: "/a.png"
       }
     ],
     stockQty: 7,

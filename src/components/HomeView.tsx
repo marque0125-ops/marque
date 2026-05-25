@@ -154,10 +154,10 @@ export default function HomeView() {
 
   return (
 
-    <div className="space-y-24 pb-24">
+    <div className="space-y-8 sm:space-y-24 pb-12 sm:pb-24">
       {/* ==================== 6.5 STANDALONE PROMO BANNER ==================== */}
       {promoBanners && promoBanners.length > 0 && (
-        <section className="relative w-full max-w-6xl mx-auto rounded-3xl overflow-hidden shadow-2xl group cursor-pointer aspect-[16/9] sm:aspect-[2.5/1] lg:aspect-[3/1] bg-slate-950 border border-white/5">
+        <section className="relative w-full max-w-6xl mx-auto rounded-2xl overflow-hidden shadow-2xl group cursor-pointer h-[160px] sm:h-auto sm:aspect-[2.5/1] lg:aspect-[3/1] bg-slate-950 border border-white/5">
           {promoBanners.map((slide, idx) => (
             <div
               key={slide.id}
@@ -214,7 +214,7 @@ export default function HomeView() {
               Spotlight: Traxxas X-Maxx 8S
             </div>
 
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-none">
+            <h1 className="font-display text-2xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-none">
               BRUTAL SPEED.<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-gold">
                 UNMATCHED DURABILITY.
@@ -225,10 +225,10 @@ export default function HomeView() {
               Experience 130+ km/h runs, fully waterproof brushless motors, and high-performance accessories/spares. MARQUE brings the world's most extreme RC cars and accessories to Indian bashers and track racers.
             </p>
 
-            <div className="flex flex-wrap gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
               <button
                 onClick={() => { setFilterBrand('ALL'); setView('shop'); }}
-                className="group flex items-center gap-2 rounded-xl bg-brand-orange px-6 py-3.5 text-sm font-bold text-black hover:bg-brand-gold hover:shadow-glow transition-all duration-300 uppercase tracking-wider"
+                className="group flex items-center justify-center gap-2 rounded-xl bg-brand-orange px-6 py-3.5 text-sm font-bold text-black hover:bg-brand-gold hover:shadow-glow transition-all duration-300 uppercase tracking-wider"
               >
                 Explore Track Rigs
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -243,8 +243,8 @@ export default function HomeView() {
             </div>
           </div>
 
-          {/* Right Column (Attractive Image Slider) */}
-          <div className="lg:col-span-5 relative w-full flex justify-center items-center h-[350px] lg:h-[400px] cursor-pointer">
+          {/* Right Column — hidden on mobile */}
+          <div className="hidden lg:flex lg:col-span-5 relative w-full justify-center items-center h-[350px] lg:h-[400px] cursor-pointer">
             <div className="absolute -inset-1.5 rounded-3xl bg-gradient-to-r from-brand-orange to-brand-gold opacity-30 blur-lg pointer-events-none"></div>
             <div className="relative w-full h-full rounded-3xl border border-white/5 overflow-hidden bg-slate-950 group shadow-2xl">
               {heroBanners.map((slide, idx) => (
@@ -287,94 +287,62 @@ export default function HomeView() {
         </div>
       </section>
 
-      {/* ==================== 2. TABBED VEHICLE SEARCH/FILTER (Impel "Find Cars") ==================== */}
-      <section className="-mt-12 relative z-20 max-w-5xl mx-auto">
-        <div className="rounded-3xl border border-brand-border bg-slate-950/90 backdrop-blur p-6 sm:p-8 shadow-2xl">
-          <div className="space-y-4">
-            <div className="border-b border-brand-border pb-3 flex items-center justify-between">
-              <span className="font-display text-xs sm:text-sm font-black uppercase tracking-wider text-brand-orange">
-                Find High-Performance Cars For Sale
-              </span>
-              <span className="text-[10px] text-slate-500 font-bold uppercase hidden sm:inline">
-                Madipakkam Hub Serviceable
-              </span>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-              {/* Keyword Search */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Search Keyword</label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-                  <input
-                    type="text"
-                    value={searchQueryLocal}
-                    onChange={(e) => setSearchQueryLocal(e.target.value)}
-                    placeholder="Slash, X-Maxx, Arrma..."
-                    className="w-full rounded-xl border border-brand-border bg-slate-900/50 pl-10 pr-3 py-3 text-xs font-bold text-white placeholder-slate-500 focus:border-brand-orange focus:bg-slate-900 transition-all outline-none"
-                  />
-                </div>
-              </div>
 
-              {/* Brand Select */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Select Brand</label>
-                <select
-                  value={selectedBrandLocal}
-                  onChange={(e) => setSelectedBrandLocal(e.target.value)}
-                  className="w-full rounded-xl border border-brand-border bg-slate-900/50 px-3 py-3 text-xs font-bold text-white focus:border-brand-orange focus:bg-slate-900 transition-all outline-none"
-                >
-                  <option value="ALL">All Brands (Traxxas, Arrma...)</option>
-                  <option value="traxxas">Traxxas High-Performance</option>
-                  <option value="arrma">Arrma Bashers</option>
-                  <option value="fms">FMS Scale Realism</option>
-                  <option value="rlaarlo">Rlaarlo Speed Demons</option>
-                  <option value="mjx">MJX Hyper Go</option>
-                </select>
-              </div>
-
-              {/* Terrain Select */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Select Terrain Type</label>
-                <select
-                  value={selectedTerrainLocal}
-                  onChange={(e) => setSelectedTerrainLocal(e.target.value)}
-                  className="w-full rounded-xl border border-brand-border bg-slate-900/50 px-3 py-3 text-xs font-bold text-white focus:border-brand-orange focus:bg-slate-900 transition-all outline-none"
-                >
-                  <option value="ALL">All Terrains</option>
-                  <option value="Off-Road">Off-Road Dirt Bashers</option>
-                  <option value="On-Road">On-Road Asphalt Speed</option>
-                  <option value="Crawler">Technical Rock Crawlers</option>
-                  <option value="Drift">Precision Drift Machines</option>
-                </select>
-              </div>
-
-              {/* Submit Button */}
-              <button
-                onClick={handleSearchSubmit}
-                className="w-full rounded-xl bg-brand-orange hover:bg-brand-gold text-black py-3.5 text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 hover:shadow-glow"
-              >
-                <Search className="h-4 w-4" />
-                Search Garage
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ==================== MOBILE QUICK SEARCH (mobile only) ==================== */}
+      <div className="block sm:hidden -mt-2">
+        <button
+          onClick={() => { setSelectedProduct(null); setView('shop'); }}
+          className="w-full flex items-center gap-3 rounded-2xl border border-brand-border/60 bg-slate-900/80 px-4 py-3.5 text-sm text-slate-400 text-left"
+        >
+          <Search className="h-4 w-4 text-slate-500 shrink-0" />
+          Search crawlers, bashers, accessories...
+          <span className="ml-auto rounded-lg bg-brand-orange px-3 py-1 text-[10px] font-black text-black uppercase shrink-0">Go</span>
+        </button>
+      </div>
 
       {/* ==================== 3. BROWSE BY CATEGORY ==================== */}
-      <section className="space-y-12 py-8">
-        <div className="text-center space-y-3">
+      <section className="space-y-6 sm:space-y-12 sm:py-8">
+        <div className="text-center space-y-2 sm:space-y-3">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-orange uppercase tracking-widest">
             <Sliders className="h-4 w-4" />
             Shop by Category
           </div>
-          <h2 className="font-display text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+          <h2 className="font-display text-2xl sm:text-5xl font-black uppercase tracking-tight text-white">
             Find Your Next Machine
           </h2>
         </div>
 
-        <div className="flex flex-col md:flex-row h-[350px] sm:h-[450px] w-full max-w-7xl mx-auto px-4 gap-2 sm:gap-4">
+        {/* Mobile: 2-column grid */}
+        <div className="grid sm:hidden grid-cols-2 gap-x-6 gap-y-8 px-4 pt-2 pb-6">
+          {categories.map((cat, idx) => {
+            const count = products.filter(p => p.categoryId === cat.id).length;
+            return (
+              <button
+                key={idx}
+                onClick={() => handleCategoryClick(cat.id)}
+                className="flex flex-col items-center gap-3 w-full"
+              >
+                <div className="w-[140px] h-[140px] rounded-full bg-white border border-slate-800 shadow-sm overflow-hidden flex items-center justify-center relative">
+                  <Image
+                    src={cat.image}
+                    alt={cat.name}
+                    fill
+                    sizes="140px"
+                    className="object-contain p-4"
+                  />
+                </div>
+                <div className="space-y-1 text-center">
+                  <span className="text-base font-bold text-white block leading-tight">{cat.name}</span>
+                  <span className="text-xs text-slate-400 block">{count} products</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Desktop: full grid */}
+        <div className="hidden sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-4 sm:gap-x-8 gap-y-10 sm:gap-y-12 w-full max-w-7xl mx-auto px-4 pt-4">
           {categories.map((cat, idx) => {
             const count = products.filter(p => p.categoryId === cat.id).length;
 
@@ -382,44 +350,27 @@ export default function HomeView() {
               <div
                 key={idx}
                 onClick={() => handleCategoryClick(cat.id)}
-                className="group relative flex-1 hover:flex-[3] transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] cursor-pointer rounded-2xl overflow-hidden bg-slate-900 border border-brand-border/30 hover:border-brand-orange shadow-lg"
+                className="group flex flex-col items-center text-center cursor-pointer space-y-4"
               >
-                {/* Background Image */}
-                <Image
-                  src={cat.image}
-                  alt={cat.name}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-60 group-hover:opacity-100 grayscale-[30%] group-hover:grayscale-0"
-                />
-
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent opacity-90 transition-opacity duration-500" />
-
-                {/* Default State (Collapsed) */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
-                  <h3
-                    className="font-display font-black text-base md:text-xl text-white uppercase tracking-wider drop-shadow-md text-center hidden md:block"
-                    style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
-                  >
-                    {cat.name}
-                  </h3>
-                  <h3 className="font-display font-black text-sm text-white uppercase tracking-wider drop-shadow-md text-center md:hidden">
-                    {cat.name}
-                  </h3>
+                {/* Circular Image Container */}
+                <div className="relative w-full aspect-square rounded-full border border-white/20 bg-white group-hover:border-brand-orange shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300">
+                  <Image
+                    src={cat.image}
+                    alt={cat.name}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                    className="object-contain p-5 transition-transform duration-500 group-hover:scale-110"
+                  />
                 </div>
 
-                {/* Hovered State (Expanded) */}
-                <div className="absolute inset-0 flex flex-col items-start justify-end p-6 sm:p-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
-                  <span className="bg-brand-orange text-black font-black uppercase text-[10px] px-3 py-1 rounded shadow-lg mb-3">
-                    {count} Products
-                  </span>
-                  <h3 className="font-display font-black text-3xl sm:text-5xl text-white uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] leading-tight mb-2">
+                {/* Text Content */}
+                <div className="space-y-1">
+                  <h3 className="font-display text-sm sm:text-base font-bold text-white group-hover:text-brand-orange transition-colors">
                     {cat.name}
                   </h3>
-                  <div className="flex items-center gap-2 text-brand-orange font-bold text-xs uppercase tracking-widest bg-black/40 backdrop-blur px-4 py-2 rounded border border-brand-orange/30">
-                    Explore Inventory <ArrowRight className="h-4 w-4" />
-                  </div>
+                  <p className="text-xs text-slate-400 font-medium">
+                    {count} {count === 1 ? 'product' : 'products'}
+                  </p>
                 </div>
               </div>
             );
@@ -428,7 +379,7 @@ export default function HomeView() {
       </section>
 
       {/* ==================== BRANDS INFINITY SCROLLING MARQUEE ==================== */}
-      <section className="space-y-6 overflow-hidden">
+      <section className="hidden sm:block space-y-6 overflow-hidden">
         {/* Style block for reverse marquee animation keyframe */}
         <style dangerouslySetInnerHTML={{
           __html: `
@@ -528,31 +479,31 @@ export default function HomeView() {
         </div>
       </section>
 
-      {/* ==================== 6. EXPLORE ALL VEHICLES / TABS (Impel Explore section) ==================== */}
-      <section className="space-y-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-brand-border pb-6">
-          <div className="space-y-2">
+      {/* ==================== 6. EXPLORE ALL VEHICLES ==================== */}
+      <section className="space-y-6 sm:space-y-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6 border-b border-brand-border pb-4 sm:pb-6">
+          <div className="space-y-1 sm:space-y-2">
             <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block">
               Direct Garage Clearance
             </span>
-            <h2 className="font-display text-2xl sm:text-3xl font-black uppercase text-white tracking-tight">
-              Explore All Vehicles
+            <h2 className="font-display text-xl sm:text-3xl font-black uppercase text-white tracking-tight">
+              Featured Products
             </h2>
           </div>
 
-          {/* Impel Category Tabs */}
-          <div className="flex flex-wrap gap-2">
+          {/* Tabs — scrollable on mobile */}
+          <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
             {[
-              { id: 'ALL', name: 'All Vehicles' },
-              { id: 'Off-Road', name: 'Off-Road Bashers' },
-              { id: 'On-Road', name: 'On-Road Speed' },
-              { id: 'Crawler', name: 'Scale Crawlers' },
-              { id: 'Drift', name: 'Drift Spec' }
+              { id: 'ALL', name: 'All' },
+              { id: 'Off-Road', name: 'Off-Road' },
+              { id: 'On-Road', name: 'On-Road' },
+              { id: 'Crawler', name: 'Crawler' },
+              { id: 'Drift', name: 'Drift' }
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setExploreTab(tab.id as any)}
-                className={`rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 ${exploreTab === tab.id
+                className={`shrink-0 rounded-lg px-3 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 ${exploreTab === tab.id
                   ? "bg-brand-orange text-black font-black shadow-glow"
                   : "border border-brand-border bg-slate-900/30 text-slate-400 hover:text-white hover:border-brand-orange"
                   }`}
@@ -564,7 +515,7 @@ export default function HomeView() {
         </div>
 
         {/* Dynamic Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
           {exploreFilteredProducts.map((p) => (
             <ProductCardItem
               key={p.id}
@@ -575,12 +526,22 @@ export default function HomeView() {
             />
           ))}
         </div>
+
+        {/* View All button */}
+        <div className="text-center pt-2">
+          <button
+            onClick={() => { resetFilters(); setView('shop'); }}
+            className="inline-flex items-center gap-2 rounded-xl border border-brand-border bg-slate-900 hover:border-brand-orange hover:bg-slate-950 px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-white transition-all"
+          >
+            View All Products <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
       </section>
 
 
 
-      {/* ==================== 4. DUAL CALL-TO-ACTION CARDS (Impel Looking for Car / Sell) ==================== */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+      {/* ==================== 4. DUAL CALL-TO-ACTION CARDS ==================== */}
+      <section className="hidden sm:grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
         {/* Card 1: Ready-To-Run */}
         <div className="group relative rounded-3xl overflow-hidden border border-brand-orange/20 bg-slate-950 hover:border-brand-orange transition-all duration-500 shadow-xl hover:shadow-[0_0_40px_rgba(249,115,22,0.15)] flex flex-col justify-between min-h-[260px] cursor-pointer" onClick={() => { setFilterBrand("ALL"); setView("shop"); }}>
           <div className="absolute inset-0 bg-gradient-to-br from-brand-orange/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
@@ -630,8 +591,8 @@ export default function HomeView() {
         </div>
       </section>
 
-      {/* ==================== 5. WELCOME ABOUT SECTION (Impel Welcome block) ==================== */}
-      <section className="relative max-w-6xl mx-auto py-16 sm:py-24 px-4 sm:px-8">
+      {/* ==================== 5. WELCOME ABOUT SECTION ==================== */}
+      <section className="hidden sm:block relative max-w-6xl mx-auto py-16 sm:py-24 px-4 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
           
           <div className="order-2 lg:order-1 space-y-8">
@@ -704,7 +665,7 @@ export default function HomeView() {
       </section>
 
       {/* ==================== 7. STATISTICS COUNTER PANEL ==================== */}
-      <section className="relative rounded-3xl border border-brand-border bg-slate-950 py-10 px-6 max-w-6xl mx-auto overflow-hidden">
+      <section className="hidden sm:block relative rounded-3xl border border-brand-border bg-slate-950 py-10 px-6 max-w-6xl mx-auto overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-brand-orange/5 to-brand-gold/5 opacity-50" />
         <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-brand-border">
           {[
@@ -725,8 +686,8 @@ export default function HomeView() {
         </div>
       </section>
 
-      {/* ==================== 8. WHY CHOOSE US? (Impel Why Choose Us block) ==================== */}
-      <section className="space-y-10 max-w-6xl mx-auto">
+      {/* ==================== 8. WHY CHOOSE US? ==================== */}
+      <section className="hidden sm:block space-y-10 max-w-6xl mx-auto">
         <div className="text-center space-y-2">
           <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block">
             Why Choose MARQUE?
@@ -782,8 +743,8 @@ export default function HomeView() {
         </div>
       </section>
 
-      {/* ==================== 9. WHAT OUR CUSTOMERS SAY (Impel Testimonials) ==================== */}
-      <section className="relative rounded-3xl border border-brand-border bg-slate-950 py-12 px-6 sm:px-12 relative overflow-hidden text-center max-w-4xl mx-auto shadow-glow">
+      {/* ==================== 9. TESTIMONIALS ==================== */}
+      <section className="hidden sm:block relative rounded-3xl border border-brand-border bg-slate-950 py-12 px-6 sm:px-12 relative overflow-hidden text-center max-w-4xl mx-auto shadow-glow">
         <div className="absolute inset-0 bg-gradient-to-b from-brand-orange/5 to-transparent pointer-events-none" />
 
         <div className="space-y-8 relative z-10">
@@ -835,8 +796,8 @@ export default function HomeView() {
         </div>
       </section>
 
-      {/* ==================== 10. CURATED HOBBYIST GUIDES (Impel Recent News) ==================== */}
-      <section className="space-y-8">
+      {/* ==================== 10. ARTICLES ==================== */}
+      <section className="hidden sm:block space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-brand-border pb-6">
           <div className="space-y-2">
             <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block">

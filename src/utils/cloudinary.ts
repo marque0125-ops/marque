@@ -3,8 +3,8 @@
  * Uploads a file directly to Cloudinary via REST API.
  */
 
-const CLOUD_NAME = "dqo1r1ftb";
-const UPLOAD_PRESET = "Rccars";
+const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dqo1r1ftb";
+const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "Rccars";
 
 export async function uploadImageToCloudinary(file: File): Promise<string> {
   try {
