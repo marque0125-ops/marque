@@ -164,7 +164,7 @@ export const BRANDS: Brand[] = [
     id: "b9",
     name: "MARQUE SHOWCASE",
     slug: "marque-showcase",
-    logoUrl: "/marque-new-logo.png",
+    logoUrl: "/logo.png",
     description: "Premium custom accessories designed by MARQUE, including acrylic showcase enclosures and display stands tailored for high-end hobby gear and collectibles.",
     country: "India",
     established: "2026"

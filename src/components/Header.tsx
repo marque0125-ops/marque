@@ -92,7 +92,7 @@ export default function Header() {
           >
             <div className="relative flex h-14 w-36 sm:h-16 sm:w-48 items-center justify-center rounded-xl bg-white overflow-hidden transition-transform duration-300 group-hover:scale-105 p-2">
               <Image
-                src="/marque-new-logo.png"
+                src="/logo.png"
                 alt="MARQUE Logo"
                 fill
                 sizes="(max-width: 640px) 144px, 192px"
