@@ -157,20 +157,19 @@ export default function HomeView() {
     <div className="space-y-8 sm:space-y-24 pb-12 sm:pb-24">
       {/* ==================== 6.5 STANDALONE PROMO BANNER ==================== */}
       {promoBanners && promoBanners.length > 0 && (
-        <section className="relative w-screen ml-[calc(50%-50vw)] overflow-hidden group cursor-pointer h-[160px] sm:h-auto sm:aspect-[2.5/1] lg:aspect-[4/1] bg-slate-950">
+        <section className="relative w-screen ml-[calc(50%-50vw)] overflow-hidden group cursor-pointer h-[160px] sm:h-auto sm:aspect-[2.5/1] bg-slate-950">
           {promoBanners.map((slide, idx) => (
             <div
               key={slide.id}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                idx === currentPromoSlide ? "opacity-100 z-10" : "opacity-0 z-0"
-              }`}
+              className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentPromoSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+                }`}
             >
-              <Image 
-                src={slide.imageUrl} 
-                alt={slide.titleMain || "Promo Banner"} 
+              <Image
+                src={slide.imageUrl}
+                alt={slide.titleMain || "Promo Banner"}
                 fill
                 sizes="(max-width: 1152px) 100vw, 1152px"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                className="object-contain transition-transform duration-1000 group-hover:scale-105"
               />
               {/* Optional Text Overlay */}
               {(slide.badgeText || slide.titleMain || slide.titleSub) && (
@@ -190,9 +189,8 @@ export default function HomeView() {
                 <button
                   key={idx}
                   onClick={() => setCurrentPromoSlide(idx)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    idx === currentPromoSlide ? "bg-brand-orange w-6" : "bg-black/50 w-2 hover:bg-white/50"
-                  }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${idx === currentPromoSlide ? "bg-brand-orange w-6" : "bg-black/50 w-2 hover:bg-white/50"
+                    }`}
                 />
               ))}
             </div>
@@ -215,9 +213,9 @@ export default function HomeView() {
             </div>
 
             <h1 className="font-display text-2xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-none">
-              BRUTAL SPEED.<br />
+              Ultimate destination for<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-gold">
-                UNMATCHED DURABILITY.
+                extreme RC cars
               </span>
             </h1>
 
@@ -308,8 +306,8 @@ export default function HomeView() {
             <Sliders className="h-4 w-4" />
             Shop by Category
           </div>
-          <h2 className="font-display text-2xl sm:text-5xl font-black uppercase tracking-tight text-white">
-            Find Your Next Machine
+          <h2 className="font-display text-2xl sm:text-5xl font-black  tracking-tight text-white">
+            Explore our RC collections
           </h2>
         </div>
 
@@ -546,7 +544,7 @@ export default function HomeView() {
         <div className="group relative rounded-3xl overflow-hidden border border-brand-orange/20 bg-slate-950 hover:border-brand-orange transition-all duration-500 shadow-xl hover:shadow-[0_0_40px_rgba(249,115,22,0.15)] flex flex-col justify-between min-h-[260px] cursor-pointer" onClick={() => { setFilterBrand("ALL"); setView("shop"); }}>
           <div className="absolute inset-0 bg-gradient-to-br from-brand-orange/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="absolute -top-10 -right-10 w-64 h-64 bg-brand-orange/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-brand-orange/30 transition-colors duration-500" />
-          
+
           <div className="relative z-10 p-8 sm:p-10 flex flex-col h-full justify-between gap-8">
             <div className="space-y-4">
               <span className="text-[10px] font-bold text-brand-orange uppercase border border-brand-orange/30 px-3 py-1 rounded-full bg-brand-orange/10 tracking-widest inline-block shadow-sm">
@@ -559,7 +557,7 @@ export default function HomeView() {
                 Ready-To-Run (RTR) models come fully assembled and painted. Just plug in your battery and shred the tarmac!
               </p>
             </div>
-            
+
             <button className="inline-flex items-center justify-center gap-2 text-sm font-black uppercase text-black bg-brand-orange group-hover:bg-brand-gold px-6 py-3.5 rounded-xl transition-all duration-300 tracking-wider w-fit shadow-[0_0_20px_rgba(249,115,22,0.2)] group-hover:shadow-[0_0_30px_rgba(249,115,22,0.4)]">
               Explore RTR Garage <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -570,7 +568,7 @@ export default function HomeView() {
         <div className="group relative rounded-3xl overflow-hidden border border-brand-gold/20 bg-slate-950 hover:border-brand-gold transition-all duration-500 shadow-xl hover:shadow-[0_0_40px_rgba(234,179,8,0.15)] flex flex-col justify-between min-h-[260px] cursor-pointer" onClick={() => { setFilterBrand("ALL"); setView("shop"); }}>
           <div className="absolute inset-0 bg-gradient-to-br from-brand-gold/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="absolute -top-10 -right-10 w-64 h-64 bg-brand-gold/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-brand-gold/30 transition-colors duration-500" />
-          
+
           <div className="relative z-10 p-8 sm:p-10 flex flex-col h-full justify-between gap-8">
             <div className="space-y-4">
               <span className="text-[10px] font-bold text-brand-gold uppercase border border-brand-gold/30 px-3 py-1 rounded-full bg-brand-gold/10 tracking-widest inline-block shadow-sm">
@@ -583,7 +581,7 @@ export default function HomeView() {
                 We stock raw chassis kits, carbon fiber upgrade parts, high-torque servos, and brushless motors for ultimate tuners.
               </p>
             </div>
-            
+
             <button className="inline-flex items-center justify-center gap-2 text-sm font-black uppercase text-black bg-brand-gold group-hover:bg-brand-orange px-6 py-3.5 rounded-xl transition-all duration-300 tracking-wider w-fit shadow-[0_0_20px_rgba(234,179,8,0.2)] group-hover:shadow-[0_0_30px_rgba(234,179,8,0.4)]">
               Browse Tuning Kits <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -594,7 +592,7 @@ export default function HomeView() {
       {/* ==================== 5. WELCOME ABOUT SECTION ==================== */}
       <section className="hidden sm:block relative max-w-6xl mx-auto py-16 sm:py-24 px-4 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
-          
+
           <div className="order-2 lg:order-1 space-y-8">
             <div className="space-y-6">
               <span className="flex items-center gap-3 text-xs text-brand-orange font-bold uppercase tracking-[0.2em]">
@@ -608,7 +606,7 @@ export default function HomeView() {
                 </span>
               </h2>
             </div>
-            
+
             <p className="text-slate-300 text-base leading-relaxed max-w-lg">
               MARQUE is India's dedicated hub for authentic, hobby-grade remote control scale engineering and premium accessories. We source directly from elite international manufacturers, providing bash-tested rigs, performance upgrades, and spare parts.
             </p>
@@ -647,7 +645,7 @@ export default function HomeView() {
               className="object-cover transition-transform duration-1000 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80 pointer-events-none" />
-            
+
             <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 z-10">
               <div className="inline-flex items-center gap-4 backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-4 shadow-xl">
                 <div className="w-12 h-12 rounded-full bg-brand-orange flex items-center justify-center shrink-0">
