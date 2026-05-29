@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useCartStore } from "../store/useCartStore";
@@ -47,11 +50,11 @@ export default function HomeView() {
     guides
   } = useProductStore();
   const {
-    setView,
     setSelectedProduct,
     heroBanners,
     promoBanners
   } = useUIStore();
+  const router = useRouter();
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentPromoSlide, setCurrentPromoSlide] = useState(0);
@@ -89,24 +92,25 @@ export default function HomeView() {
     resetFilters();
     setFilterBrand(slug);
     setSelectedProduct(null);
-    setView('shop');
+    router.push('/shop');
   };
 
   const handleCategoryClick = (categoryId: string) => {
     resetFilters();
     setFilterCategory(categoryId);
     setSelectedProduct(null);
-    setView('shop');
+    router.push('/shop');
   };
 
   const handleTerrainClick = (terrain: 'On-Road' | 'Off-Road' | 'Crawler' | 'Drift') => {
     setFilterTerrain(terrain);
     setSelectedProduct(null);
-    setView('shop');
+    router.push('/shop');
   };
 
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
+    router.push(`/product/${product.slug}`);
   };
 
   const handleQuickAdd = (e: React.MouseEvent, product: Product) => {
@@ -119,7 +123,7 @@ export default function HomeView() {
     setFilterBrand(selectedBrandLocal);
     setFilterTerrain(selectedTerrainLocal);
     setSelectedProduct(null);
-    setView('shop');
+    router.push('/shop');
   };
 
   // Filter explore rigs dynamically
@@ -225,7 +229,7 @@ export default function HomeView() {
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
               <button
-                onClick={() => { setFilterBrand('ALL'); setView('shop'); }}
+                onClick={() => { setFilterBrand('ALL'); router.push('/shop'); }}
                 className="group flex items-center justify-center gap-2 rounded-xl bg-brand-orange px-6 py-3.5 text-sm font-normal text-white sm:text-black hover:bg-brand-gold hover:shadow-glow transition-all duration-300 uppercase tracking-wider"
               >
                 Explore Track Rigs
@@ -290,7 +294,7 @@ export default function HomeView() {
       {/* ==================== MOBILE QUICK SEARCH (mobile only) ==================== */}
       <div className="block sm:hidden -mt-2">
         <button
-          onClick={() => { setSelectedProduct(null); setView('shop'); }}
+          onClick={() => { setSelectedProduct(null); router.push('/shop'); }}
           className="w-full flex items-center gap-3 rounded-2xl border border-brand-border/60 bg-slate-900/80 px-4 py-3.5 text-sm text-slate-400 text-left"
         >
           <Search className="h-4 w-4 text-slate-500 shrink-0" />
@@ -528,7 +532,7 @@ export default function HomeView() {
         {/* View All button */}
         <div className="text-center pt-2">
           <button
-            onClick={() => { resetFilters(); setView('shop'); }}
+            onClick={() => { resetFilters(); router.push('/shop'); }}
             className="inline-flex items-center gap-2 rounded-xl border border-brand-border bg-slate-900 hover:border-brand-orange hover:bg-slate-950 px-8 py-3.5 text-sm font-normal uppercase tracking-wider text-white transition-all"
           >
             View All Products <ArrowRight className="h-4 w-4" />

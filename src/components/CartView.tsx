@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useCartStore } from "../store/useCartStore";
 import { useAuthStore } from "../store/useAuthStore";
@@ -35,7 +36,6 @@ export default function CartView() {
   } = useCartStore();
 
   const {
-    setView,
     pincode,
     pinDetail,
     pinLoading,
@@ -43,6 +43,7 @@ export default function CartView() {
     checkPincode,
     showDialog
   } = useUIStore();
+  const router = useRouter();
 
   const {
     address,
@@ -165,7 +166,7 @@ export default function CartView() {
     if (method === 'COD') {
       const store = useOrderStore.getState();
       const order = store.createOrder(method);
-      setView('account');
+      router.push('/account');
       setCheckoutStep(false);
       clearCart();
       setTimeout(() => showDialog({ title: 'Notice', message: `Order ${order.id} placed via Cash on Delivery!` }), 500);
@@ -213,7 +214,7 @@ export default function CartView() {
           order.status = "confirmed";
           order.paymentMethod = method;
 
-          setView('account');
+          router.push('/account');
           setCheckoutStep(false);
           clearCart();
           setTimeout(() => {
@@ -449,7 +450,7 @@ export default function CartView() {
             Explore our collection of brushless monster trucks, street bashers, or scale crawlers to build your fleet.
           </p>
           <button
-            onClick={() => { setView('shop'); }}
+            onClick={() => { router.push('/shop'); }}
             className="bg-brand-orange text-white sm:text-black font-normal text-xs uppercase px-5 py-2.5 rounded-lg hover:bg-brand-gold transition-colors"
           >
             Visit Shop

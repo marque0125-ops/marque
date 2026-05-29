@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { Layers, Plus, Car, X, Trash2, Edit2 } from "lucide-react";
 import { useProductStore } from "../../store/useProductStore";

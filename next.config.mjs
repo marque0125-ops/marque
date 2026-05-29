@@ -30,3 +30,5 @@ const nextConfig = {
 };
 
 export default nextConfig;
+
+// Trigger Restart

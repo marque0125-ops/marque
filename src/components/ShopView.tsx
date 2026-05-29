@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
@@ -40,14 +41,15 @@ export default function ShopView() {
     isLoading
   } = useProductStore();
   const {
-    setView,
     setSelectedProduct
   } = useUIStore();
+  const router = useRouter();
 
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
+    router.push(`/product/${product.slug}`);
   };
 
   const handleQuickAdd = (e: React.MouseEvent, product: Product) => {

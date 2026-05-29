@@ -22,8 +22,6 @@ export interface DialogOptions {
 }
 
 export interface UIState {
-  currentView: 'home' | 'shop' | 'accessories' | 'pdp' | 'cart' | 'account' | 'admin' | 'terms' | 'shipping';
-  setView: (view: 'home' | 'shop' | 'accessories' | 'pdp' | 'cart' | 'account' | 'admin' | 'terms' | 'shipping') => void;
   selectedProduct: Product | null;
   setSelectedProduct: (product: Product | null) => void;
 
@@ -80,10 +78,8 @@ const safeStorage = {
 export const useUIStore = create<UIState>()(
   persist(
     (set, get) => ({
-      currentView: 'home',
-      setView: (view) => set({ currentView: view }),
       selectedProduct: null,
-      setSelectedProduct: (product) => set({ selectedProduct: product, currentView: product ? 'pdp' : 'shop' }),
+      setSelectedProduct: (product) => set({ selectedProduct: product }),
 
       dialog: {
         isOpen: false,

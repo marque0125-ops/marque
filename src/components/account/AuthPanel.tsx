@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { User, AlertCircle, Loader2 } from "lucide-react";
 import { supabase } from '../../utils/supabase';
@@ -8,6 +11,7 @@ import { useProductStore } from '../../store/useProductStore';
 export function AuthPanel() {
   const { login, loginWithSession } = useAuthStore();
   const { setView } = useUIStore();
+  const router = useRouter();
   const { setWishlist } = useProductStore();
 
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');

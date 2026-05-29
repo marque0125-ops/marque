@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { ShieldAlert, KeyRound, Loader2, AlertCircle } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";

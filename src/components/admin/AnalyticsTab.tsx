@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { TrendingUp, AlertTriangle, Sparkles, Settings } from "lucide-react";
 import { useOrderStore } from "../../store/useOrderStore";

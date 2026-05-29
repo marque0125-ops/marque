@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
 import { useAuthStore } from "../store/useAuthStore";
@@ -29,9 +31,11 @@ export default function Header() {
     setFilterBrand
   } = useProductStore();
   const { isAuthenticated, userEmail } = useAuthStore();
+  const router = useRouter();
+  const pathname = usePathname();
   const {
-    currentView,
-    setView,
+    
+    
     lowStockAlerts,
     clearLowStockAlerts,
     setSelectedProduct,
@@ -49,13 +53,13 @@ export default function Header() {
   const handleBrandClick = (slug: string) => {
     setFilterBrand(slug);
     setSelectedProduct(null);
-    setView('shop');
+    router.push('/shop');
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSelectedProduct(null);
-    setView('shop');
+    router.push('/shop');
     setShowSearchBox(false);
   };
 
@@ -87,7 +91,7 @@ export default function Header() {
 
           {/* Logo */}
           <div
-            onClick={() => { setSelectedProduct(null); setView('home'); }}
+            onClick={() => { setSelectedProduct(null); router.push('/'); }}
             className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex cursor-pointer items-center justify-center group"
           >
             <div className="relative flex h-16 w-48 sm:h-20 sm:w-60 items-center justify-center rounded-xl bg-white overflow-hidden transition-transform duration-300 group-hover:scale-105 p-2">
@@ -104,8 +108,8 @@ export default function Header() {
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-normal tracking-wide">
             <button
-              onClick={() => { setSelectedProduct(null); setView('home'); }}
-              className={`hover:text-brand-orange transition-colors ${currentView === 'home' ? 'text-brand-orange font-normal' : 'text-slate-300'}`}
+              onClick={() => { setSelectedProduct(null); router.push('/'); }}
+              className={`hover:text-brand-orange transition-colors ${pathname === '/' ? 'text-brand-orange font-normal' : 'text-slate-300'}`}
             >
               Home
             </button>
@@ -113,8 +117,8 @@ export default function Header() {
             {/* Shop Mega-menu dropdown */}
             <div className="relative group py-2">
               <button
-                onClick={() => { setSelectedProduct(null); setView('shop'); }}
-                className={`hover:text-brand-orange transition-colors flex items-center gap-1 ${currentView === 'shop' ? 'text-brand-orange font-normal' : 'text-slate-300'}`}
+                onClick={() => { setSelectedProduct(null); router.push('/shop'); }}
+                className={`hover:text-brand-orange transition-colors flex items-center gap-1 ${pathname === '/shop' ? 'text-brand-orange font-normal' : 'text-slate-300'}`}
               >
                 Shop
               </button>
@@ -133,8 +137,8 @@ export default function Header() {
             </div>
 
             <button
-              onClick={() => { setSelectedProduct(null); setView('accessories'); }}
-              className={`hover:text-brand-orange transition-colors ${currentView === 'accessories' ? 'text-brand-orange font-normal' : 'text-slate-300'}`}
+              onClick={() => { setSelectedProduct(null); router.push('/accessories'); }}
+              className={`hover:text-brand-orange transition-colors ${pathname === '/accessories' ? 'text-brand-orange font-normal' : 'text-slate-300'}`}
             >
               Accessories
             </button>
@@ -168,7 +172,7 @@ export default function Header() {
 
             {/* Wishlist */}
             <button
-              onClick={() => { setSelectedProduct(null); setView('shop'); }}
+              onClick={() => { setSelectedProduct(null); router.push('/shop'); }}
               className="relative p-2 text-slate-300 hover:text-brand-orange transition-colors hidden sm:block"
             >
               <Heart className="h-5 w-5" />
@@ -228,8 +232,8 @@ export default function Header() {
 
             {/* Cart Button */}
             <button
-              onClick={() => { setSelectedProduct(null); setView('cart'); }}
-              className={`relative p-1.5 sm:p-2.5 rounded-xl border transition-all ${currentView === 'cart' ? 'bg-brand-orange border-brand-orange text-white sm:text-black' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
+              onClick={() => { setSelectedProduct(null); router.push('/cart'); }}
+              className={`relative p-1.5 sm:p-2.5 rounded-xl border transition-all ${pathname === '/cart' ? 'bg-brand-orange border-brand-orange text-white sm:text-black' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
             >
               <ShoppingBag className="h-5 w-5" />
               {cartCount > 0 && (
@@ -241,8 +245,8 @@ export default function Header() {
 
             {/* User Account */}
             <button
-              onClick={() => { setSelectedProduct(null); setView('account'); }}
-              className={`hidden sm:block relative p-1.5 sm:p-2.5 rounded-xl border transition-all ${currentView === 'account' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
+              onClick={() => { setSelectedProduct(null); router.push('/account'); }}
+              className={`hidden sm:block relative p-1.5 sm:p-2.5 rounded-xl border transition-all ${pathname === '/account' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
               title={isAuthenticated ? "Pilot Dashboard (Authorized)" : "Pilot Authorization Login"}
             >
               <User className={`h-5 w-5 ${isAuthenticated ? "text-brand-orange" : ""}`} />
@@ -254,8 +258,8 @@ export default function Header() {
             {/* Admin Controls */}
             {isAdmin && (
               <button
-                onClick={() => { setSelectedProduct(null); setView('admin'); }}
-                className={`hidden sm:block p-1.5 sm:p-2.5 rounded-xl border transition-all ${currentView === 'admin' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
+                onClick={() => { setSelectedProduct(null); router.push('/admin'); }}
+                className={`hidden sm:block p-1.5 sm:p-2.5 rounded-xl border transition-all ${pathname === '/admin' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
                 title="Admin Panel"
               >
                 <Settings className="h-5 w-5" />
@@ -297,33 +301,33 @@ export default function Header() {
             <div className="text-xl font-display font-normal text-white mb-8 border-b border-brand-border pb-4 tracking-wider mt-4">MENU</div>
             <nav className="flex flex-col gap-6 font-normal tracking-wide text-sm">
               <button 
-                onClick={() => { setSelectedProduct(null); setView('home'); setShowMobileMenu(false); }}
-                className={`text-left uppercase hover:text-brand-orange transition-colors ${currentView === 'home' ? 'text-brand-orange' : 'text-slate-300'}`}
+                onClick={() => { setSelectedProduct(null); router.push('/'); setShowMobileMenu(false); }}
+                className={`text-left uppercase hover:text-brand-orange transition-colors ${pathname === '/' ? 'text-brand-orange' : 'text-slate-300'}`}
               >
                 Home
               </button>
               <button 
-                onClick={() => { setSelectedProduct(null); setView('shop'); setShowMobileMenu(false); }}
-                className={`text-left uppercase hover:text-brand-orange transition-colors ${currentView === 'shop' ? 'text-brand-orange' : 'text-slate-300'}`}
+                onClick={() => { setSelectedProduct(null); router.push('/shop'); setShowMobileMenu(false); }}
+                className={`text-left uppercase hover:text-brand-orange transition-colors ${pathname === '/shop' ? 'text-brand-orange' : 'text-slate-300'}`}
               >
                 Shop All Models
               </button>
               <button 
-                onClick={() => { setSelectedProduct(null); setView('accessories'); setShowMobileMenu(false); }}
-                className={`text-left uppercase hover:text-brand-orange transition-colors ${currentView === 'accessories' ? 'text-brand-orange' : 'text-slate-300'}`}
+                onClick={() => { setSelectedProduct(null); router.push('/accessories'); setShowMobileMenu(false); }}
+                className={`text-left uppercase hover:text-brand-orange transition-colors ${pathname === '/accessories' ? 'text-brand-orange' : 'text-slate-300'}`}
               >
                 Accessories & Parts
               </button>
               <button 
-                onClick={() => { setSelectedProduct(null); setView('account'); setShowMobileMenu(false); }}
-                className={`text-left uppercase hover:text-brand-orange transition-colors ${currentView === 'account' ? 'text-brand-orange' : 'text-slate-300'}`}
+                onClick={() => { setSelectedProduct(null); router.push('/account'); setShowMobileMenu(false); }}
+                className={`text-left uppercase hover:text-brand-orange transition-colors ${pathname === '/account' ? 'text-brand-orange' : 'text-slate-300'}`}
               >
                 {isAuthenticated ? "Dashboard" : "Login / Account"}
               </button>
               {isAdmin && (
                 <button 
-                  onClick={() => { setSelectedProduct(null); setView('admin'); setShowMobileMenu(false); }}
-                  className={`text-left uppercase hover:text-brand-orange transition-colors ${currentView === 'admin' ? 'text-brand-orange' : 'text-slate-300'}`}
+                  onClick={() => { setSelectedProduct(null); router.push('/admin'); setShowMobileMenu(false); }}
+                  className={`text-left uppercase hover:text-brand-orange transition-colors ${pathname === '/admin' ? 'text-brand-orange' : 'text-slate-300'}`}
                 >
                   Admin Panel
                 </button>

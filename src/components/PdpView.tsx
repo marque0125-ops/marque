@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useCartStore } from "../store/useCartStore";
@@ -35,9 +36,9 @@ export default function PdpView() {
   } = useProductStore();
   const {
     selectedProduct,
-    setSelectedProduct,
-    setView
+    setSelectedProduct
   } = useUIStore();
+  const router = useRouter();
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [viewMode, setViewMode] = useState<'standard' | '360'>('standard');
@@ -176,7 +177,7 @@ export default function PdpView() {
     });
 
     // Send to cart
-    setView('cart');
+    router.push('/cart');
   };
 
   const handleTogglePart = (sku: string) => {
@@ -222,7 +223,7 @@ export default function PdpView() {
       
       {/* Back button */}
       <button 
-        onClick={() => { setSelectedProduct(null); setView('shop'); }}
+        onClick={() => { setSelectedProduct(null); router.push('/shop'); }}
         className="inline-flex items-center gap-1.5 text-xs font-normal text-slate-400 hover:text-brand-orange uppercase transition-colors"
       >
         <ChevronLeft className="h-4 w-4" /> Back to RC Garage

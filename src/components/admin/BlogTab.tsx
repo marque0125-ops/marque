@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { Plus, Edit2, Trash2, X, Save, FileText, Image as ImageIcon, Clock, Hash, Loader2 } from "lucide-react";
 import { useProductStore } from "../../store/useProductStore";

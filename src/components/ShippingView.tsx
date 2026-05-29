@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Truck, PackageCheck, Clock, MapPin } from "lucide-react";
 

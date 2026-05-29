@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { Image as ImageIcon, Plus, Trash2, Edit2, X, Save, Layers, Loader2 } from "lucide-react";
 import { useUIStore, BannerSlide } from "../../store/useUIStore";

@@ -1,19 +1,20 @@
 "use client";
 
+import Link from "next/link";
 import React from "react";
 import Image from "next/image";
-import { useUIStore } from "../store/useUIStore";
+
 import { useProductStore } from "../store/useProductStore";
+import { useUIStore } from "../store/useUIStore";
 import { Car, Mail, Phone, ShieldCheck, MapPin, Truck, HelpCircle } from "lucide-react";
 
 export default function Footer() {
-  const { setView, setSelectedProduct } = useUIStore();
+  const { setSelectedProduct } = useUIStore();
   const { setFilterBrand } = useProductStore();
 
   const selectBrand = (slug: string) => {
     setFilterBrand(slug);
     setSelectedProduct(null);
-    setView('shop');
   };
 
   return (
@@ -25,7 +26,7 @@ export default function Footer() {
           
           {/* Col 1: About */}
           <div className="space-y-4">
-            <div className="flex flex-col gap-2 cursor-pointer group" onClick={() => { setSelectedProduct(null); setView('home'); }}>
+            <Link href="/" className="flex flex-col gap-2 cursor-pointer group" onClick={() => setSelectedProduct(null)}>
               <div className="relative flex h-14 w-36 items-center justify-center rounded-xl bg-[#ffffff] overflow-hidden transition-transform duration-300 group-hover:scale-105 p-2">
                 <Image 
                   src="/logo.png" 
@@ -38,7 +39,7 @@ export default function Footer() {
               <span className="font-display text-xl font-normal uppercase tracking-tighter text-[#ffffff] transition-colors group-hover:text-brand-orange mt-2">
                 MARQUE
               </span>
-            </div>
+            </Link>
             <p className="text-xs leading-relaxed text-[#9ca3af]">
               India's premier e-commerce portal for hobby-grade remote control cars and performance accessories. Stocking international legends: Traxxas, Arrma, FMS, and Rlaarlo. We deliver track-ready engineering straight to your door with certified GST-inclusive pricing.
             </p>
@@ -58,29 +59,29 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-xs text-[#9ca3af]">
               <li>
-                <button onClick={() => selectBrand('traxxas')} className="hover:text-brand-orange transition-colors">
+                <Link href="/shop" onClick={() => selectBrand('traxxas')} className="hover:text-brand-orange transition-colors">
                   Traxxas High-Performance
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => selectBrand('arrma')} className="hover:text-brand-orange transition-colors">
+                <Link href="/shop" onClick={() => selectBrand('arrma')} className="hover:text-brand-orange transition-colors">
                   Arrma Designed Fast Tough
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => selectBrand('rlaarlo')} className="hover:text-brand-orange transition-colors">
+                <Link href="/shop" onClick={() => selectBrand('rlaarlo')} className="hover:text-brand-orange transition-colors">
                   Rlaarlo Aluminum Upgrades
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => selectBrand('fms')} className="hover:text-brand-orange transition-colors">
+                <Link href="/shop" onClick={() => selectBrand('fms')} className="hover:text-brand-orange transition-colors">
                   FMS Scale Realism
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => selectBrand('mjx')} className="hover:text-brand-orange transition-colors">
+                <Link href="/shop" onClick={() => selectBrand('mjx')} className="hover:text-brand-orange transition-colors">
                   MJX Hyper Go Bashers
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
@@ -146,8 +147,8 @@ export default function Footer() {
           </div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-brand-orange">Privacy Policy</a>
-            <button onClick={() => { setView('terms'); window.scrollTo(0, 0); }} className="hover:text-brand-orange">Terms of Service</button>
-            <button onClick={() => { setView('shipping'); window.scrollTo(0, 0); }} className="hover:text-brand-orange">Shipping Rates</button>
+            <Link href="/terms" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange">Terms of Service</Link>
+            <Link href="/shipping" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange">Shipping Rates</Link>
             <a href="#" className="hover:text-brand-orange">Refund & Replacements</a>
           </div>
         </div>

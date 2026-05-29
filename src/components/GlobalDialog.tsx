@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { useUIStore } from '../store/useUIStore';
 import { AlertCircle, AlertTriangle } from 'lucide-react';

@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { User, Mail, MapPin, Phone, ShieldCheck, Box, LogOut, ChevronRight, Truck, Heart, Edit2, X, Save } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -10,8 +13,9 @@ export function Dashboard() {
   const { userEmail, address, setAddress, logout } = useAuthStore();
   const { orders, fetchOrders, cancelOrder } = useOrderStore();
   const { showDialog } = useUIStore();
+  const router = useRouter();
   const { products, wishlist } = useProductStore();
-  const { setView, setSelectedProduct } = useUIStore();
+  const { setSelectedProduct } = useUIStore();
 
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(orders.length > 0 ? orders[0].id : null);
   const activeOrder = orders.find((o: any) => o.id === selectedOrderId);
@@ -62,7 +66,7 @@ export function Dashboard() {
     const product = products.find((p: any) => p.id === productId);
     if (product) {
       setSelectedProduct(product);
-      setView('pdp');
+      router.push('/pdp');
       window.scrollTo(0, 0);
     }
   };

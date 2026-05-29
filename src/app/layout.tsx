@@ -19,6 +19,13 @@ export const metadata: Metadata = {
   description: "Authorized e-commerce portal for high-performance remote control cars in India. Professional support, verified 18% HSN 9503 GST invoices, and live order tracking systems.",
 };
 
+import dynamic from 'next/dynamic';
+
+const Header = dynamic(() => import('../components/Header'), { ssr: false });
+const Footer = dynamic(() => import('../components/Footer'), { ssr: false });
+const GlobalDialog = dynamic(() => import('../components/GlobalDialog').then(mod => mod.GlobalDialog), { ssr: false });
+const ClientProviders = dynamic(() => import('../components/ClientProviders'), { ssr: false });
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,7 +36,21 @@ export default function RootLayout({
       <head>
       </head>
       <body className={`${inter.variable} ${outfit.variable} antialiased font-sans`}>
-        {children}
+        <div className="flex flex-col min-h-screen bg-brand-dark text-slate-100 font-sans selection:bg-brand-orange selection:text-black">
+          {/* Dynamic Global Navigation Header */}
+          <Header />
+
+          {/* Main Viewport Container */}
+          <main className="flex-grow mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-10">
+            <ClientProviders>{children}</ClientProviders>
+          </main>
+
+          {/* Corporate Declarations Footer */}
+          <Footer />
+
+          {/* Global Modals */}
+          <GlobalDialog />
+        </div>
       </body>
     </html>
   );

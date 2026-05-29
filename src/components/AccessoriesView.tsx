@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
@@ -29,9 +30,9 @@ export default function AccessoriesView() {
   } = useProductStore();
   const {
     setSelectedProduct,
-    setView,
     showDialog
   } = useUIStore();
+  const router = useRouter();
 
   const [activeBrandTab, setActiveBrandTab] = useState<"ALL" | "LEGO" | "MARQUE">("ALL");
   const [maxPrice, setMaxPrice] = useState<number>(12000);

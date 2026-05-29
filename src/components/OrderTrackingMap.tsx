@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { CheckCircle2, Package, Truck, MapPin, Map, PackageX } from 'lucide-react';
 
