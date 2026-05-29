@@ -8,7 +8,7 @@ export default function TermsView() {
         <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-slate-900 border border-slate-800 text-brand-orange mb-4 shadow-glow">
           <FileText className="h-8 w-8" />
         </div>
-        <h1 className="font-display text-3xl sm:text-4xl font-black uppercase tracking-tight text-white leading-none">
+        <h1 className="font-display text-3xl sm:text-4xl font-normal uppercase tracking-tight text-white leading-none">
           Terms & Conditions
         </h1>
         <p className="text-slate-400 text-sm max-w-2xl mx-auto">
@@ -21,7 +21,7 @@ export default function TermsView() {
         <section className="space-y-3 rounded-2xl border border-brand-border bg-slate-950 p-6 sm:p-8">
           <div className="flex items-center gap-3 border-b border-brand-border/40 pb-3 mb-4">
             <Shield className="h-5 w-5 text-brand-orange" />
-            <h2 className="font-display text-xl font-bold uppercase text-white">1. General Usage & Liability</h2>
+            <h2 className="font-display text-xl font-normal uppercase text-white">1. General Usage & Liability</h2>
           </div>
           <p>
             MARQUE RC provides hobby-grade remote control models designed for experienced enthusiasts. These are not toys. They contain small parts and involve complex mechanical systems. 
@@ -40,7 +40,7 @@ export default function TermsView() {
           </div>
           <div className="flex items-center gap-3 border-b border-brand-border/40 pb-3 mb-4 relative z-10">
             <AlertTriangle className="h-5 w-5 text-red-500" />
-            <h2 className="font-display text-xl font-bold uppercase text-white">2. LiPo Battery Safety & Handling</h2>
+            <h2 className="font-display text-xl font-normal uppercase text-white">2. LiPo Battery Safety & Handling</h2>
           </div>
           <p className="relative z-10">
             Lithium Polymer (LiPo) batteries require strict adherence to safety guidelines. Mishandling, overcharging, or physical damage can lead to catastrophic failure, including fire.
@@ -57,7 +57,7 @@ export default function TermsView() {
         <section className="space-y-3 rounded-2xl border border-brand-border bg-slate-950 p-6 sm:p-8">
           <div className="flex items-center gap-3 border-b border-brand-border/40 pb-3 mb-4">
             <Box className="h-5 w-5 text-brand-gold" />
-            <h2 className="font-display text-xl font-bold uppercase text-white">3. Returns, Refunds & Warranty</h2>
+            <h2 className="font-display text-xl font-normal uppercase text-white">3. Returns, Refunds & Warranty</h2>
           </div>
           <p>
             Due to the nature of hobby-grade electronics and mechanics, our return policy is strict to ensure the integrity of our inventory.

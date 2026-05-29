@@ -76,7 +76,7 @@ export default function BlogTab() {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-brand-border pb-4">
-          <h2 className="font-display text-xl font-bold text-white uppercase tracking-wider">
+          <h2 className="font-display text-xl font-normal text-white uppercase tracking-wider">
             {editingGuide.id ? "Edit Article" : "New Article"}
           </h2>
           <button
@@ -90,7 +90,7 @@ export default function BlogTab() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Article Title *</label>
+              <label className="text-xs font-normal uppercase tracking-wider text-slate-400">Article Title *</label>
               <div className="relative">
                 <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                 <input
@@ -105,7 +105,7 @@ export default function BlogTab() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Category *</label>
+                <label className="text-xs font-normal uppercase tracking-wider text-slate-400">Category *</label>
                 <div className="relative">
                   <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <input
@@ -118,7 +118,7 @@ export default function BlogTab() {
                 </div>
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Read Time</label>
+                <label className="text-xs font-normal uppercase tracking-wider text-slate-400">Read Time</label>
                 <div className="relative">
                   <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <input
@@ -133,7 +133,7 @@ export default function BlogTab() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Cover Image</label>
+              <label className="text-xs font-normal uppercase tracking-wider text-slate-400">Cover Image</label>
               <div className="flex items-center gap-4">
                 {editingGuide.imageUrl ? (
                   <div className="h-16 w-16 rounded border border-brand-border overflow-hidden bg-slate-900 shrink-0 relative group">
@@ -156,20 +156,20 @@ export default function BlogTab() {
                     accept="image/*"
                     onChange={handleImageUpload}
                     disabled={isUploading}
-                    className={`w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:uppercase file:bg-brand-orange file:text-black hover:file:bg-brand-gold file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-normal file:uppercase file:bg-brand-orange file:text-white sm:text-black hover:file:bg-brand-gold file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   />
                   {isUploading && (
                     <div className="absolute inset-y-0 right-4 flex items-center">
                       <Loader2 className="h-5 w-5 animate-spin text-brand-orange" />
                     </div>
                   )}
-                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-bold tracking-wider">Recommended: JPG, PNG, WEBP.</p>
+                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-normal tracking-wider">Recommended: JPG, PNG, WEBP.</p>
                 </div>
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Short Excerpt</label>
+              <label className="text-xs font-normal uppercase tracking-wider text-slate-400">Short Excerpt</label>
               <textarea
                 value={editingGuide.excerpt || ""}
                 onChange={e => setEditingGuide({ ...editingGuide, excerpt: e.target.value })}
@@ -180,7 +180,7 @@ export default function BlogTab() {
           </div>
 
           <div className="space-y-1.5 h-full flex flex-col">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Full Content *</label>
+            <label className="text-xs font-normal uppercase tracking-wider text-slate-400">Full Content *</label>
             <textarea
               value={editingGuide.content || ""}
               onChange={e => setEditingGuide({ ...editingGuide, content: e.target.value })}
@@ -193,13 +193,13 @@ export default function BlogTab() {
         <div className="flex justify-end gap-3 pt-6 border-t border-brand-border">
           <button
             onClick={() => setIsEditing(false)}
-            className="rounded-lg px-6 py-2.5 text-sm font-bold text-slate-300 hover:bg-slate-800 transition-colors uppercase tracking-wider"
+            className="rounded-lg px-6 py-2.5 text-sm font-normal text-slate-300 hover:bg-slate-800 transition-colors uppercase tracking-wider"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 rounded-lg bg-brand-orange px-8 py-2.5 text-sm font-black text-black hover:bg-brand-gold hover:shadow-glow transition-all uppercase tracking-wider"
+            className="flex items-center gap-2 rounded-lg bg-brand-orange px-8 py-2.5 text-sm font-normal text-white sm:text-black hover:bg-brand-gold hover:shadow-glow transition-all uppercase tracking-wider"
           >
             <Save className="h-4 w-4" />
             Save Article
@@ -213,14 +213,14 @@ export default function BlogTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between border-b border-brand-border pb-4">
         <div className="space-y-1">
-          <h2 className="font-display text-xl font-bold text-white uppercase tracking-wider">
+          <h2 className="font-display text-xl font-normal text-white uppercase tracking-wider">
             Blog Management
           </h2>
           <p className="text-xs text-slate-400">Create and edit articles for the Knowledge Database.</p>
         </div>
         <button
           onClick={() => startEdit()}
-          className="flex items-center gap-2 rounded-lg bg-brand-orange px-4 py-2 text-sm font-bold text-black hover:bg-brand-gold hover:shadow-glow transition-all uppercase tracking-wider"
+          className="flex items-center gap-2 rounded-lg bg-brand-orange px-4 py-2 text-sm font-normal text-white sm:text-black hover:bg-brand-gold hover:shadow-glow transition-all uppercase tracking-wider"
         >
           <Plus className="h-4 w-4" />
           New Article
@@ -238,17 +238,17 @@ export default function BlogTab() {
                   <ImageIcon className="h-8 w-8" />
                 </div>
               )}
-              <span className="absolute top-2 right-2 bg-slate-950/80 border border-brand-border text-[8px] font-bold text-brand-orange uppercase px-2 py-0.5 rounded backdrop-blur">
+              <span className="absolute top-2 right-2 bg-slate-950/80 border border-brand-border text-[8px] font-normal text-brand-orange uppercase px-2 py-0.5 rounded backdrop-blur">
                 {guide.category}
               </span>
             </div>
             
             <div className="p-4 flex-1 flex flex-col">
-              <h3 className="font-bold text-white text-sm line-clamp-2 mb-2 leading-snug">{guide.title}</h3>
+              <h3 className="font-normal text-white text-sm line-clamp-2 mb-2 leading-snug">{guide.title}</h3>
               <p className="text-xs text-slate-400 line-clamp-2 mb-4 flex-1">{guide.excerpt}</p>
               
               <div className="flex items-center justify-between pt-4 border-t border-brand-border/50">
-                <span className="text-[10px] text-slate-500 font-bold">{guide.readTime}</span>
+                <span className="text-[10px] text-slate-500 font-normal">{guide.readTime}</span>
                 <div className="flex items-center gap-2">
                   <button 
                     onClick={() => startEdit(guide)}

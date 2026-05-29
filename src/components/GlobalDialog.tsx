@@ -34,7 +34,7 @@ export function GlobalDialog() {
             ) : (
               <AlertCircle className="h-6 w-6 text-brand-orange" />
             )}
-            <h3 className="font-display font-bold text-lg text-white uppercase tracking-wider">
+            <h3 className="font-display font-normal text-lg text-white uppercase tracking-wider">
               {dialog.title || (dialog.type === 'confirm' ? 'Confirm Action' : 'System Notice')}
             </h3>
           </div>
@@ -47,14 +47,14 @@ export function GlobalDialog() {
             {dialog.type === 'confirm' && (
               <button
                 onClick={handleCancel}
-                className="px-4 py-2 text-xs font-bold uppercase rounded-lg border border-brand-border text-slate-400 hover:text-white hover:bg-slate-900 transition-colors"
+                className="px-4 py-2 text-xs font-normal uppercase rounded-lg border border-brand-border text-slate-400 hover:text-white hover:bg-slate-900 transition-colors"
               >
                 {dialog.cancelText || 'Cancel'}
               </button>
             )}
             <button
               onClick={handleConfirm}
-              className="px-4 py-2 text-xs font-bold uppercase rounded-lg bg-brand-orange text-black hover:bg-brand-gold transition-colors shadow-glow"
+              className="px-4 py-2 text-xs font-normal uppercase rounded-lg bg-brand-orange text-white sm:text-black hover:bg-brand-gold transition-colors shadow-glow"
             >
               {dialog.confirmText || 'OK'}
             </button>

@@ -18,7 +18,7 @@ export function OrderTrackingMap({ status }: TrackingMapProps) {
     return (
       <div className="w-full bg-slate-950/80 border border-brand-border rounded-2xl p-6 flex flex-col items-center justify-center min-h-[200px]">
         <PackageX className="h-12 w-12 text-red-500 mb-3" />
-        <h3 className="font-display font-bold text-lg text-red-500 uppercase">Order Cancelled</h3>
+        <h3 className="font-display font-normal text-lg text-red-500 uppercase">Order Cancelled</h3>
         <p className="text-xs text-slate-400">This consignment has been aborted and refunded.</p>
       </div>
     );
@@ -36,7 +36,7 @@ export function OrderTrackingMap({ status }: TrackingMapProps) {
       </svg>
 
       <div className="relative z-10">
-        <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200 mb-8 flex items-center gap-2">
+        <h3 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200 mb-8 flex items-center gap-2">
           <Map className="h-4 w-4 text-brand-orange" />
           Live Telemetry Routing
         </h3>
@@ -62,13 +62,13 @@ export function OrderTrackingMap({ status }: TrackingMapProps) {
                 <div 
                   className={`h-10 w-10 sm:h-12 sm:w-12 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${
                     isActive 
-                      ? 'bg-brand-orange text-black border-brand-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]' 
+                      ? 'bg-brand-orange text-white sm:text-black border-brand-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]' 
                       : 'bg-slate-900 text-slate-600 border-slate-800'
                   } ${isCurrent ? 'animate-pulse' : ''}`}
                 >
                   <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
-                <span className={`text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-center max-w-[60px] ${isActive ? 'text-brand-orange' : 'text-slate-600'}`}>
+                <span className={`text-[9px] sm:text-[10px] font-normal uppercase tracking-wider text-center max-w-[60px] ${isActive ? 'text-brand-orange' : 'text-slate-600'}`}>
                   {step.label}
                 </span>
               </div>

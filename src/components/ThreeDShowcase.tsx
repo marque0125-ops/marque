@@ -859,12 +859,12 @@ export default function ThreeDShowcase() {
         {/* DRIVE MODE CONTROLS OVERLAY */}
         {isDriveMode ? (
           <div className="absolute top-4 left-4 z-10 flex items-center gap-3 p-3 rounded-2xl glass-panel text-slate-100">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-orange text-black animate-pulse">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-orange text-white sm:text-black animate-pulse">
               <Keyboard className="h-5 w-5 stroke-[2.5]" />
             </div>
             <div className="text-xs">
-              <p className="font-bold text-white uppercase tracking-wider">DRIVE CONTROLS ACTIVE</p>
-              <p className="text-slate-400">Steer using <span className="font-bold text-brand-orange">WASD</span> or <span className="font-bold text-brand-orange">ARROWS</span> keys</p>
+              <p className="font-normal text-white uppercase tracking-wider">DRIVE CONTROLS ACTIVE</p>
+              <p className="text-slate-400">Steer using <span className="font-normal text-brand-orange">WASD</span> or <span className="font-normal text-brand-orange">ARROWS</span> keys</p>
             </div>
           </div>
         ) : (
@@ -887,7 +887,7 @@ export default function ThreeDShowcase() {
         
         {/* CAR SWITCHER SELECTOR */}
         <div className="space-y-3">
-          <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Select Rig Model</label>
+          <label className="text-[10px] text-slate-500 font-normal uppercase tracking-wider">Select Rig Model</label>
           <div className="grid grid-cols-3 gap-2">
             {[
               { id: "traxxas", label: "X-MAXX", desc: "8S Basher", speed: "80 KM/H" },
@@ -903,9 +903,9 @@ export default function ThreeDShowcase() {
                     : "border-brand-border bg-slate-900 text-slate-400 hover:border-slate-700"
                 }`}
               >
-                <span className="font-display text-xs font-black tracking-tight">{car.label}</span>
+                <span className="font-display text-xs font-normal tracking-tight">{car.label}</span>
                 <span className="text-[9px] text-slate-500 mt-0.5">{car.desc}</span>
-                <span className="text-[9px] font-bold text-brand-gold mt-1">{car.speed}</span>
+                <span className="text-[9px] font-normal text-brand-gold mt-1">{car.speed}</span>
               </button>
             ))}
           </div>
@@ -914,8 +914,8 @@ export default function ThreeDShowcase() {
         {/* INTERACTIVE SHOCK SHELL CONTROLLER */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Expose Brushless Internals</label>
-            <span className="text-[10px] text-brand-orange font-bold font-mono">{(bodyExposedRatio * 100).toFixed(0)}% Lift</span>
+            <label className="text-[10px] text-slate-500 font-normal uppercase tracking-wider">Expose Brushless Internals</label>
+            <span className="text-[10px] text-brand-orange font-normal font-mono">{(bodyExposedRatio * 100).toFixed(0)}% Lift</span>
           </div>
           <div className="flex items-center gap-3">
             <Sliders className="h-4 w-4 text-slate-500" />
@@ -939,7 +939,7 @@ export default function ThreeDShowcase() {
 
         {/* SOLID METALLIC FINISH COLOR SWATCHES */}
         <div className="space-y-3">
-          <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Body Clearcoat Paint</label>
+          <label className="text-[10px] text-slate-500 font-normal uppercase tracking-wider">Body Clearcoat Paint</label>
           <div className="flex gap-3">
             {[
               { hex: "#f97316", name: "Solar Flare Orange" },
@@ -967,10 +967,10 @@ export default function ThreeDShowcase() {
             
             <button
               onClick={() => { setIsDriveMode(!isDriveMode); setBodyExposedRatio(0); }}
-              className={`flex items-center justify-center gap-2 rounded-xl py-3 text-xs font-bold uppercase transition-all duration-300 ${
+              className={`flex items-center justify-center gap-2 rounded-xl py-3 text-xs font-normal uppercase transition-all duration-300 ${
                 isDriveMode
                   ? "bg-red-600 text-white hover:bg-red-500"
-                  : "bg-brand-orange text-black hover:bg-brand-gold hover:shadow-glow"
+                  : "bg-brand-orange text-white sm:text-black hover:bg-brand-gold hover:shadow-glow"
               }`}
             >
               <Zap className="h-4 w-4 stroke-[2.5]" />
@@ -980,7 +980,7 @@ export default function ThreeDShowcase() {
             <button
               onClick={handleToggleSound}
               disabled={!isDriveMode}
-              className={`flex items-center justify-center gap-2 rounded-xl py-3 text-xs font-bold uppercase border transition-colors ${
+              className={`flex items-center justify-center gap-2 rounded-xl py-3 text-xs font-normal uppercase border transition-colors ${
                 !isDriveMode 
                   ? "border-slate-800 text-slate-600 cursor-not-allowed" 
                   : isSoundMuted 

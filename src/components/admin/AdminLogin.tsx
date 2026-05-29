@@ -64,7 +64,7 @@ export function AdminLogin() {
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-900 border border-slate-800 text-slate-400 mb-4">
             <ShieldAlert className="h-8 w-8" />
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl font-black uppercase tracking-tight text-white leading-none">
+          <h2 className="font-display text-2xl sm:text-3xl font-normal uppercase tracking-tight text-white leading-none">
             Restricted Area
           </h2>
           <p className="text-xs text-slate-400 tracking-wide">
@@ -75,13 +75,13 @@ export function AdminLogin() {
         {errorMsg && (
           <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-400 flex items-center gap-2 relative z-10">
             <AlertCircle className="h-4 w-4 shrink-0" />
-            <span className="font-bold">{errorMsg}</span>
+            <span className="font-normal">{errorMsg}</span>
           </div>
         )}
 
         <form onSubmit={handleAdminLogin} className="space-y-5 relative z-10">
           <div className="space-y-1.5">
-            <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Admin Identifier (Email)</label>
+            <label className="text-[10px] text-slate-500 font-normal uppercase tracking-wider block">Admin Identifier (Email)</label>
             <input 
               type="email" 
               value={email} 
@@ -93,7 +93,7 @@ export function AdminLogin() {
           </div>
           
           <div className="space-y-1.5">
-            <label className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Clearance Code (Password)</label>
+            <label className="text-[10px] text-slate-500 font-normal uppercase tracking-wider block">Clearance Code (Password)</label>
             <div className="relative">
               <input 
                 type="password" 
@@ -110,7 +110,7 @@ export function AdminLogin() {
           <button 
             type="submit" 
             disabled={isLoading} 
-            className="w-full mt-2 bg-red-600 text-white font-black uppercase tracking-wider py-3.5 rounded-xl hover:bg-red-500 shadow-[0_0_20px_rgba(220,38,38,0.3)] transition-all flex justify-center items-center gap-2"
+            className="w-full mt-2 bg-red-600 text-white font-normal uppercase tracking-wider py-3.5 rounded-xl hover:bg-red-500 shadow-[0_0_20px_rgba(220,38,38,0.3)] transition-all flex justify-center items-center gap-2"
           >
             {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Authenticate"}
           </button>

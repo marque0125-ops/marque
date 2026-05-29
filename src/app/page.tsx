@@ -54,7 +54,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-brand-dark text-slate-100 font-sans selection:bg-brand-orange selection:text-black">
+    <div className="flex flex-col min-h-screen bg-brand-dark text-slate-100 font-sans selection:bg-brand-orange selection:text-white sm:text-black">
       {/* Dynamic Global Navigation Header */}
       <Header />
 

@@ -223,7 +223,7 @@ export default function PdpView() {
       {/* Back button */}
       <button 
         onClick={() => { setSelectedProduct(null); setView('shop'); }}
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-brand-orange uppercase transition-colors"
+        className="inline-flex items-center gap-1.5 text-xs font-normal text-slate-400 hover:text-brand-orange uppercase transition-colors"
       >
         <ChevronLeft className="h-4 w-4" /> Back to RC Garage
       </button>
@@ -256,7 +256,7 @@ export default function PdpView() {
                 
                 {/* 360 degree radial scanner overlay effect */}
                 <div className="absolute inset-0 border border-brand-orange/20 rounded-2xl pointer-events-none carbon-overlay opacity-30" />
-                <div className="absolute top-4 left-4 flex items-center gap-1.5 text-[10px] font-bold text-brand-orange uppercase bg-black/80 px-2 py-1 rounded border border-brand-orange/30">
+                <div className="absolute top-4 left-4 flex items-center gap-1.5 text-[10px] font-normal text-brand-orange uppercase bg-black/80 px-2 py-1 rounded border border-brand-orange/30">
                   <RotateCw className="h-3.5 w-3.5 animate-spin" /> Interactive 360° Booth
                 </div>
               </div>
@@ -266,7 +266,7 @@ export default function PdpView() {
             {selectedProduct.videoUrl && viewMode === 'standard' && (
               <button 
                 onClick={() => setShowVideo(true)}
-                className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-xl bg-brand-orange px-4 py-2.5 text-xs font-bold text-black hover:bg-brand-gold shadow-md uppercase tracking-wider"
+                className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-xl bg-brand-orange px-4 py-2.5 text-xs font-normal text-white sm:text-black hover:bg-brand-gold shadow-md uppercase tracking-wider"
               >
                 <Play className="h-4 w-4 fill-black stroke-none" /> Play Track Video
               </button>
@@ -290,7 +290,7 @@ export default function PdpView() {
             </div>
           ) : (
             <div className="space-y-2 bg-slate-900/60 p-4 rounded-xl border border-brand-border">
-              <div className="flex justify-between text-xs font-bold text-slate-300 uppercase tracking-wide">
+              <div className="flex justify-between text-xs font-normal text-slate-300 uppercase tracking-wide">
                 <span>Drag to Rotate Vehicle</span>
                 <span className="text-brand-orange font-mono">Angle Frame: {rotatorAngle + 1} / {selectedProduct.images.length}</span>
               </div>
@@ -315,7 +315,7 @@ export default function PdpView() {
           {/* Brand story & titles */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-brand-orange font-bold uppercase tracking-widest font-display">
+              <span className="text-xs text-brand-orange font-normal uppercase tracking-widest font-display">
                 {brand?.name} AUTHORIZED
               </span>
               <button 
@@ -326,11 +326,11 @@ export default function PdpView() {
               </button>
             </div>
             
-            <h1 className="font-display text-3xl font-black uppercase text-white leading-tight">
+            <h1 className="font-display text-3xl font-normal uppercase text-white leading-tight">
               {selectedProduct.name}
             </h1>
             
-            <div className="flex items-center gap-4 text-xs font-bold">
+            <div className="flex items-center gap-4 text-xs font-normal">
               <span className="flex items-center gap-0.5 text-brand-gold">
                 <Star className="h-4.5 w-4.5 fill-brand-gold" />
                 {selectedProduct.averageRating} ({selectedProduct.reviewCount} customer reviews)
@@ -346,15 +346,15 @@ export default function PdpView() {
 
           {/* Pricing panel */}
           <div className="p-4 rounded-xl border border-brand-border bg-slate-900/40 space-y-1">
-            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">MARQUE Direct pricing (inclusive of 18% GST)</span>
+            <span className="text-[10px] text-slate-500 font-normal uppercase tracking-wider">MARQUE Direct pricing (inclusive of 18% GST)</span>
             <div className="flex items-baseline gap-3">
-              <span className="text-3xl font-black text-brand-gold font-display">
+              <span className="text-3xl font-normal text-brand-gold font-display">
                 ₹{activePrice.toLocaleString('en-IN')}
               </span>
               <span className="text-sm text-slate-500 line-through">
                 ₹{activeComparePrice.toLocaleString('en-IN')}
               </span>
-              <span className="text-xs text-green-400 font-bold uppercase">
+              <span className="text-xs text-green-400 font-normal uppercase">
                 Save ₹{(activeComparePrice - activePrice).toLocaleString('en-IN')}!
               </span>
             </div>
@@ -363,7 +363,7 @@ export default function PdpView() {
           {/* COLOR SWATCH SELECTOR */}
           {uniqueColors.length > 0 && (
             <div className="space-y-3">
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+              <label className="text-xs font-normal text-slate-300 uppercase tracking-wider block">
                 Select Livery Color: <span className="text-brand-orange font-normal">{selectedColor}</span>
               </label>
               <div className="flex flex-wrap gap-3">
@@ -376,11 +376,11 @@ export default function PdpView() {
                       key={idx}
                       onClick={() => handleAttributeChange(color, selectedBattery)}
                       disabled={isOutOfStock}
-                      className={`relative px-4 py-2.5 rounded-xl border text-xs font-bold uppercase transition-all ${isOutOfStock ? 'border-dashed border-slate-800 text-slate-600 cursor-not-allowed bg-slate-950/40' : selectedColor === color ? 'bg-brand-orange text-black border-brand-orange shadow-glow' : 'border-brand-border bg-slate-900 hover:border-slate-600 text-slate-300'}`}
+                      className={`relative px-4 py-2.5 rounded-xl border text-xs font-normal uppercase transition-all ${isOutOfStock ? 'border-dashed border-slate-800 text-slate-600 cursor-not-allowed bg-slate-950/40' : selectedColor === color ? 'bg-brand-orange text-white sm:text-black border-brand-orange shadow-glow' : 'border-brand-border bg-slate-900 hover:border-slate-600 text-slate-300'}`}
                     >
                       {color}
                       {matchingVariant && matchingVariant.stockQty < 3 && matchingVariant.stockQty > 0 && (
-                        <span className="absolute -top-1.5 -right-1.5 rounded-full bg-brand-gold text-[8px] font-black text-black px-1 leading-normal animate-pulse">
+                        <span className="absolute -top-1.5 -right-1.5 rounded-full bg-brand-gold text-[8px] font-normal text-black px-1 leading-normal animate-pulse">
                           Low
                         </span>
                       )}
@@ -394,7 +394,7 @@ export default function PdpView() {
           {/* BATTERY BUNDLE SELECTOR */}
           {uniqueBatteries.length > 0 && (
             <div className="space-y-3">
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+              <label className="text-xs font-normal text-slate-300 uppercase tracking-wider block">
                 Power Bundle (Includes Chargers & High-Discharge LiPos):
               </label>
               <div className="space-y-2">
@@ -411,10 +411,10 @@ export default function PdpView() {
                       className={`w-full text-left p-3.5 rounded-xl border flex items-center justify-between transition-all ${stock === 0 ? 'opacity-40 border-slate-800 cursor-not-allowed' : selectedBattery === battery ? 'bg-brand-orange/10 border-brand-orange text-white' : 'border-brand-border bg-slate-900/60 hover:bg-slate-900 text-slate-300'}`}
                     >
                       <div className="space-y-0.5">
-                        <span className="text-xs font-bold block">{battery}</span>
+                        <span className="text-xs font-normal block">{battery}</span>
                         <span className="text-[10px] text-slate-400">Stock Status: {stock > 0 ? `${stock} available` : "Out of stock"}</span>
                       </div>
-                      <span className="font-mono text-xs font-bold text-brand-gold">₹{activePriceForThis.toLocaleString('en-IN')}</span>
+                      <span className="font-mono text-xs font-normal text-brand-gold">₹{activePriceForThis.toLocaleString('en-IN')}</span>
                     </button>
                   );
                 })}
@@ -426,15 +426,15 @@ export default function PdpView() {
           <div className="space-y-3 pt-4">
             <div className="flex items-center gap-2 text-xs">
               {activeVariant && activeVariant.stockQty === 0 ? (
-                <div className="flex items-center gap-1.5 text-red-500 font-bold uppercase tracking-wider">
+                <div className="flex items-center gap-1.5 text-red-500 font-normal uppercase tracking-wider">
                   <AlertTriangle className="h-4 w-4" /> Out of stock for this configuration
                 </div>
               ) : activeVariant && activeVariant.stockQty < 3 ? (
-                <div className="flex items-center gap-1.5 text-brand-orange font-bold uppercase tracking-wider animate-pulse">
+                <div className="flex items-center gap-1.5 text-brand-orange font-normal uppercase tracking-wider animate-pulse">
                   <AlertTriangle className="h-4 w-4" /> HURRY! Only {activeVariant.stockQty} rigs remaining in Chennai warehouse!
                 </div>
               ) : (
-                <div className="flex items-center gap-1.5 text-green-400 font-bold uppercase tracking-wider">
+                <div className="flex items-center gap-1.5 text-green-400 font-normal uppercase tracking-wider">
                   <Check className="h-4 w-4" /> Ready to Race - Leaves fulfillment warehouse in 24 hours
                 </div>
               )}
@@ -444,7 +444,7 @@ export default function PdpView() {
               <button 
                 onClick={handleAddToCart}
                 disabled={!activeVariant || activeVariant.stockQty === 0}
-                className="flex-1 group flex items-center justify-center gap-2 rounded-xl bg-brand-orange py-4 text-sm font-bold text-black hover:bg-brand-gold hover:shadow-glow disabled:bg-slate-800 disabled:text-slate-600 disabled:shadow-none transition-all uppercase tracking-wider"
+                className="flex-1 group flex items-center justify-center gap-2 rounded-xl bg-brand-orange py-4 text-sm font-normal text-white sm:text-black hover:bg-brand-gold hover:shadow-glow disabled:bg-slate-800 disabled:text-slate-600 disabled:shadow-none transition-all uppercase tracking-wider"
               >
                 <ShoppingBag className="h-4.5 w-4.5" />
                 Configure & Add to Cart
@@ -459,8 +459,8 @@ export default function PdpView() {
       {selectedProduct.compatibleParts.length > 0 && (
         <section className="rounded-2xl border border-brand-border bg-slate-900/10 p-6 md:p-8 space-y-6">
           <div>
-            <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider">Technical Upgrades</span>
-            <h2 className="font-display text-xl font-bold uppercase text-white mt-1">Recommended Accessories & Power Packs</h2>
+            <span className="text-[10px] text-brand-orange font-normal uppercase tracking-wider">Technical Upgrades</span>
+            <h2 className="font-display text-xl font-normal uppercase text-white mt-1">Recommended Accessories & Power Packs</h2>
             <p className="text-xs text-slate-400 mt-1">
               Select compatible factory parts below. They will be added to your bundle when you buy the rig.
             </p>
@@ -477,15 +477,15 @@ export default function PdpView() {
                   className={`cursor-pointer p-4 rounded-xl border flex items-center justify-between transition-all ${isChecked ? 'bg-brand-orange/5 border-brand-orange' : 'border-brand-border bg-slate-900/40 hover:border-slate-700'}`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`h-5 w-5 rounded border flex items-center justify-center transition-all ${isChecked ? 'bg-brand-orange border-brand-orange text-black' : 'border-slate-800 bg-slate-950'}`}>
+                    <div className={`h-5 w-5 rounded border flex items-center justify-center transition-all ${isChecked ? 'bg-brand-orange border-brand-orange text-white sm:text-black' : 'border-slate-800 bg-slate-950'}`}>
                       {isChecked && <Check className="h-3.5 w-3.5 stroke-[3]" />}
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-white block">{part.name}</span>
+                      <span className="text-xs font-normal text-white block">{part.name}</span>
                       <span className="text-[9px] text-slate-500 block font-mono">SKU: {part.sku}</span>
                     </div>
                   </div>
-                  <span className="font-mono text-xs font-bold text-brand-gold">₹{part.price.toLocaleString('en-IN')}</span>
+                  <span className="font-mono text-xs font-normal text-brand-gold">₹{part.price.toLocaleString('en-IN')}</span>
                 </div>
               );
             })}
@@ -498,14 +498,14 @@ export default function PdpView() {
         
         {/* Specs Table */}
         <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4">
-          <h3 className="font-display text-lg font-bold text-white uppercase border-b border-brand-border pb-3">
+          <h3 className="font-display text-lg font-normal text-white uppercase border-b border-brand-border pb-3">
             Chassis Specifications
           </h3>
           <div className="divide-y divide-brand-border text-xs">
             {Object.entries(selectedProduct.specs).map(([key, val]) => (
               <div key={key} className="flex justify-between py-2.5">
-                <span className="text-slate-400 font-medium">{key}</span>
-                <span className="text-slate-200 font-bold">{val}</span>
+                <span className="text-slate-400 font-normal">{key}</span>
+                <span className="text-slate-200 font-normal">{val}</span>
               </div>
             ))}
           </div>
@@ -513,13 +513,13 @@ export default function PdpView() {
 
         {/* What's In the Box */}
         <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4">
-          <h3 className="font-display text-lg font-bold text-white uppercase border-b border-brand-border pb-3">
+          <h3 className="font-display text-lg font-normal text-white uppercase border-b border-brand-border pb-3">
             What's in the Box?
           </h3>
           <ul className="space-y-3.5 text-xs text-slate-300">
             {selectedProduct.whatsInTheBox.map((item, idx) => (
               <li key={idx} className="flex items-start gap-2.5">
-                <span className="h-4.5 w-4.5 rounded-full bg-brand-orange/10 border border-brand-orange/30 text-brand-orange flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
+                <span className="h-4.5 w-4.5 rounded-full bg-brand-orange/10 border border-brand-orange/30 text-brand-orange flex items-center justify-center font-normal text-[10px] shrink-0 mt-0.5">
                   {idx + 1}
                 </span>
                 <span className="leading-relaxed">{item}</span>
@@ -535,7 +535,7 @@ export default function PdpView() {
         
         {/* Reviews List */}
         <div className="lg:col-span-7 space-y-6">
-          <h3 className="font-display text-xl font-bold uppercase text-white flex items-center gap-2">
+          <h3 className="font-display text-xl font-normal uppercase text-white flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-brand-orange" />
             Verified Customer Debriefs ({productReviews.length})
           </h3>
@@ -552,11 +552,11 @@ export default function PdpView() {
                     <div className="flex items-center gap-3">
                       <Image src={r.avatar} alt={r.userName} width={36} height={36} className="rounded-full object-cover border border-brand-border" />
                       <div>
-                        <span className="text-xs font-bold text-white block">{r.userName}</span>
+                        <span className="text-xs font-normal text-white block">{r.userName}</span>
                         <span className="text-[9px] text-slate-500 block font-mono">{r.date}</span>
                       </div>
                     </div>
-                    <span className="rounded bg-brand-gold/10 border border-brand-gold/30 px-2 py-0.5 text-[9px] font-bold text-brand-gold uppercase">
+                    <span className="rounded bg-brand-gold/10 border border-brand-gold/30 px-2 py-0.5 text-[9px] font-normal text-brand-gold uppercase">
                       Verified Buyer
                     </span>
                   </div>
@@ -568,7 +568,7 @@ export default function PdpView() {
                   </div>
 
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-white block">{r.title}</span>
+                    <span className="text-xs font-normal text-white block">{r.title}</span>
                     <p className="text-xs text-slate-400 leading-relaxed">{r.body}</p>
                   </div>
                 </div>
@@ -579,19 +579,19 @@ export default function PdpView() {
 
         {/* Add Review Form */}
         <div className="lg:col-span-5 rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4">
-          <h3 className="font-display text-lg font-bold text-white uppercase border-b border-brand-border pb-3">
+          <h3 className="font-display text-lg font-normal text-white uppercase border-b border-brand-border pb-3">
             Submit a Pit Report
           </h3>
           
           <form onSubmit={handleReviewSubmit} className="space-y-4 text-xs">
             {reviewSuccess && (
-              <div className="p-3 rounded bg-green-500/10 border border-green-500 text-green-400 font-bold uppercase text-[10px] text-center">
+              <div className="p-3 rounded bg-green-500/10 border border-green-500 text-green-400 font-normal uppercase text-[10px] text-center">
                 Review submitted successfully! Recalculated vehicle ratings.
               </div>
             )}
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Rating</label>
+              <label className="text-[10px] font-normal text-slate-400 uppercase tracking-widest block">Rating</label>
               <div className="flex gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -607,7 +607,7 @@ export default function PdpView() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Mechanic Name</label>
+              <label className="text-[10px] font-normal text-slate-400 uppercase tracking-widest block">Mechanic Name</label>
               <input 
                 type="text" 
                 required
@@ -619,7 +619,7 @@ export default function PdpView() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Debrief Title</label>
+              <label className="text-[10px] font-normal text-slate-400 uppercase tracking-widest block">Debrief Title</label>
               <input 
                 type="text" 
                 required
@@ -631,7 +631,7 @@ export default function PdpView() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Detailed Review Summary</label>
+              <label className="text-[10px] font-normal text-slate-400 uppercase tracking-widest block">Detailed Review Summary</label>
               <textarea 
                 required
                 rows={4}
@@ -644,7 +644,7 @@ export default function PdpView() {
 
             <button
               type="submit"
-              className="w-full bg-brand-orange text-black font-bold uppercase py-2.5 rounded-lg hover:bg-brand-gold transition-colors"
+              className="w-full bg-brand-orange text-white sm:text-black font-normal uppercase py-2.5 rounded-lg hover:bg-brand-gold transition-colors"
             >
               Post Review to Registry
             </button>
@@ -656,7 +656,7 @@ export default function PdpView() {
       {/* RELATED PRODUCTS SECTION */}
       {relatedProducts.length > 0 && (
         <section className="pt-8 border-t border-brand-border">
-          <h3 className="font-display text-xl font-bold uppercase text-white mb-6">
+          <h3 className="font-display text-xl font-normal uppercase text-white mb-6">
             Related Gear & Upgrades
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -685,17 +685,17 @@ export default function PdpView() {
 
                     {/* Scale and Speed Badges */}
                     <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-                      <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-orange border border-brand-orange/30 uppercase tracking-wider">
+                      <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-normal text-brand-orange border border-brand-orange/30 uppercase tracking-wider">
                         {p.categoryId === 'accessories' ? 'Accessory' : `${p.scale} Scale`}
                       </span>
                       {p.categoryId === 'accessories' ? (
                         p.specs.Pieces && (
-                          <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
+                          <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-normal text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
                             {p.specs.Pieces}
                           </span>
                         )
                       ) : (
-                        <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
+                        <span className="rounded bg-black/80 px-2 py-0.5 text-[9px] font-normal text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
                           {p.speedKmh}+ KM/H
                         </span>
                       )}
@@ -715,15 +715,15 @@ export default function PdpView() {
                     {/* Stock Badge */}
                     <div className="absolute bottom-3 left-3 z-10">
                       {p.stockQty === 0 ? (
-                        <span className="rounded bg-red-600 px-2 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider">
+                        <span className="rounded bg-red-600 px-2 py-0.5 text-[9px] font-normal text-white uppercase tracking-wider">
                           Out of stock
                         </span>
                       ) : p.stockQty < 3 ? (
-                        <span className="rounded bg-brand-orange px-2 py-0.5 text-[9px] font-bold text-black uppercase tracking-wider animate-pulse">
+                        <span className="rounded bg-brand-orange px-2 py-0.5 text-[9px] font-normal text-white sm:text-black uppercase tracking-wider animate-pulse">
                           Only {p.stockQty} Left!
                         </span>
                       ) : (
-                        <span className="rounded bg-slate-950/80 border border-slate-800 px-2 py-0.5 text-[9px] font-bold text-green-400 uppercase tracking-wider">
+                        <span className="rounded bg-slate-950/80 border border-slate-800 px-2 py-0.5 text-[9px] font-normal text-green-400 uppercase tracking-wider">
                           In Stock
                         </span>
                       )}
@@ -734,14 +734,14 @@ export default function PdpView() {
                   <div className="p-4 flex-1 flex flex-col justify-between gap-3">
                     <div className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider font-display">
+                        <span className="text-[10px] text-brand-orange font-normal uppercase tracking-wider font-display">
                           {brand?.name}
                         </span>
-                        <span className="text-[10px] text-slate-500 font-semibold">
+                        <span className="text-[10px] text-slate-500 font-normal">
                           SKU: {p.sku.slice(0, 8)}
                         </span>
                       </div>
-                      <h3 className="font-display text-sm font-bold text-white line-clamp-1 group-hover:text-brand-orange transition-colors">
+                      <h3 className="font-display text-sm font-normal text-white line-clamp-1 group-hover:text-brand-orange transition-colors">
                         {p.name}
                       </h3>
                       <p className="text-xs text-slate-400 line-clamp-2">
@@ -750,7 +750,7 @@ export default function PdpView() {
                     </div>
 
                     {/* Star rating and key spec */}
-                    <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 border-t border-brand-border pt-2">
+                    <div className="flex items-center justify-between text-[10px] font-normal text-slate-400 border-t border-brand-border pt-2">
                       <span className="flex items-center gap-0.5 text-brand-gold">
                         <Star className="h-3 w-3 fill-brand-gold" />
                         {p.averageRating} ({p.reviewCount})
@@ -768,11 +768,11 @@ export default function PdpView() {
                         <span className="text-[10px] text-slate-500 line-through block leading-none">
                           ₹{p.comparePrice.toLocaleString('en-IN')}
                         </span>
-                        <span className="text-base font-black text-brand-gold font-display leading-none block mt-1">
+                        <span className="text-base font-normal text-brand-gold font-display leading-none block mt-1">
                           ₹{p.price.toLocaleString('en-IN')}
                         </span>
                       </div>
-                      <button className="flex items-center justify-center rounded-lg bg-brand-orange px-3 py-1.5 text-[10px] font-bold text-black uppercase hover:bg-brand-gold transition-colors">
+                      <button className="flex items-center justify-center rounded-lg bg-brand-orange px-3 py-1.5 text-[10px] font-normal text-white sm:text-black uppercase hover:bg-brand-gold transition-colors">
                         {p.categoryId === 'accessories' ? 'Buy Item' : 'Buy Rig'}
                       </button>
                     </div>

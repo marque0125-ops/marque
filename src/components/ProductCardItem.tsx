@@ -69,10 +69,10 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
 
         {/* Absolute Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1 z-10">
-          <span className="rounded bg-slate-950/80 px-2 py-0.5 text-[8px] font-bold text-brand-orange border border-brand-orange/30 uppercase tracking-wider">
+          <span className="rounded bg-slate-950/80 px-2 py-0.5 text-[8px] font-normal text-brand-orange border border-brand-orange/30 uppercase tracking-wider">
             {p.scale} Scale
           </span>
-          <span className="rounded bg-slate-950/80 px-2 py-0.5 text-[8px] font-bold text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
+          <span className="rounded bg-slate-950/80 px-2 py-0.5 text-[8px] font-normal text-brand-gold border border-brand-gold/30 uppercase tracking-wider">
             {p.speedKmh}+ KM/H
           </span>
         </div>
@@ -91,19 +91,19 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
       {/* Info Section */}
       <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between gap-3 sm:gap-4">
         <div className="flex flex-col items-center text-center space-y-1">
-          <h3 className="text-[13px] sm:text-[15px] font-semibold text-white line-clamp-1 group-hover:text-brand-orange transition-colors">
+          <h3 className="text-[13px] sm:text-[15px] font-normal text-white line-clamp-1 group-hover:text-brand-orange transition-colors">
             {p.name}
           </h3>
-          <span className="text-[11px] sm:text-xs font-medium text-slate-400">
+          <span className="text-[11px] sm:text-xs font-normal text-slate-400">
             {p.terrainType}
           </span>
           <div className="flex items-center justify-center gap-2 pt-1">
             {p.comparePrice > p.price && (
-              <span className="text-[11px] sm:text-xs font-medium text-slate-500 line-through">
+              <span className="text-[11px] sm:text-xs font-normal text-slate-500 line-through">
                 ₹{p.comparePrice.toLocaleString('en-IN')}
               </span>
             )}
-            <span className="text-sm sm:text-base font-bold text-white whitespace-nowrap">
+            <span className="text-sm sm:text-base font-normal text-white whitespace-nowrap">
               ₹{p.price.toLocaleString('en-IN')}
             </span>
           </div>
@@ -130,16 +130,16 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
         {/* Specs row — hidden on mobile */}
         <div className="hidden sm:grid grid-cols-3 gap-2 border-t border-brand-border pt-4 text-center">
           <div className="bg-slate-900/50 rounded-lg p-2 border border-brand-border">
-            <span className="text-[8px] text-slate-500 block uppercase font-bold">Terrain</span>
-            <span className="text-[10px] text-slate-300 font-extrabold block uppercase truncate">{p.terrainType}</span>
+            <span className="text-[8px] text-slate-500 block uppercase font-normal">Terrain</span>
+            <span className="text-[10px] text-slate-300 font-normal block uppercase truncate">{p.terrainType}</span>
           </div>
           <div className="bg-slate-900/50 rounded-lg p-2 border border-brand-border">
-            <span className="text-[8px] text-slate-500 block uppercase font-bold">Build</span>
-            <span className="text-[10px] text-slate-300 font-extrabold block uppercase truncate">{p.buildType}</span>
+            <span className="text-[8px] text-slate-500 block uppercase font-normal">Build</span>
+            <span className="text-[10px] text-slate-300 font-normal block uppercase truncate">{p.buildType}</span>
           </div>
           <div className="bg-slate-900/50 rounded-lg p-2 border border-brand-border">
-            <span className="text-[8px] text-slate-500 block uppercase font-bold">ESC Max</span>
-            <span className="text-[10px] text-slate-300 font-extrabold block uppercase truncate">{selectedVariant?.attributes?.battery?.split(' ')[0] || p.variants[0]?.attributes?.battery?.split(' ')[0] || "LiPo"}</span>
+            <span className="text-[8px] text-slate-500 block uppercase font-normal">ESC Max</span>
+            <span className="text-[10px] text-slate-300 font-normal block uppercase truncate">{selectedVariant?.attributes?.battery?.split(' ')[0] || p.variants[0]?.attributes?.battery?.split(' ')[0] || "LiPo"}</span>
           </div>
         </div>
 
@@ -147,7 +147,7 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
         <div className="border-t border-brand-border pt-3 w-full">
           <button
             onClick={(e) => handleQuickAdd(e, p)}
-            className="w-full rounded-lg bg-brand-orange hover:bg-brand-gold font-black uppercase px-3 py-2 text-[10px] sm:text-xs transition-colors flex items-center justify-center gap-1"
+            className="w-full rounded-lg bg-brand-orange hover:bg-brand-gold font-normal uppercase px-3 py-2 text-[10px] sm:text-xs transition-colors flex items-center justify-center gap-1"
             style={{ color: '#ffffff' }}
           >
             <Car className="h-3.5 w-3.5" />

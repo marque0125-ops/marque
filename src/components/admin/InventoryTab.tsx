@@ -167,12 +167,12 @@ export function InventoryTab() {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-950 p-6 rounded-2xl border border-brand-border">
         <div className="space-y-1">
-          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
+          <h3 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200 flex items-center gap-2">
             <Layers className="h-4.5 w-4.5 text-brand-orange" /> Warehouse Inventory Registry & CRUD
           </h3>
         </div>
         {!isAddingProduct && !isEditingProduct && (
-          <button onClick={() => { resetProductForm(); setIsAddingProduct(true); }} className="bg-brand-orange text-black px-4 py-2.5 rounded-lg text-xs font-bold uppercase flex items-center gap-1.5 hover:bg-brand-gold">
+          <button onClick={() => { resetProductForm(); setIsAddingProduct(true); }} className="bg-brand-orange text-white sm:text-black px-4 py-2.5 rounded-lg text-xs font-normal uppercase flex items-center gap-1.5 hover:bg-brand-gold">
             <Plus className="h-4 w-4" /> Add New RC Model
           </button>
         )}
@@ -181,17 +181,17 @@ export function InventoryTab() {
       {(isAddingProduct || isEditingProduct) ? (
         <form onSubmit={handleSaveProduct} className="space-y-6 bg-slate-900/60 p-6 rounded-2xl border border-brand-border backdrop-blur-md">
           <div className="flex items-center justify-between border-b border-brand-border pb-3">
-            <h4 className="font-display text-base font-bold uppercase text-white flex items-center gap-2">
+            <h4 className="font-display text-base font-normal uppercase text-white flex items-center gap-2">
               <Car className="h-5 w-5 text-brand-orange" /> {isEditingProduct ? `Edit Model: ${formName}` : "Register New RC Model Chassis"}
             </h4>
             <button type="button" onClick={resetProductForm} className="text-slate-500 hover:text-red-500"><X className="h-5 w-5" /></button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-xs text-slate-300">
-            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Model Name</label><input type="text" value={formName} onChange={(e) => setFormName(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
-            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Chassis SKU Code</label><input type="text" value={formSku} onChange={(e) => setFormSku(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
-            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Brand Manufacturer</label><select value={formBrandId} onChange={(e) => setFormBrandId(e.target.value)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange">{BRANDS.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}</select></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Model Name</label><input type="text" value={formName} onChange={(e) => setFormName(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Chassis SKU Code</label><input type="text" value={formSku} onChange={(e) => setFormSku(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Brand Manufacturer</label><select value={formBrandId} onChange={(e) => setFormBrandId(e.target.value)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange">{BRANDS.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}</select></div>
             <div className="space-y-1.5">
-              <label className="text-[10px] text-slate-400 font-bold uppercase block">Category</label>
+              <label className="text-[10px] text-slate-400 font-normal uppercase block">Category</label>
               <select
                 value={formCategoryId}
                 onChange={(e) => setFormCategoryId(e.target.value)}
@@ -202,12 +202,12 @@ export function InventoryTab() {
                 ))}
               </select>
             </div>
-            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Sale Price</label><input type="number" value={formPrice || ""} onChange={(e) => setFormPrice(parseInt(e.target.value) || 0)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
-            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">MRP (Compare Price)</label><input type="number" value={formComparePrice || ""} onChange={(e) => setFormComparePrice(parseInt(e.target.value) || 0)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
-            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Scale (e.g. 1:10)</label><input type="text" value={formScale} onChange={(e) => setFormScale(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
-            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-bold uppercase block">Top Speed (KM/H)</label><input type="number" value={formSpeedKmh || ""} onChange={(e) => setFormSpeedKmh(parseInt(e.target.value) || 0)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Sale Price</label><input type="number" value={formPrice || ""} onChange={(e) => setFormPrice(parseInt(e.target.value) || 0)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">MRP (Compare Price)</label><input type="number" value={formComparePrice || ""} onChange={(e) => setFormComparePrice(parseInt(e.target.value) || 0)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Scale (e.g. 1:10)</label><input type="text" value={formScale} onChange={(e) => setFormScale(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Top Speed (KM/H)</label><input type="number" value={formSpeedKmh || ""} onChange={(e) => setFormSpeedKmh(parseInt(e.target.value) || 0)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5 md:col-span-4">
-              <label className="text-[10px] text-slate-400 font-bold uppercase block">Product Gallery Images</label>
+              <label className="text-[10px] text-slate-400 font-normal uppercase block">Product Gallery Images</label>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-wrap gap-4">
                   {formImages.map((imgUrl, idx) => (
@@ -229,15 +229,15 @@ export function InventoryTab() {
                     multiple
                     accept="image/*"
                     onChange={handleImageUpload}
-                    className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:uppercase file:bg-brand-orange file:text-black hover:file:bg-brand-gold file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
+                    className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-normal file:uppercase file:bg-brand-orange file:text-white sm:text-black hover:file:bg-brand-gold file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
                   />
-                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-bold tracking-wider">Max size: 2MB per image. Select multiple files.</p>
+                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-normal tracking-wider">Max size: 2MB per image. Select multiple files.</p>
                 </div>
               </div>
             </div>
 
             <div className="space-y-1.5 md:col-span-3 border-t border-brand-border pt-4">
-              <label className="text-[10px] text-slate-400 font-bold uppercase block flex items-center gap-2">
+              <label className="text-[10px] text-slate-400 font-normal uppercase block flex items-center gap-2">
                 Play Track Video
               </label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -249,42 +249,42 @@ export function InventoryTab() {
                     placeholder="YouTube/Vimeo Embed URL" 
                     className="w-full rounded-lg bg-slate-950 border border-brand-border py-2.5 px-3 focus:border-brand-orange text-white" 
                   />
-                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-bold tracking-wider">Paste embed URL directly</p>
+                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-normal tracking-wider">Paste embed URL directly</p>
                 </div>
                 <div>
                   <input
                     type="file"
                     accept="video/*"
                     onChange={handleVideoUpload}
-                    className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
+                    className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-normal file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
                   />
-                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-bold tracking-wider">Or upload video file (Max 5MB).</p>
+                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-normal tracking-wider">Or upload video file (Max 5MB).</p>
                 </div>
               </div>
               {formVideoUrl && formVideoUrl.startsWith("data:video") && (
-                <div className="mt-2 text-[10px] text-brand-orange font-bold uppercase">Video loaded into memory (Size: {(formVideoUrl.length / 1024 / 1024).toFixed(2)} MB)</div>
+                <div className="mt-2 text-[10px] text-brand-orange font-normal uppercase">Video loaded into memory (Size: {(formVideoUrl.length / 1024 / 1024).toFixed(2)} MB)</div>
               )}
             </div>
           </div>
           <div className="border-t border-brand-border pt-4 text-xs space-y-4">
-            <span className="text-[10px] text-brand-gold font-bold uppercase block">Variants</span>
+            <span className="text-[10px] text-brand-gold font-normal uppercase block">Variants</span>
             <div className="flex flex-col gap-2">
               <div className="flex gap-2">
                 <input type="text" value={newVarColor} onChange={e => setNewVarColor(e.target.value)} placeholder="Color" className="w-24 rounded bg-slate-900 border border-brand-border p-1.5 text-white" />
                 <input type="text" value={newVarBattery} onChange={e => setNewVarBattery(e.target.value)} placeholder="Battery" className="w-28 rounded bg-slate-900 border border-brand-border p-1.5 text-white" />
                 <input type="text" value={newVarImageUrl} onChange={e => setNewVarImageUrl(e.target.value)} placeholder="Img URL (Opt)" className="w-28 rounded bg-slate-900 border border-brand-border p-1.5 text-white" />
                 <input type="number" value={newVarStock} onChange={e => setNewVarStock(parseInt(e.target.value) || 0)} className="w-14 rounded bg-slate-900 border border-brand-border p-1.5 text-white" />
-                <button type="button" onClick={handleAddVariant} className="bg-brand-orange px-3 rounded font-bold uppercase text-[9px] text-black">Add</button>
+                <button type="button" onClick={handleAddVariant} className="bg-brand-orange px-3 rounded font-normal uppercase text-[9px] text-white sm:text-black">Add</button>
               </div>
               <div className="flex items-center gap-2">
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleVariantImageUpload}
-                  className="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-bold file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 file:cursor-pointer"
+                  className="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-normal file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 file:cursor-pointer"
                 />
                 {newVarImageUrl && newVarImageUrl.startsWith("data:image") && (
-                  <span className="text-[10px] text-brand-orange font-bold uppercase">Image Loaded</span>
+                  <span className="text-[10px] text-brand-orange font-normal uppercase">Image Loaded</span>
                 )}
               </div>
             </div>
@@ -296,8 +296,8 @@ export function InventoryTab() {
                         <img src={v.imageUrl} alt={v.name} className="w-8 h-8 object-cover rounded border border-brand-border" />
                       )}
                       <div>
-                        <span className="font-bold text-white block text-xs">{v.name}</span>
-                        <span className="text-[9px] text-brand-orange uppercase font-bold tracking-wider">Stock: {v.stockQty}</span>
+                        <span className="font-normal text-white block text-xs">{v.name}</span>
+                        <span className="text-[9px] text-brand-orange uppercase font-normal tracking-wider">Stock: {v.stockQty}</span>
                       </div>
                     </div>
                   <button type="button" onClick={() => handleRemoveVariant(v.id)} className="text-red-500 hover:text-red-400 transition-colors p-1"><Trash2 className="h-4 w-4" /></button>
@@ -306,8 +306,8 @@ export function InventoryTab() {
             </div>
           </div>
           <div className="flex justify-end gap-3 pt-4 border-t border-brand-border">
-            <button type="button" onClick={resetProductForm} className="border border-brand-border px-4 py-2 rounded-lg text-xs font-bold uppercase text-slate-400">Cancel</button>
-            <button type="submit" className="bg-brand-orange px-5 py-2 rounded-lg text-xs font-bold uppercase text-black hover:bg-brand-gold">Publish Product</button>
+            <button type="button" onClick={resetProductForm} className="border border-brand-border px-4 py-2 rounded-lg text-xs font-normal uppercase text-slate-400">Cancel</button>
+            <button type="submit" className="bg-brand-orange px-5 py-2 rounded-lg text-xs font-normal uppercase text-white sm:text-black hover:bg-brand-gold">Publish Product</button>
           </div>
         </form>
       ) : (
@@ -321,13 +321,13 @@ export function InventoryTab() {
                     <div className="flex items-center gap-3">
                       <img src={p.images[0]} alt={p.name} className="h-12 w-12 rounded object-cover border border-brand-border" />
                       <div>
-                        <span className="text-[9px] text-brand-orange font-bold uppercase block">{brand?.name}</span>
-                        <span className="font-bold text-white text-sm block">{p.name}</span>
+                        <span className="text-[9px] text-brand-orange font-normal uppercase block">{brand?.name}</span>
+                        <span className="font-normal text-white text-sm block">{p.name}</span>
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <button onClick={() => handleOpenEditProduct(p)} className="border border-brand-orange text-brand-orange px-3 py-1.5 rounded font-bold uppercase text-[9px]"><Edit2 className="h-3 w-3 inline" /> Edit</button>
-                      <button onClick={() => handleDeleteProductClick(p.id, p.name)} className="border border-brand-border text-slate-500 hover:text-red-400 px-3 py-1.5 rounded font-bold uppercase text-[9px]"><Trash2 className="h-3 w-3 inline" /> Remove</button>
+                      <button onClick={() => handleOpenEditProduct(p)} className="border border-brand-orange text-brand-orange px-3 py-1.5 rounded font-normal uppercase text-[9px]"><Edit2 className="h-3 w-3 inline" /> Edit</button>
+                      <button onClick={() => handleDeleteProductClick(p.id, p.name)} className="border border-brand-border text-slate-500 hover:text-red-400 px-3 py-1.5 rounded font-normal uppercase text-[9px]"><Trash2 className="h-3 w-3 inline" /> Remove</button>
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -336,16 +336,16 @@ export function InventoryTab() {
                       return (
                         <div key={v.id} className="p-3 rounded-lg border border-brand-border/60 bg-slate-900/60 flex items-center justify-between">
                           <div className="space-y-0.5">
-                            <span className="text-[10px] text-slate-300 font-bold block">{v.attributes.color}</span>
-                            <span className="text-[9px] font-bold block text-slate-400">Stock: {v.stockQty}</span>
+                            <span className="text-[10px] text-slate-300 font-normal block">{v.attributes.color}</span>
+                            <span className="text-[9px] font-normal block text-slate-400">Stock: {v.stockQty}</span>
                           </div>
                           {isEditing ? (
                             <div className="flex gap-1.5">
-                              <input type="number" value={editingStockVal} onChange={(e) => setEditingStockVal(parseInt(e.target.value) || 0)} className="w-12 rounded bg-slate-950 border border-brand-orange p-1 text-center font-bold text-xs text-white" />
-                              <button onClick={() => handleStockUpdate(p.id, v.id)} className="bg-brand-orange text-black px-2 py-1 rounded text-[9px] font-bold">Save</button>
+                              <input type="number" value={editingStockVal} onChange={(e) => setEditingStockVal(parseInt(e.target.value) || 0)} className="w-12 rounded bg-slate-950 border border-brand-orange p-1 text-center font-normal text-xs text-white" />
+                              <button onClick={() => handleStockUpdate(p.id, v.id)} className="bg-brand-orange text-white sm:text-black px-2 py-1 rounded text-[9px] font-normal">Save</button>
                             </div>
                           ) : (
-                            <button onClick={() => startEditing(v.id, v.stockQty)} className="text-[9px] text-brand-orange font-bold hover:underline"><Edit2 className="h-3 w-3 inline" /> Adjust</button>
+                            <button onClick={() => startEditing(v.id, v.stockQty)} className="text-[9px] text-brand-orange font-normal hover:underline"><Edit2 className="h-3 w-3 inline" /> Adjust</button>
                           )}
                         </div>
                       );

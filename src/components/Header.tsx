@@ -63,7 +63,7 @@ export default function Header() {
     <>
       <header className="sticky top-0 z-50 w-full border-b border-brand-border bg-brand-dark/85 backdrop-blur-md">
       {/* Dynamic Promotion Ticker Marquee */}
-      <div className="w-full bg-gradient-to-r from-brand-orange to-brand-gold py-1.5 text-[11px] font-bold uppercase tracking-wider text-black overflow-hidden select-none">
+      <div className="w-full bg-gradient-to-r from-brand-orange to-brand-gold py-1.5 text-[11px] font-normal uppercase tracking-wider text-black overflow-hidden select-none">
         <div className="flex whitespace-nowrap animate-marquee gap-8">
           <div className="flex shrink-0 items-center justify-around gap-8 min-w-full">
             <span>{announcementText}</span>
@@ -75,7 +75,7 @@ export default function Header() {
       </div>
 
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-20 items-center justify-between gap-1 sm:gap-4">
+        <div className="relative flex h-24 items-center justify-between gap-1 sm:gap-4">
 
           {/* Mobile Menu Toggle */}
           <button 
@@ -90,22 +90,22 @@ export default function Header() {
             onClick={() => { setSelectedProduct(null); setView('home'); }}
             className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex cursor-pointer items-center justify-center group"
           >
-            <div className="relative flex h-14 w-36 sm:h-16 sm:w-48 items-center justify-center rounded-xl bg-white overflow-hidden transition-transform duration-300 group-hover:scale-105 p-2">
+            <div className="relative flex h-16 w-48 sm:h-20 sm:w-60 items-center justify-center rounded-xl bg-white overflow-hidden transition-transform duration-300 group-hover:scale-105 p-2">
               <Image
                 src="/logo.png"
                 alt="MARQUE Logo"
                 fill
-                sizes="(max-width: 640px) 144px, 192px"
+                sizes="(max-width: 640px) 192px, 240px"
                 className="object-contain mix-blend-multiply"
               />
             </div>
           </div>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium tracking-wide">
+          <nav className="hidden md:flex items-center gap-6 text-sm font-normal tracking-wide">
             <button
               onClick={() => { setSelectedProduct(null); setView('home'); }}
-              className={`hover:text-brand-orange transition-colors ${currentView === 'home' ? 'text-brand-orange font-bold' : 'text-slate-300'}`}
+              className={`hover:text-brand-orange transition-colors ${currentView === 'home' ? 'text-brand-orange font-normal' : 'text-slate-300'}`}
             >
               Home
             </button>
@@ -114,7 +114,7 @@ export default function Header() {
             <div className="relative group py-2">
               <button
                 onClick={() => { setSelectedProduct(null); setView('shop'); }}
-                className={`hover:text-brand-orange transition-colors flex items-center gap-1 ${currentView === 'shop' ? 'text-brand-orange font-bold' : 'text-slate-300'}`}
+                className={`hover:text-brand-orange transition-colors flex items-center gap-1 ${currentView === 'shop' ? 'text-brand-orange font-normal' : 'text-slate-300'}`}
               >
                 Shop
               </button>
@@ -125,7 +125,7 @@ export default function Header() {
                     onClick={() => handleBrandClick(b.slug)}
                     className="flex flex-col items-start p-2 rounded-lg hover:bg-slate-900 text-left transition-colors"
                   >
-                    <span className="text-xs font-bold text-slate-200">{b.name}</span>
+                    <span className="text-xs font-normal text-slate-200">{b.name}</span>
                     <span className="text-[9px] text-slate-500">{b.country}</span>
                   </button>
                 ))}
@@ -134,7 +134,7 @@ export default function Header() {
 
             <button
               onClick={() => { setSelectedProduct(null); setView('accessories'); }}
-              className={`hover:text-brand-orange transition-colors ${currentView === 'accessories' ? 'text-brand-orange font-bold' : 'text-slate-300'}`}
+              className={`hover:text-brand-orange transition-colors ${currentView === 'accessories' ? 'text-brand-orange font-normal' : 'text-slate-300'}`}
             >
               Accessories
             </button>
@@ -173,7 +173,7 @@ export default function Header() {
             >
               <Heart className="h-5 w-5" />
               {wishlist.length > 0 && (
-                <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand-gold text-[9px] font-black text-black">
+                <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand-gold text-[9px] font-normal text-black">
                   {wishlist.length}
                 </span>
               )}
@@ -195,7 +195,7 @@ export default function Header() {
               {showNotifications && (
                 <div className="absolute right-0 mt-3 w-80 rounded-xl border border-brand-border bg-slate-950 p-4 shadow-2xl z-50">
                   <div className="flex items-center justify-between border-b border-brand-border pb-2 mb-3">
-                    <span className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                    <span className="text-xs font-normal text-slate-200 flex items-center gap-1.5">
                       <AlertTriangle className="h-4 w-4 text-brand-orange" />
                       Live Alerts ({lowStockAlerts.length})
                     </span>
@@ -229,11 +229,11 @@ export default function Header() {
             {/* Cart Button */}
             <button
               onClick={() => { setSelectedProduct(null); setView('cart'); }}
-              className={`relative p-1.5 sm:p-2.5 rounded-xl border transition-all ${currentView === 'cart' ? 'bg-brand-orange border-brand-orange text-black' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
+              className={`relative p-1.5 sm:p-2.5 rounded-xl border transition-all ${currentView === 'cart' ? 'bg-brand-orange border-brand-orange text-white sm:text-black' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
             >
               <ShoppingBag className="h-5 w-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-gold text-[10px] font-black text-black shadow-md">
+                <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-gold text-[10px] font-normal text-black shadow-md">
                   {cartCount}
                 </span>
               )}
@@ -278,7 +278,7 @@ export default function Header() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-sm text-slate-200 outline-none focus:border-brand-orange"
             />
-            <button type="submit" className="bg-brand-orange text-black px-4 py-2 rounded-lg font-bold text-xs uppercase">
+            <button type="submit" className="bg-brand-orange text-white sm:text-black px-4 py-2 rounded-lg font-normal text-xs uppercase">
               Go
             </button>
           </form>
@@ -294,8 +294,8 @@ export default function Header() {
             <button onClick={() => setShowMobileMenu(false)} className="absolute top-4 right-4 text-slate-400 hover:text-brand-orange">
               <X className="h-6 w-6" />
             </button>
-            <div className="text-xl font-display font-black text-white mb-8 border-b border-brand-border pb-4 tracking-wider mt-4">MENU</div>
-            <nav className="flex flex-col gap-6 font-bold tracking-wide text-sm">
+            <div className="text-xl font-display font-normal text-white mb-8 border-b border-brand-border pb-4 tracking-wider mt-4">MENU</div>
+            <nav className="flex flex-col gap-6 font-normal tracking-wide text-sm">
               <button 
                 onClick={() => { setSelectedProduct(null); setView('home'); setShowMobileMenu(false); }}
                 className={`text-left uppercase hover:text-brand-orange transition-colors ${currentView === 'home' ? 'text-brand-orange' : 'text-slate-300'}`}

@@ -157,7 +157,7 @@ export default function HomeView() {
     <div className="space-y-8 sm:space-y-24 pb-12 sm:pb-24">
       {/* ==================== 6.5 STANDALONE PROMO BANNER ==================== */}
       {promoBanners && promoBanners.length > 0 && (
-        <section className="relative w-screen ml-[calc(50%-50vw)] overflow-hidden group cursor-pointer h-[160px] sm:h-auto sm:aspect-[2.5/1] bg-slate-950">
+        <section className="relative w-screen ml-[calc(50%-50vw)] -mt-10 sm:mt-0 overflow-hidden group cursor-pointer aspect-[2.5/1] bg-slate-950">
           {promoBanners.map((slide, idx) => (
             <div
               key={slide.id}
@@ -169,13 +169,13 @@ export default function HomeView() {
                 alt={slide.titleMain || "Promo Banner"}
                 fill
                 sizes="(max-width: 1152px) 100vw, 1152px"
-                className="object-contain transition-transform duration-1000 group-hover:scale-105"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
               />
               {/* Optional Text Overlay */}
               {(slide.badgeText || slide.titleMain || slide.titleSub) && (
                 <div className="absolute bottom-4 left-6 p-4 rounded-xl bg-slate-950/80 backdrop-blur border border-brand-border text-left">
-                  {slide.badgeText && <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider block mb-1">{slide.badgeText}</span>}
-                  {slide.titleMain && <span className="font-display text-2xl sm:text-3xl font-black text-white leading-none block mb-1">{slide.titleMain}</span>}
+                  {slide.badgeText && <span className="text-[10px] text-brand-orange font-normal uppercase tracking-wider block mb-1">{slide.badgeText}</span>}
+                  {slide.titleMain && <span className="font-display text-2xl sm:text-3xl font-normal text-white leading-none block mb-1">{slide.titleMain}</span>}
                   {slide.titleSub && <span className="text-xs text-slate-300 block">{slide.titleSub}</span>}
                 </div>
               )}
@@ -207,12 +207,12 @@ export default function HomeView() {
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Left Column (Copy and CTA) */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-brand-orange/10 px-3 py-1 text-xs font-bold text-brand-orange uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-brand-orange/10 px-3 py-1 text-xs font-normal text-brand-orange uppercase tracking-wider">
               <Flame className="h-3.5 w-3.5" />
               Spotlight: Traxxas X-Maxx 8S
             </div>
 
-            <h1 className="font-display text-2xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-none">
+            <h1 className="font-display text-2xl sm:text-5xl lg:text-6xl font-normal uppercase tracking-tight text-white leading-none">
               Ultimate destination for<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-gold">
                 extreme RC cars
@@ -226,7 +226,7 @@ export default function HomeView() {
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
               <button
                 onClick={() => { setFilterBrand('ALL'); setView('shop'); }}
-                className="group flex items-center justify-center gap-2 rounded-xl bg-brand-orange px-6 py-3.5 text-sm font-bold text-black hover:bg-brand-gold hover:shadow-glow transition-all duration-300 uppercase tracking-wider"
+                className="group flex items-center justify-center gap-2 rounded-xl bg-brand-orange px-6 py-3.5 text-sm font-normal text-white sm:text-black hover:bg-brand-gold hover:shadow-glow transition-all duration-300 uppercase tracking-wider"
               >
                 Explore Track Rigs
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -234,7 +234,7 @@ export default function HomeView() {
 
               <button
                 onClick={() => handleBrandClick('traxxas')}
-                className="rounded-xl border border-brand-border bg-slate-900/60 hover:bg-slate-900 px-6 py-3.5 text-sm font-bold text-white hover:border-brand-orange transition-all duration-300 uppercase tracking-wider"
+                className="rounded-xl border border-brand-border bg-slate-900/60 hover:bg-slate-900 px-6 py-3.5 text-sm font-normal text-white hover:border-brand-orange transition-all duration-300 uppercase tracking-wider"
               >
                 Shop Traxxas VXL
               </button>
@@ -260,8 +260,8 @@ export default function HomeView() {
                     className="object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
                   <div className="absolute bottom-4 right-4 flex flex-col items-end gap-1 p-3 rounded-xl bg-slate-950/80 backdrop-blur border border-white/10 text-right">
-                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{slide.badgeText}</span>
-                    <span className="font-display text-xl font-black text-brand-gold leading-none">{slide.titleMain}</span>
+                    <span className="text-[9px] text-slate-400 font-normal uppercase tracking-wider">{slide.badgeText}</span>
+                    <span className="font-display text-xl font-normal text-brand-gold leading-none">{slide.titleMain}</span>
                     <span className="text-[9px] text-slate-300">{slide.titleSub}</span>
                   </div>
                 </div>
@@ -295,18 +295,18 @@ export default function HomeView() {
         >
           <Search className="h-4 w-4 text-slate-500 shrink-0" />
           Search crawlers, bashers, accessories...
-          <span className="ml-auto rounded-lg bg-brand-orange px-3 py-1 text-[10px] font-black text-black uppercase shrink-0">Go</span>
+          <span className="ml-auto rounded-lg bg-brand-orange px-3 py-1 text-[10px] font-normal text-white sm:text-black uppercase shrink-0">Go</span>
         </button>
       </div>
 
       {/* ==================== 3. BROWSE BY CATEGORY ==================== */}
       <section className="space-y-6 sm:space-y-12 sm:py-8">
         <div className="text-center space-y-2 sm:space-y-3">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-orange uppercase tracking-widest">
+          <div className="inline-flex items-center gap-1.5 text-xs font-normal text-brand-orange uppercase tracking-widest">
             <Sliders className="h-4 w-4" />
             Shop by Category
           </div>
-          <h2 className="font-display text-2xl sm:text-5xl font-black  tracking-tight text-white">
+          <h2 className="font-display text-2xl sm:text-5xl font-normal  tracking-tight text-white">
             Explore our RC collections
           </h2>
         </div>
@@ -331,7 +331,7 @@ export default function HomeView() {
                   />
                 </div>
                 <div className="space-y-1 text-center">
-                  <span className="text-base font-bold text-white block leading-tight">{cat.name}</span>
+                  <span className="text-base font-normal text-white block leading-tight">{cat.name}</span>
                   <span className="text-xs text-slate-400 block">{count} products</span>
                 </div>
               </button>
@@ -363,10 +363,10 @@ export default function HomeView() {
 
                 {/* Text Content */}
                 <div className="space-y-1">
-                  <h3 className="font-display text-sm sm:text-base font-bold text-white group-hover:text-brand-orange transition-colors">
+                  <h3 className="font-display text-sm sm:text-base font-normal text-white group-hover:text-brand-orange transition-colors">
                     {cat.name}
                   </h3>
-                  <p className="text-xs text-slate-400 font-medium">
+                  <p className="text-xs text-slate-400 font-normal">
                     {count} {count === 1 ? 'product' : 'products'}
                   </p>
                 </div>
@@ -394,11 +394,11 @@ export default function HomeView() {
         `}} />
 
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-gold uppercase tracking-widest">
+          <div className="inline-flex items-center gap-1.5 text-xs font-normal text-brand-gold uppercase tracking-widest">
             <Sparkles className="h-4 w-4" />
             Elite Racing Makes
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl font-black uppercase text-white tracking-tight">
+          <h2 className="font-display text-2xl sm:text-3xl font-normal uppercase text-white tracking-tight">
             Championship Lineup
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm max-w-md mx-auto">
@@ -461,10 +461,10 @@ export default function HomeView() {
 
                     {/* Minimalist Subtext */}
                     <div className="relative z-10 mt-3 text-center space-y-0.5">
-                      <span className="font-display text-xs font-black tracking-widest text-slate-400 group-hover:text-white transition-colors block uppercase">
+                      <span className="font-display text-xs font-normal tracking-widest text-slate-400 group-hover:text-white transition-colors block uppercase">
                         {brand.name}
                       </span>
-                      <span className="text-[9px] text-slate-600 font-bold uppercase tracking-wider group-hover:text-brand-orange transition-colors flex items-center justify-center gap-1">
+                      <span className="text-[9px] text-slate-600 font-normal uppercase tracking-wider group-hover:text-brand-orange transition-colors flex items-center justify-center gap-1">
                         {brand.country} {brand.flag}
                       </span>
                     </div>
@@ -481,10 +481,10 @@ export default function HomeView() {
       <section className="space-y-6 sm:space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6 border-b border-brand-border pb-4 sm:pb-6">
           <div className="space-y-1 sm:space-y-2">
-            <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block">
+            <span className="text-[10px] text-brand-gold font-normal uppercase tracking-widest block">
               Direct Garage Clearance
             </span>
-            <h2 className="font-display text-xl sm:text-3xl font-black uppercase text-white tracking-tight">
+            <h2 className="font-display text-xl sm:text-3xl font-normal uppercase text-white tracking-tight">
               Featured Products
             </h2>
           </div>
@@ -501,8 +501,8 @@ export default function HomeView() {
               <button
                 key={tab.id}
                 onClick={() => setExploreTab(tab.id as any)}
-                className={`shrink-0 rounded-lg px-3 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 ${exploreTab === tab.id
-                  ? "bg-brand-orange text-black font-black shadow-glow"
+                className={`shrink-0 rounded-lg px-3 sm:px-4 py-2 text-xs font-normal uppercase tracking-wider transition-all duration-300 ${exploreTab === tab.id
+                  ? "bg-brand-orange text-white sm:text-black font-normal shadow-glow"
                   : "border border-brand-border bg-slate-900/30 text-slate-400 hover:text-white hover:border-brand-orange"
                   }`}
               >
@@ -529,7 +529,7 @@ export default function HomeView() {
         <div className="text-center pt-2">
           <button
             onClick={() => { resetFilters(); setView('shop'); }}
-            className="inline-flex items-center gap-2 rounded-xl border border-brand-border bg-slate-900 hover:border-brand-orange hover:bg-slate-950 px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-white transition-all"
+            className="inline-flex items-center gap-2 rounded-xl border border-brand-border bg-slate-900 hover:border-brand-orange hover:bg-slate-950 px-8 py-3.5 text-sm font-normal uppercase tracking-wider text-white transition-all"
           >
             View All Products <ArrowRight className="h-4 w-4" />
           </button>
@@ -547,10 +547,10 @@ export default function HomeView() {
 
           <div className="relative z-10 p-8 sm:p-10 flex flex-col h-full justify-between gap-8">
             <div className="space-y-4">
-              <span className="text-[10px] font-bold text-brand-orange uppercase border border-brand-orange/30 px-3 py-1 rounded-full bg-brand-orange/10 tracking-widest inline-block shadow-sm">
+              <span className="text-[10px] font-normal text-brand-orange uppercase border border-brand-orange/30 px-3 py-1 rounded-full bg-brand-orange/10 tracking-widest inline-block shadow-sm">
                 Casual & Expert Drivers
               </span>
-              <h3 className="font-display text-2xl sm:text-3xl font-black uppercase tracking-tight text-white group-hover:text-brand-orange transition-colors duration-300">
+              <h3 className="font-display text-2xl sm:text-3xl font-normal uppercase tracking-tight text-white group-hover:text-brand-orange transition-colors duration-300">
                 Looking For a Ready-To-Run Rig?
               </h3>
               <p className="text-slate-400 text-sm max-w-md leading-relaxed">
@@ -558,7 +558,7 @@ export default function HomeView() {
               </p>
             </div>
 
-            <button className="inline-flex items-center justify-center gap-2 text-sm font-black uppercase text-black bg-brand-orange group-hover:bg-brand-gold px-6 py-3.5 rounded-xl transition-all duration-300 tracking-wider w-fit shadow-[0_0_20px_rgba(249,115,22,0.2)] group-hover:shadow-[0_0_30px_rgba(249,115,22,0.4)]">
+            <button className="inline-flex items-center justify-center gap-2 text-sm font-normal uppercase text-white sm:text-black bg-brand-orange group-hover:bg-brand-gold px-6 py-3.5 rounded-xl transition-all duration-300 tracking-wider w-fit shadow-[0_0_20px_rgba(249,115,22,0.2)] group-hover:shadow-[0_0_30px_rgba(249,115,22,0.4)]">
               Explore RTR Garage <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
@@ -571,10 +571,10 @@ export default function HomeView() {
 
           <div className="relative z-10 p-8 sm:p-10 flex flex-col h-full justify-between gap-8">
             <div className="space-y-4">
-              <span className="text-[10px] font-bold text-brand-gold uppercase border border-brand-gold/30 px-3 py-1 rounded-full bg-brand-gold/10 tracking-widest inline-block shadow-sm">
+              <span className="text-[10px] font-normal text-brand-gold uppercase border border-brand-gold/30 px-3 py-1 rounded-full bg-brand-gold/10 tracking-widest inline-block shadow-sm">
                 Scale Builders & Tuners
               </span>
-              <h3 className="font-display text-2xl sm:text-3xl font-black uppercase tracking-tight text-white group-hover:text-brand-gold transition-colors duration-300">
+              <h3 className="font-display text-2xl sm:text-3xl font-normal uppercase tracking-tight text-white group-hover:text-brand-gold transition-colors duration-300">
                 Want to Build Custom Kits?
               </h3>
               <p className="text-slate-400 text-sm max-w-md leading-relaxed">
@@ -582,7 +582,7 @@ export default function HomeView() {
               </p>
             </div>
 
-            <button className="inline-flex items-center justify-center gap-2 text-sm font-black uppercase text-black bg-brand-gold group-hover:bg-brand-orange px-6 py-3.5 rounded-xl transition-all duration-300 tracking-wider w-fit shadow-[0_0_20px_rgba(234,179,8,0.2)] group-hover:shadow-[0_0_30px_rgba(234,179,8,0.4)]">
+            <button className="inline-flex items-center justify-center gap-2 text-sm font-normal uppercase text-white sm:text-black bg-brand-gold group-hover:bg-brand-orange px-6 py-3.5 rounded-xl transition-all duration-300 tracking-wider w-fit shadow-[0_0_20px_rgba(234,179,8,0.2)] group-hover:shadow-[0_0_30px_rgba(234,179,8,0.4)]">
               Browse Tuning Kits <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
@@ -595,13 +595,13 @@ export default function HomeView() {
 
           <div className="order-2 lg:order-1 space-y-8">
             <div className="space-y-6">
-              <span className="flex items-center gap-3 text-xs text-brand-orange font-bold uppercase tracking-[0.2em]">
+              <span className="flex items-center gap-3 text-xs text-brand-orange font-normal uppercase tracking-[0.2em]">
                 <span className="w-8 h-px bg-brand-orange/50"></span>
                 Welcome to MARQUE
               </span>
-              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-[1.05]">
+              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-normal uppercase tracking-tight text-white leading-[1.05]">
                 Sleek Rigs,<br />Smart Prices.<br />
-                <span className="text-slate-400 font-medium tracking-normal normal-case text-2xl sm:text-3xl block mt-4">
+                <span className="text-slate-400 font-normal tracking-normal normal-case text-2xl sm:text-3xl block mt-4">
                   Your ideal car is a click away.
                 </span>
               </h2>
@@ -629,7 +629,7 @@ export default function HomeView() {
             <div className="pt-4">
               <button
                 onClick={() => { setFilterBrand("ALL"); setView("shop"); }}
-                className="group inline-flex items-center justify-center gap-3 text-sm font-bold uppercase text-white bg-transparent border border-white/20 hover:border-brand-orange hover:bg-brand-orange hover:text-black px-8 py-4 rounded-full transition-all duration-300 tracking-widest"
+                className="group inline-flex items-center justify-center gap-3 text-sm font-normal uppercase text-white bg-transparent border border-white/20 hover:border-brand-orange hover:bg-brand-orange hover:text-white sm:text-black px-8 py-4 rounded-full transition-all duration-300 tracking-widest"
               >
                 Explore Vehicles <ArrowRight className="h-4 w-4" />
               </button>
@@ -652,8 +652,8 @@ export default function HomeView() {
                   <Trophy className="h-6 w-6 text-black" />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-sm sm:text-base tracking-wide">Premium Quality</p>
-                  <p className="text-slate-300 text-xs sm:text-sm font-medium">Guaranteed Performance</p>
+                  <p className="text-white font-normal text-sm sm:text-base tracking-wide">Premium Quality</p>
+                  <p className="text-slate-300 text-xs sm:text-sm font-normal">Guaranteed Performance</p>
                 </div>
               </div>
             </div>
@@ -673,10 +673,10 @@ export default function HomeView() {
             { value: "1-Day", label: "Local Hub Dispatch" }
           ].map((stat, idx) => (
             <div key={idx} className="space-y-1.5 pt-6 md:pt-0">
-              <span className="font-display text-3xl sm:text-4xl font-black text-brand-orange block tracking-tight">
+              <span className="font-display text-3xl sm:text-4xl font-normal text-brand-orange block tracking-tight">
                 {stat.value}
               </span>
-              <span className="text-[10px] text-slate-400 uppercase font-black tracking-widest block">
+              <span className="text-[10px] text-slate-400 uppercase font-normal tracking-widest block">
                 {stat.label}
               </span>
             </div>
@@ -687,10 +687,10 @@ export default function HomeView() {
       {/* ==================== 8. WHY CHOOSE US? ==================== */}
       <section className="hidden sm:block space-y-10 max-w-6xl mx-auto">
         <div className="text-center space-y-2">
-          <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block">
+          <span className="text-[10px] text-brand-gold font-normal uppercase tracking-widest block">
             Why Choose MARQUE?
           </span>
-          <h2 className="font-display text-2xl sm:text-4xl font-black uppercase text-white tracking-tight">
+          <h2 className="font-display text-2xl sm:text-4xl font-normal uppercase text-white tracking-tight">
             We Set The Performance Standard
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm max-w-md mx-auto">
@@ -729,7 +729,7 @@ export default function HomeView() {
                 <perk.icon className="h-5 w-5" />
               </div>
               <div className="space-y-1.5">
-                <h4 className="font-display text-sm font-black text-white uppercase tracking-tight">
+                <h4 className="font-display text-sm font-normal text-white uppercase tracking-tight">
                   {perk.title}
                 </h4>
                 <p className="text-xs text-slate-400 leading-relaxed">
@@ -747,10 +747,10 @@ export default function HomeView() {
 
         <div className="space-y-8 relative z-10">
           <div className="text-center space-y-2">
-            <span className="text-[10px] text-brand-orange font-bold uppercase tracking-widest block">
+            <span className="text-[10px] text-brand-orange font-normal uppercase tracking-widest block">
               Pilot Reviews
             </span>
-            <h2 className="font-display text-xl sm:text-2xl font-black uppercase text-white">
+            <h2 className="font-display text-xl sm:text-2xl font-normal uppercase text-white">
               What Our Customers Say
             </h2>
           </div>
@@ -758,7 +758,7 @@ export default function HomeView() {
           {/* Testimonial Active Slide */}
           <div className="space-y-6">
             <Quote className="mx-auto h-8 w-8 text-brand-orange/30 rotate-180" />
-            <blockquote className="font-display text-sm sm:text-lg font-medium text-slate-200 leading-relaxed italic max-w-2xl mx-auto">
+            <blockquote className="font-display text-sm sm:text-lg font-normal text-slate-200 leading-relaxed italic max-w-2xl mx-auto">
               "{testimonials[testimonialIndex].quote}"
             </blockquote>
             <div className="flex items-center justify-center gap-3">
@@ -770,10 +770,10 @@ export default function HomeView() {
                 className="rounded-full border border-brand-border object-cover"
               />
               <div className="text-left">
-                <span className="font-bold text-white block text-xs sm:text-sm">
+                <span className="font-normal text-white block text-xs sm:text-sm">
                   {testimonials[testimonialIndex].name}
                 </span>
-                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">
+                <span className="text-[10px] text-slate-500 font-normal uppercase tracking-wider block">
                   {testimonials[testimonialIndex].role}
                 </span>
               </div>
@@ -798,14 +798,14 @@ export default function HomeView() {
       <section className="hidden sm:block space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-brand-border pb-6">
           <div className="space-y-2">
-            <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block">
+            <span className="text-[10px] text-brand-gold font-normal uppercase tracking-widest block">
               Knowledge Database
             </span>
-            <h2 className="font-display text-2xl sm:text-3xl font-black uppercase text-white tracking-tight">
+            <h2 className="font-display text-2xl sm:text-3xl font-normal uppercase text-white tracking-tight">
               Recent News & Articles
             </h2>
           </div>
-          <span className="text-xs text-slate-400 uppercase font-bold tracking-widest">
+          <span className="text-xs text-slate-400 uppercase font-normal tracking-widest">
             Hobby Garage Blog
           </span>
         </div>
@@ -826,13 +826,13 @@ export default function HomeView() {
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <span className="absolute bottom-3 left-3 bg-slate-950/80 border border-brand-border text-[8px] font-bold text-brand-orange uppercase px-2 py-0.5 rounded">
+                  <span className="absolute bottom-3 left-3 bg-slate-950/80 border border-brand-border text-[8px] font-normal text-brand-orange uppercase px-2 py-0.5 rounded">
                     {guide.category}
                   </span>
                 </div>
                 <div className="p-5 space-y-2.5">
-                  <span className="text-[9px] text-slate-500 font-bold block">{guide.readTime}</span>
-                  <h3 className="font-display text-sm font-black text-white group-hover:text-brand-orange transition-colors leading-snug">
+                  <span className="text-[9px] text-slate-500 font-normal block">{guide.readTime}</span>
+                  <h3 className="font-display text-sm font-normal text-white group-hover:text-brand-orange transition-colors leading-snug">
                     {guide.title}
                   </h3>
                   <p className="text-xs text-slate-400 leading-relaxed line-clamp-3">
@@ -842,7 +842,7 @@ export default function HomeView() {
               </div>
 
               <div className="p-5 pt-0">
-                <span className="text-[10px] font-black text-brand-orange uppercase tracking-widest flex items-center gap-1 group-hover:text-brand-gold transition-colors">
+                <span className="text-[10px] font-normal text-brand-orange uppercase tracking-widest flex items-center gap-1 group-hover:text-brand-gold transition-colors">
                   Read Article <ChevronRight className="h-4 w-4" />
                 </span>
               </div>
@@ -863,10 +863,10 @@ export default function HomeView() {
             </button>
 
             <div className="space-y-4">
-              <span className="text-[9px] text-brand-orange font-bold uppercase tracking-wider bg-brand-orange/10 px-2 py-0.5 rounded border border-brand-orange/20">
+              <span className="text-[9px] text-brand-orange font-normal uppercase tracking-wider bg-brand-orange/10 px-2 py-0.5 rounded border border-brand-orange/20">
                 {activeGuide.category} • {activeGuide.readTime}
               </span>
-              <h2 className="font-display text-2xl md:text-3xl font-extrabold text-white leading-tight">
+              <h2 className="font-display text-2xl md:text-3xl font-normal text-white leading-tight">
                 {activeGuide.title}
               </h2>
               <div className="relative w-full h-56 rounded-xl border border-brand-border overflow-hidden">
@@ -885,7 +885,7 @@ export default function HomeView() {
             <div className="pt-4 border-t border-brand-border flex justify-end">
               <button
                 onClick={() => setActiveGuide(null)}
-                className="bg-brand-orange text-black px-5 py-2.5 rounded-lg text-xs font-bold uppercase hover:bg-brand-gold transition-colors"
+                className="bg-brand-orange text-white sm:text-black px-5 py-2.5 rounded-lg text-xs font-normal uppercase hover:bg-brand-gold transition-colors"
               >
                 Close tech guide
               </button>

@@ -8,7 +8,7 @@ export default function ShippingView() {
         <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-slate-900 border border-slate-800 text-brand-orange mb-4 shadow-glow">
           <Truck className="h-8 w-8" />
         </div>
-        <h1 className="font-display text-3xl sm:text-4xl font-black uppercase tracking-tight text-white leading-none">
+        <h1 className="font-display text-3xl sm:text-4xl font-normal uppercase tracking-tight text-white leading-none">
           Shipping Policy
         </h1>
         <p className="text-slate-400 text-sm max-w-2xl mx-auto">
@@ -21,7 +21,7 @@ export default function ShippingView() {
         <section className="space-y-3 rounded-2xl border border-brand-border bg-slate-950 p-6 sm:p-8">
           <div className="flex items-center gap-3 border-b border-brand-border/40 pb-3 mb-4">
             <Clock className="h-5 w-5 text-brand-orange" />
-            <h2 className="font-display text-xl font-bold uppercase text-white">1. Order Processing Time</h2>
+            <h2 className="font-display text-xl font-normal uppercase text-white">1. Order Processing Time</h2>
           </div>
           <p>
             All orders are processed and prepared for dispatch within <strong>24-48 hours</strong> of payment confirmation (excluding Sundays and national holidays).
@@ -37,7 +37,7 @@ export default function ShippingView() {
         <section className="space-y-3 rounded-2xl border border-brand-border bg-slate-950 p-6 sm:p-8">
           <div className="flex items-center gap-3 border-b border-brand-border/40 pb-3 mb-4">
             <MapPin className="h-5 w-5 text-brand-gold" />
-            <h2 className="font-display text-xl font-bold uppercase text-white">2. Shipping Rates & Delivery Estimates</h2>
+            <h2 className="font-display text-xl font-normal uppercase text-white">2. Shipping Rates & Delivery Estimates</h2>
           </div>
           <p>
             We partner with premium logistics carriers (BlueDart, Delhivery Surface) to ensure the safe transport of bulky RC boxes and LiPo batteries.
@@ -54,7 +54,7 @@ export default function ShippingView() {
         <section className="space-y-3 rounded-2xl border border-brand-border bg-slate-950 p-6 sm:p-8">
           <div className="flex items-center gap-3 border-b border-brand-border/40 pb-3 mb-4">
             <PackageCheck className="h-5 w-5 text-blue-400" />
-            <h2 className="font-display text-xl font-bold uppercase text-white">3. Pincode Serviceability & Tracking</h2>
+            <h2 className="font-display text-xl font-normal uppercase text-white">3. Pincode Serviceability & Tracking</h2>
           </div>
           <p>
             Because RC cars come in highly oversized boxes, standard courier networks sometimes lack serviceability to remote pincodes.

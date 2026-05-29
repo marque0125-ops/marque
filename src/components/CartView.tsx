@@ -255,11 +255,11 @@ export default function CartView() {
         <div className="rounded-2xl border border-brand-border bg-slate-900/10 p-6">
           <button
             onClick={() => setCheckoutStep(false)}
-            className="text-xs text-slate-400 hover:text-brand-orange uppercase font-bold flex items-center gap-1 mb-2"
+            className="text-xs text-slate-400 hover:text-brand-orange uppercase font-normal flex items-center gap-1 mb-2"
           >
             <Minus className="h-3 w-3" /> Back to Shopping Cart
           </button>
-          <h1 className="font-display text-2xl sm:text-3xl font-bold uppercase text-white">
+          <h1 className="font-display text-2xl sm:text-3xl font-normal uppercase text-white">
             Razorpay Secure Checkpoint
           </h1>
           <p className="text-xs text-slate-400">
@@ -275,30 +275,30 @@ export default function CartView() {
 
             {/* Delivery address details card */}
             <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4">
-              <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200 border-b border-brand-border pb-2">
+              <h3 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200 border-b border-brand-border pb-2">
                 1. Delivery Manifest & Destination
               </h3>
 
               <div className="grid grid-cols-2 gap-4 text-xs">
                 <div>
-                  <span className="text-slate-500 block uppercase font-bold text-[9px]">Receiver Name</span>
-                  <span className="text-slate-200 font-bold">{address.name}</span>
+                  <span className="text-slate-500 block uppercase font-normal text-[9px]">Receiver Name</span>
+                  <span className="text-slate-200 font-normal">{address.name}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block uppercase font-bold text-[9px]">Contact Mobile</span>
-                  <span className="text-slate-200 font-bold">{address.phone}</span>
+                  <span className="text-slate-500 block uppercase font-normal text-[9px]">Contact Mobile</span>
+                  <span className="text-slate-200 font-normal">{address.phone}</span>
                 </div>
                 <div className="col-span-2">
-                  <span className="text-slate-500 block uppercase font-bold text-[9px]">Street Address</span>
-                  <span className="text-slate-200 font-bold leading-relaxed">{address.addressLine}</span>
+                  <span className="text-slate-500 block uppercase font-normal text-[9px]">Street Address</span>
+                  <span className="text-slate-200 font-normal leading-relaxed">{address.addressLine}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block uppercase font-bold text-[9px]">City</span>
-                  <span className="text-slate-200 font-bold">{address.city}</span>
+                  <span className="text-slate-500 block uppercase font-normal text-[9px]">City</span>
+                  <span className="text-slate-200 font-normal">{address.city}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block uppercase font-bold text-[9px]">State & Pincode</span>
-                  <span className="text-slate-200 font-bold">{address.state} - {address.pincode}</span>
+                  <span className="text-slate-500 block uppercase font-normal text-[9px]">State & Pincode</span>
+                  <span className="text-slate-200 font-normal">{address.state} - {address.pincode}</span>
                 </div>
                 {isB2B && address.gstin && (
                   <div className="col-span-2 p-2 bg-slate-900 rounded border border-brand-border/40 text-[10px] text-brand-gold">
@@ -310,13 +310,13 @@ export default function CartView() {
 
             {/* RAZORPAY PAYMENT SIMULATION DRAWER */}
             <div className="rounded-2xl border border-brand-orange bg-slate-900/10 p-6 space-y-6 relative overflow-hidden animate-pulse-glow">
-              <div className="absolute top-0 right-0 bg-brand-orange text-black font-bold uppercase text-[9px] px-3 py-1 rounded-bl">
+              <div className="absolute top-0 right-0 bg-brand-orange text-white sm:text-black font-normal uppercase text-[9px] px-3 py-1 rounded-bl">
                 Razorpay Live Sandbox
               </div>
 
               <div className="space-y-2">
-                <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider block">Select Razorpay Payment Gateway API</span>
-                <h3 className="font-display text-base font-bold text-white uppercase flex items-center gap-1.5">
+                <span className="text-[10px] text-brand-orange font-normal uppercase tracking-wider block">Select Razorpay Payment Gateway API</span>
+                <h3 className="font-display text-base font-normal text-white uppercase flex items-center gap-1.5">
                   <Zap className="h-5 w-5 text-brand-orange animate-bounce" />
                   India UPI / Credit Card Portal
                 </h3>
@@ -324,15 +324,15 @@ export default function CartView() {
 
               {/* UPI Deep links options */}
               <div className="space-y-3">
-                <span className="text-xs font-bold text-slate-300 block">Preferred Mobile Deep-links (UPI Autopay Preferred):</span>
+                <span className="text-xs font-normal text-slate-300 block">Preferred Mobile Deep-links (UPI Autopay Preferred):</span>
                 <div className="grid grid-cols-3 gap-3">
                   {['Google Pay', 'PhonePe', 'Paytm'].map((upi) => (
                     <button
                       key={upi}
                       onClick={() => handlePlaceOrder('UPI')}
-                      className="p-3 rounded-xl border border-brand-border bg-slate-950 text-center hover:border-brand-orange hover:bg-slate-900 text-xs font-bold text-slate-200 flex flex-col items-center justify-center gap-1 transition-all"
+                      className="p-3 rounded-xl border border-brand-border bg-slate-950 text-center hover:border-brand-orange hover:bg-slate-900 text-xs font-normal text-slate-200 flex flex-col items-center justify-center gap-1 transition-all"
                     >
-                      <span className="text-[10px] font-bold text-brand-gold">⚡ UPI</span>
+                      <span className="text-[10px] font-normal text-brand-gold">⚡ UPI</span>
                       <span>{upi}</span>
                     </button>
                   ))}
@@ -345,8 +345,8 @@ export default function CartView() {
                   onClick={() => handlePlaceOrder('Card')}
                   className="p-4 rounded-xl border border-brand-border bg-slate-950 text-left hover:border-brand-orange hover:bg-slate-900 flex flex-col justify-between transition-all"
                 >
-                  <span className="text-[10px] text-slate-500 font-bold uppercase block">Credit/Debit Card</span>
-                  <span className="text-xs font-bold text-slate-200 mt-2 block">Visa, Mastercard, RuPay</span>
+                  <span className="text-[10px] text-slate-500 font-normal uppercase block">Credit/Debit Card</span>
+                  <span className="text-xs font-normal text-slate-200 mt-2 block">Visa, Mastercard, RuPay</span>
                 </button>
 
                 {/* COD option */}
@@ -355,9 +355,9 @@ export default function CartView() {
                   className="p-4 rounded-xl border flex flex-col justify-between transition-all border-brand-border bg-slate-950 hover:border-brand-orange hover:bg-slate-900 text-slate-200 cursor-pointer"
                 >
                   <div className="flex justify-between w-full gap-2">
-                    <span className="text-[10px] text-slate-500 font-bold uppercase">Cash on Delivery</span>
+                    <span className="text-[10px] text-slate-500 font-normal uppercase">Cash on Delivery</span>
                   </div>
-                  <span className="text-xs font-bold mt-2 block text-left">
+                  <span className="text-xs font-normal mt-2 block text-left">
                     Pay Cash to Courier
                   </span>
                 </button>
@@ -372,7 +372,7 @@ export default function CartView() {
 
           {/* Right Side: Invoice Subtotal Summary */}
           <div className="lg:col-span-5 rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-6">
-            <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200 border-b border-brand-border pb-2">
+            <h3 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200 border-b border-brand-border pb-2">
               Order Receipt Invoice
             </h3>
 
@@ -380,12 +380,12 @@ export default function CartView() {
               {cart.map((item) => (
                 <div key={item.id} className="flex justify-between pt-3.5 first:pt-0">
                   <div className="space-y-0.5 max-w-[80%]">
-                    <span className="text-slate-200 font-bold block">{item.product.name}</span>
+                    <span className="text-slate-200 font-normal block">{item.product.name}</span>
                     <span className="text-[10px] text-slate-400 block font-display">
                       Variant: {item.variant.attributes.color || "Default"} • Qty: {item.qty}
                     </span>
                   </div>
-                  <span className="font-mono font-bold text-slate-300">
+                  <span className="font-mono font-normal text-slate-300">
                     ₹{((item.variant.priceOverride || item.product.price) * item.qty).toLocaleString('en-IN')}
                   </span>
                 </div>
@@ -398,7 +398,7 @@ export default function CartView() {
                 <span className="font-mono text-slate-300">₹{subtotal.toLocaleString('en-IN')}</span>
               </div>
               {appliedCoupon && (
-                <div className="flex justify-between text-green-400 font-bold">
+                <div className="flex justify-between text-green-400 font-normal">
                   <span>Coupon ({appliedCoupon.code})</span>
                   <span className="font-mono">-₹{discountAmount.toLocaleString('en-IN')}</span>
                 </div>
@@ -411,7 +411,7 @@ export default function CartView() {
                 <span>GST HSN-9503 Portion (18% inclusive)</span>
                 <span className="font-mono">₹{gstAmount.toLocaleString('en-IN')}</span>
               </div>
-              <div className="flex justify-between text-sm font-black text-brand-gold border-t border-brand-border pt-2.5">
+              <div className="flex justify-between text-sm font-normal text-brand-gold border-t border-brand-border pt-2.5">
                 <span className="font-display uppercase">Net Payable INR (₹)</span>
                 <span className="font-mono">₹{grandTotal.toLocaleString('en-IN')}</span>
               </div>
@@ -430,8 +430,8 @@ export default function CartView() {
 
       {/* Page Header */}
       <div className="rounded-2xl border border-brand-border bg-slate-900/10 p-6">
-        <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider block">Shopping Basket</span>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold uppercase text-white mt-1">
+        <span className="text-[10px] text-brand-orange font-normal uppercase tracking-wider block">Shopping Basket</span>
+        <h1 className="font-display text-2xl sm:text-3xl font-normal uppercase text-white mt-1">
           MARQUE Pitstop Cart
         </h1>
         <p className="text-xs text-slate-400">
@@ -444,13 +444,13 @@ export default function CartView() {
           <div className="h-12 w-12 rounded-full bg-slate-900 border border-brand-orange flex items-center justify-center mx-auto text-brand-orange">
             <ShoppingBag className="h-6 w-6" />
           </div>
-          <h3 className="font-display text-lg font-bold text-white uppercase">Your cart is currently empty</h3>
+          <h3 className="font-display text-lg font-normal text-white uppercase">Your cart is currently empty</h3>
           <p className="text-xs text-slate-400 max-w-sm mx-auto">
             Explore our collection of brushless monster trucks, street bashers, or scale crawlers to build your fleet.
           </p>
           <button
             onClick={() => { setView('shop'); }}
-            className="bg-brand-orange text-black font-bold text-xs uppercase px-5 py-2.5 rounded-lg hover:bg-brand-gold transition-colors"
+            className="bg-brand-orange text-white sm:text-black font-normal text-xs uppercase px-5 py-2.5 rounded-lg hover:bg-brand-gold transition-colors"
           >
             Visit Shop
           </button>
@@ -461,7 +461,7 @@ export default function CartView() {
           {/* Left Column: Cart Items list */}
           <div className="lg:col-span-7 space-y-6">
             <div className="rounded-2xl border border-brand-border bg-slate-950 overflow-hidden">
-              <div className="p-4 bg-slate-900/60 border-b border-brand-border flex items-center justify-between text-xs font-bold text-slate-300">
+              <div className="p-4 bg-slate-900/60 border-b border-brand-border flex items-center justify-between text-xs font-normal text-slate-300">
                 <span>Racing Models ({cartCount})</span>
                 <button
                   onClick={clearCart}
@@ -488,16 +488,16 @@ export default function CartView() {
                           className="h-16 w-16 rounded-xl object-cover border border-brand-border shrink-0"
                         />
                         <div className="space-y-1">
-                          <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider block leading-none font-display">
+                          <span className="text-[10px] text-brand-orange font-normal uppercase tracking-wider block leading-none font-display">
                             {brand?.name}
                           </span>
-                          <span className="text-xs font-bold text-white block leading-snug">
+                          <span className="text-xs font-normal text-white block leading-snug">
                             {item.product.name}
                           </span>
                           <span className="text-[9px] text-slate-500 block leading-none font-mono">
                             SKU: {item.variant.sku}
                           </span>
-                          <div className="flex gap-2 pt-1 text-[9px] text-slate-400 font-semibold font-display">
+                          <div className="flex gap-2 pt-1 text-[9px] text-slate-400 font-normal font-display">
                             <span>Color: {item.variant.attributes.color || "Standard"}</span>
                             <span>•</span>
                             <span>Power: {item.variant.attributes.battery || "Rechargeable"}</span>
@@ -514,7 +514,7 @@ export default function CartView() {
                           >
                             <Minus className="h-3 w-3" />
                           </button>
-                          <span className="w-8 text-center text-xs font-bold font-mono text-white">
+                          <span className="w-8 text-center text-xs font-normal font-mono text-white">
                             {item.qty}
                           </span>
                           <button
@@ -529,7 +529,7 @@ export default function CartView() {
                           <span className="font-mono text-xs text-slate-500 block leading-none">
                             ₹{basePrice.toLocaleString('en-IN')} x {item.qty}
                           </span>
-                          <span className="font-mono text-sm font-bold text-brand-gold block mt-1 leading-none">
+                          <span className="font-mono text-sm font-normal text-brand-gold block mt-1 leading-none">
                             ₹{itemSubtotal.toLocaleString('en-IN')}
                           </span>
                         </div>
@@ -550,7 +550,7 @@ export default function CartView() {
 
             {/* PIN CODE SERVICEABILITY & ADDRESS CONSOLE (India specific) */}
             <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4">
-              <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200 border-b border-brand-border pb-2 flex items-center gap-1.5">
+              <h3 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200 border-b border-brand-border pb-2 flex items-center gap-1.5">
                 <MapPin className="h-4.5 w-4.5 text-brand-orange" />
                 2. Regional Delivery Check
               </h3>
@@ -561,7 +561,7 @@ export default function CartView() {
                 <div className="space-y-3 md:col-span-2">
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1.5">
-                      <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Receiver Full Name</label>
+                      <label className="text-[10px] text-slate-400 font-normal uppercase tracking-wider">Receiver Full Name</label>
                       <input
                         type="text"
                         required
@@ -572,7 +572,7 @@ export default function CartView() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Contact Number (SMS tracking)</label>
+                      <label className="text-[10px] text-slate-400 font-normal uppercase tracking-wider">Contact Number (SMS tracking)</label>
                       <input
                         type="tel"
                         required
@@ -585,7 +585,7 @@ export default function CartView() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Street Address / Landmark</label>
+                    <label className="text-[10px] text-slate-400 font-normal uppercase tracking-wider">Street Address / Landmark</label>
                     <input
                       type="text"
                       required
@@ -599,7 +599,7 @@ export default function CartView() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
                   <div className="space-y-1.5">
-                    <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">City</label>
+                    <label className="text-[10px] text-slate-400 font-normal uppercase tracking-wider block">City</label>
                     <input
                       type="text"
                       required
@@ -609,7 +609,7 @@ export default function CartView() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">State</label>
+                    <label className="text-[10px] text-slate-400 font-normal uppercase tracking-wider block">State</label>
                     <input
                       type="text"
                       required
@@ -619,7 +619,7 @@ export default function CartView() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Pincode (6 Digits)</label>
+                    <label className="text-[10px] text-slate-400 font-normal uppercase tracking-wider block">Pincode (6 Digits)</label>
                     <input
                       type="text"
                       maxLength={6}
@@ -642,7 +642,7 @@ export default function CartView() {
 
             {/* Coupon Code section */}
             <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-3">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block flex items-center gap-1">
+              <label className="text-[10px] font-normal text-slate-400 uppercase tracking-widest block flex items-center gap-1">
                 <Ticket className="h-4 w-4 text-brand-orange" />
                 Apply Technical Promo Coupon
               </label>
@@ -657,20 +657,20 @@ export default function CartView() {
                 />
                 <button
                   type="submit"
-                  className="bg-brand-orange text-black px-4 rounded-lg font-bold uppercase text-[10px] hover:bg-brand-gold transition-colors"
+                  className="bg-brand-orange text-white sm:text-black px-4 rounded-lg font-normal uppercase text-[10px] hover:bg-brand-gold transition-colors"
                 >
                   Apply
                 </button>
               </form>
 
               {couponFeedback && (
-                <div className={`p-2 rounded text-[10px] font-semibold text-center border ${couponFeedback.type === 'success' ? 'bg-green-500/10 border-green-500 text-green-400' : 'bg-red-500/10 border-red-500 text-red-400'}`}>
+                <div className={`p-2 rounded text-[10px] font-normal text-center border ${couponFeedback.type === 'success' ? 'bg-green-500/10 border-green-500 text-green-400' : 'bg-red-500/10 border-red-500 text-red-400'}`}>
                   {couponFeedback.text}
                 </div>
               )}
 
               {appliedCoupon && (
-                <div className="p-2.5 rounded-lg bg-green-500/10 border border-green-500/40 text-[10px] text-green-400 flex items-center justify-between font-bold">
+                <div className="p-2.5 rounded-lg bg-green-500/10 border border-green-500/40 text-[10px] text-green-400 flex items-center justify-between font-normal">
                   <div>
                     <span>Coupon: {appliedCoupon.code}</span>
                     <span className="block text-[8px] text-slate-500 mt-0.5">{appliedCoupon.description}</span>
@@ -695,7 +695,7 @@ export default function CartView() {
                   onChange={(e) => setIsB2B(e.target.checked)}
                   className="accent-brand-orange h-4 w-4"
                 />
-                <label htmlFor="b2b-check" className="text-xs font-bold text-slate-300 uppercase cursor-pointer select-none">
+                <label htmlFor="b2b-check" className="text-xs font-normal text-slate-300 uppercase cursor-pointer select-none">
                   Request B2B GSTIN Tax Invoice
                 </label>
               </div>
@@ -703,7 +703,7 @@ export default function CartView() {
               {isB2B && (
                 <div className="space-y-3 text-xs pt-1">
                   <div className="space-y-1">
-                    <label className="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Registered Corporate Entity Name</label>
+                    <label className="text-[9px] text-slate-500 uppercase font-normal tracking-wider">Registered Corporate Entity Name</label>
                     <input
                       type="text"
                       value={companyName}
@@ -714,8 +714,8 @@ export default function CartView() {
                   </div>
                   <div className="space-y-1">
                     <div className="flex justify-between">
-                      <label className="text-[9px] text-slate-500 uppercase font-bold tracking-wider">15-Digit India GSTIN Number</label>
-                      {gstinError && <span className="text-[8px] text-red-500 font-bold">{gstinError}</span>}
+                      <label className="text-[9px] text-slate-500 uppercase font-normal tracking-wider">15-Digit India GSTIN Number</label>
+                      {gstinError && <span className="text-[8px] text-red-500 font-normal">{gstinError}</span>}
                     </div>
                     <input
                       type="text"
@@ -735,7 +735,7 @@ export default function CartView() {
 
             {/* Checkout Pricing Manifest */}
             <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-6">
-              <h3 className="font-display text-sm font-bold uppercase tracking-wider text-slate-200 border-b border-brand-border pb-2">
+              <h3 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200 border-b border-brand-border pb-2">
                 Order Billing Manifest
               </h3>
 
@@ -745,7 +745,7 @@ export default function CartView() {
                   <span className="font-mono text-slate-300">₹{subtotal.toLocaleString('en-IN')}</span>
                 </div>
                 {appliedCoupon && (
-                  <div className="flex justify-between text-green-400 font-bold">
+                  <div className="flex justify-between text-green-400 font-normal">
                     <span>Coupon Discount ({appliedCoupon.code})</span>
                     <span className="font-mono">-₹{discountAmount.toLocaleString('en-IN')}</span>
                   </div>
@@ -758,7 +758,7 @@ export default function CartView() {
                   <span>GST HSN-9503 Portion (18% inclusive)</span>
                   <span className="font-mono">₹{gstAmount.toLocaleString('en-IN')}</span>
                 </div>
-                <div className="flex justify-between text-base font-black text-brand-gold border-t border-brand-border pt-2.5">
+                <div className="flex justify-between text-base font-normal text-brand-gold border-t border-brand-border pt-2.5">
                   <span className="font-display uppercase">Net Payable</span>
                   <span className="font-mono">₹{grandTotal.toLocaleString('en-IN')}</span>
                 </div>
@@ -766,7 +766,7 @@ export default function CartView() {
 
               <button
                 onClick={handleProceed}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-brand-orange py-4 text-xs font-bold uppercase text-black hover:bg-brand-gold hover:shadow-glow transition-all"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-brand-orange py-4 text-xs font-normal uppercase text-white sm:text-black hover:bg-brand-gold hover:shadow-glow transition-all"
               >
                 Configure Secure Checkout
                 <ArrowRight className="h-4 w-4" />

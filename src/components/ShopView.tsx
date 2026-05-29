@@ -111,7 +111,7 @@ export default function ShopView() {
     <div className="flex flex-col space-y-5">
       {/* Search */}
       <div className="space-y-1.5">
-        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Model Search</label>
+        <label className="text-[10px] font-normal text-slate-400 uppercase tracking-widest">Model Search</label>
         <input
           type="text"
           placeholder="e.g. brushless, 8s..."
@@ -123,7 +123,7 @@ export default function ShopView() {
 
       {/* Brand */}
       <div className="space-y-1.5">
-        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Brand</label>
+        <label className="text-[10px] font-normal text-slate-400 uppercase tracking-widest block">Brand</label>
         <select
           value={filterBrand}
           onChange={(e) => setFilterBrand(e.target.value)}
@@ -138,7 +138,7 @@ export default function ShopView() {
 
       {/* Scale */}
       <div className="space-y-1.5">
-        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Chassis Scale</label>
+        <label className="text-[10px] font-normal text-slate-400 uppercase tracking-widest block">Chassis Scale</label>
         <select
           value={filterScale}
           onChange={(e) => setFilterScale(e.target.value)}
@@ -155,7 +155,7 @@ export default function ShopView() {
 
       {/* Terrain */}
       <div className="space-y-1.5">
-        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Terrain</label>
+        <label className="text-[10px] font-normal text-slate-400 uppercase tracking-widest block">Terrain</label>
         <select
           value={filterTerrain}
           onChange={(e) => setFilterTerrain(e.target.value)}
@@ -171,13 +171,13 @@ export default function ShopView() {
 
       {/* Build Type */}
       <div className="space-y-1.5">
-        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Build Type</label>
+        <label className="text-[10px] font-normal text-slate-400 uppercase tracking-widest block">Build Type</label>
         <div className="flex gap-2">
           {['ALL', 'RTR', 'Kit'].map((type) => (
             <button
               key={type}
               onClick={() => setFilterBuildType(type)}
-              className={`flex-1 py-2 text-[10px] font-bold uppercase rounded border transition-all ${filterBuildType === type ? 'bg-brand-orange text-black border-brand-orange' : 'border-brand-border bg-slate-900 hover:border-slate-700 text-slate-300'}`}
+              className={`flex-1 py-2 text-[10px] font-normal uppercase rounded border transition-all ${filterBuildType === type ? 'bg-brand-orange text-white sm:text-black border-brand-orange' : 'border-brand-border bg-slate-900 hover:border-slate-700 text-slate-300'}`}
             >
               {type}
             </button>
@@ -187,7 +187,7 @@ export default function ShopView() {
 
       {/* Price */}
       <div className="space-y-1.5">
-        <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+        <div className="flex justify-between text-[10px] font-normal text-slate-400 uppercase tracking-widest">
           <span>Max Budget</span>
           <span className="text-brand-gold">₹{priceRange[1].toLocaleString('en-IN')}</span>
         </div>
@@ -200,7 +200,7 @@ export default function ShopView() {
           onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
           className="w-full accent-brand-orange cursor-pointer"
         />
-        <div className="flex justify-between text-[9px] text-slate-500 font-bold font-mono">
+        <div className="flex justify-between text-[9px] text-slate-500 font-normal font-mono">
           <span>₹5,000</span>
           <span>₹1,50,000</span>
         </div>
@@ -214,8 +214,8 @@ export default function ShopView() {
       {/* Page Header */}
       <div className="rounded-2xl border border-brand-border bg-slate-900/10 p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <span className="text-[10px] text-brand-orange font-bold uppercase tracking-wider block">RC Performance Inventory</span>
-          <h1 className="font-display text-xl sm:text-3xl font-bold uppercase tracking-tight text-white mt-1">
+          <span className="text-[10px] text-brand-orange font-normal uppercase tracking-wider block">RC Performance Inventory</span>
+          <h1 className="font-display text-xl sm:text-3xl font-normal uppercase tracking-tight text-white mt-1">
             {filterBrand !== "ALL" ? `${filterBrand} Garage` : "The Main Track"}
           </h1>
           <p className="text-xs text-slate-400 mt-1">
@@ -223,11 +223,11 @@ export default function ShopView() {
           </p>
         </div>
         <div className="flex items-center gap-2 self-start sm:self-center">
-          <span className="text-xs text-slate-500 font-bold uppercase tracking-wider hidden sm:block">Sort By</span>
+          <span className="text-xs text-slate-500 font-normal uppercase tracking-wider hidden sm:block">Sort By</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="rounded-lg border border-brand-border bg-slate-900 px-3 py-2 text-xs font-bold text-slate-200 focus:border-brand-orange outline-none"
+            className="rounded-lg border border-brand-border bg-slate-900 px-3 py-2 text-xs font-normal text-slate-200 focus:border-brand-orange outline-none"
           >
             <option value="newest">Newest</option>
             <option value="price-asc">Price ↑</option>
@@ -251,7 +251,7 @@ export default function ShopView() {
         </div>
         <button
           onClick={() => setShowMobileFilters(true)}
-          className={`flex items-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs font-bold uppercase whitespace-nowrap transition-all ${activeFiltersCount > 0 ? 'bg-brand-orange border-brand-orange text-black' : 'border-brand-border bg-slate-900 text-slate-300'}`}
+          className={`flex items-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs font-normal uppercase whitespace-nowrap transition-all ${activeFiltersCount > 0 ? 'bg-brand-orange border-brand-orange text-black' : 'border-brand-border bg-slate-900 text-slate-300'}`}
         >
           <SlidersHorizontal className="h-3.5 w-3.5" />
           Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}
@@ -264,12 +264,12 @@ export default function ShopView() {
         {/* Desktop Sidebar — hidden on mobile */}
         <aside className="hidden lg:flex w-72 shrink-0 flex-col rounded-2xl border border-brand-border/50 bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-xl p-6 space-y-6 sticky top-28 shadow-[0_10px_40px_rgba(0,0,0,0.6)] z-20 max-h-[calc(100vh-7rem)] overflow-y-auto custom-scrollbar">
           <div className="flex items-center justify-between border-b border-brand-border pb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
+            <span className="text-xs font-normal uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
               <SlidersHorizontal className="h-4 w-4 text-brand-orange" />
               Tune Filters
             </span>
             {activeFiltersCount > 0 && (
-              <button onClick={resetFilters} className="text-[10px] text-brand-orange font-bold uppercase hover:underline flex items-center gap-0.5">
+              <button onClick={resetFilters} className="text-[10px] text-brand-orange font-normal uppercase hover:underline flex items-center gap-0.5">
                 <RotateCcw className="h-3 w-3" /> Reset
               </button>
             )}
@@ -282,14 +282,14 @@ export default function ShopView() {
           {/* Active filter badges */}
           {activeFiltersCount > 0 && (
             <div className="flex flex-wrap gap-2 items-center bg-slate-950 p-3 rounded-xl border border-brand-border">
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Active:</span>
+              <span className="text-[10px] text-slate-500 font-normal uppercase tracking-wider">Active:</span>
               {searchQuery && <span className="rounded bg-slate-900 border border-brand-border px-2 py-0.5 text-[10px] text-slate-200">"{searchQuery}"</span>}
               {filterBrand !== "ALL" && <span className="rounded bg-slate-900 border border-brand-border px-2 py-0.5 text-[10px] text-slate-200 uppercase">{filterBrand}</span>}
               {filterScale !== "ALL" && <span className="rounded bg-slate-900 border border-brand-border px-2 py-0.5 text-[10px] text-slate-200">{filterScale}</span>}
               {filterTerrain !== "ALL" && <span className="rounded bg-slate-900 border border-brand-border px-2 py-0.5 text-[10px] text-slate-200">{filterTerrain}</span>}
               {filterBuildType !== "ALL" && <span className="rounded bg-slate-900 border border-brand-border px-2 py-0.5 text-[10px] text-slate-200">{filterBuildType}</span>}
               {priceRange[1] < 150000 && <span className="rounded bg-slate-900 border border-brand-border px-2 py-0.5 text-[10px] text-slate-200">Under ₹{priceRange[1].toLocaleString('en-IN')}</span>}
-              <button onClick={resetFilters} className="ml-auto text-[10px] text-brand-orange font-bold flex items-center gap-0.5 hover:underline">
+              <button onClick={resetFilters} className="ml-auto text-[10px] text-brand-orange font-normal flex items-center gap-0.5 hover:underline">
                 <RotateCcw className="h-3 w-3" /> Reset
               </button>
             </div>
@@ -301,9 +301,9 @@ export default function ShopView() {
               <div className="h-12 w-12 rounded-full bg-slate-900 border border-brand-orange flex items-center justify-center mx-auto text-brand-orange">
                 <RotateCcw className="h-6 w-6" />
               </div>
-              <h3 className="font-display text-lg font-bold text-white uppercase">No rigs match your specs</h3>
+              <h3 className="font-display text-lg font-normal text-white uppercase">No rigs match your specs</h3>
               <p className="text-xs text-slate-400 max-w-sm mx-auto">Try widening your budget, clearing search queries, or exploring a different terrain.</p>
-              <button onClick={resetFilters} className="bg-brand-orange text-black font-bold text-xs uppercase px-5 py-2.5 rounded-lg hover:bg-brand-gold transition-colors">
+              <button onClick={resetFilters} className="bg-brand-orange text-white sm:text-black font-normal text-xs uppercase px-5 py-2.5 rounded-lg hover:bg-brand-gold transition-colors">
                 Clear all filters
               </button>
             </div>
@@ -351,13 +351,13 @@ export default function ShopView() {
             </div>
             {/* Sheet header */}
             <div className="flex items-center justify-between px-5 py-3 border-b border-brand-border">
-              <span className="text-sm font-black uppercase tracking-wider text-white flex items-center gap-2">
+              <span className="text-sm font-normal uppercase tracking-wider text-white flex items-center gap-2">
                 <SlidersHorizontal className="h-4 w-4 text-brand-orange" />
                 Tune Filters
               </span>
               <div className="flex items-center gap-3">
                 {activeFiltersCount > 0 && (
-                  <button onClick={resetFilters} className="text-[10px] text-brand-orange font-bold uppercase flex items-center gap-0.5">
+                  <button onClick={resetFilters} className="text-[10px] text-brand-orange font-normal uppercase flex items-center gap-0.5">
                     <RotateCcw className="h-3 w-3" /> Reset
                   </button>
                 )}
@@ -374,7 +374,7 @@ export default function ShopView() {
             <div className="px-5 py-4 border-t border-brand-border">
               <button
                 onClick={() => setShowMobileFilters(false)}
-                className="w-full rounded-xl bg-brand-orange text-black font-black uppercase py-3 text-sm tracking-wider hover:bg-brand-gold transition-colors"
+                className="w-full rounded-xl bg-brand-orange text-white sm:text-black font-normal uppercase py-3 text-sm tracking-wider hover:bg-brand-gold transition-colors"
               >
                 Show {sortedProducts.length} Results
               </button>

@@ -145,7 +145,7 @@ export function AuthPanel() {
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand-orange/10 border border-brand-orange/30 text-brand-orange mb-2">
             <User className="h-6 w-6" />
           </div>
-          <h2 className="font-display text-2xl font-black uppercase tracking-tight text-white leading-none">
+          <h2 className="font-display text-2xl font-normal uppercase tracking-tight text-white leading-none">
             Customer Account
           </h2>
           <p className="text-xs text-slate-400">
@@ -154,8 +154,8 @@ export function AuthPanel() {
         </div>
 
         <div className="grid grid-cols-2 p-1 bg-slate-900 border border-brand-border rounded-xl">
-          <button onClick={() => { setActiveTab('signin'); setErrorMsg(""); setFieldErrors({}); }} className={`py-2 px-3 text-xs font-bold uppercase rounded-lg transition-all ${activeTab === 'signin' ? 'bg-brand-orange text-black font-extrabold' : 'text-slate-400 hover:text-white bg-transparent'}`}>Sign In</button>
-          <button onClick={() => { setActiveTab('signup'); setErrorMsg(""); setFieldErrors({}); }} className={`py-2 px-3 text-xs font-bold uppercase rounded-lg transition-all ${activeTab === 'signup' ? 'bg-brand-orange text-black font-extrabold' : 'text-slate-400 hover:text-white bg-transparent'}`}>Create Account</button>
+          <button onClick={() => { setActiveTab('signin'); setErrorMsg(""); setFieldErrors({}); }} className={`py-2 px-3 text-xs font-normal uppercase rounded-lg transition-all ${activeTab === 'signin' ? 'bg-brand-orange text-white sm:text-black font-normal' : 'text-slate-400 hover:text-white bg-transparent'}`}>Sign In</button>
+          <button onClick={() => { setActiveTab('signup'); setErrorMsg(""); setFieldErrors({}); }} className={`py-2 px-3 text-xs font-normal uppercase rounded-lg transition-all ${activeTab === 'signup' ? 'bg-brand-orange text-white sm:text-black font-normal' : 'text-slate-400 hover:text-white bg-transparent'}`}>Create Account</button>
         </div>
 
         {errorMsg && (
@@ -167,14 +167,14 @@ export function AuthPanel() {
         {activeTab === 'signin' && (
           <form onSubmit={handleSignInSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-[10px] text-slate-500 font-bold uppercase block">Email Address</label>
+              <label className="text-[10px] text-slate-500 font-normal uppercase block">Email Address</label>
               <input type="email" value={signInEmail} onChange={(e) => setSignInEmail(e.target.value)} disabled={isLoading} className={`w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none transition-all ${fieldErrors.signInEmail ? "border-red-500" : "border-brand-border focus:border-brand-orange"}`} />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] text-slate-500 font-bold uppercase block">Password</label>
+              <label className="text-[10px] text-slate-500 font-normal uppercase block">Password</label>
               <input type="password" value={signInPassword} onChange={(e) => setSignInPassword(e.target.value)} disabled={isLoading} className={`w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none transition-all ${fieldErrors.signInPassword ? "border-red-500" : "border-brand-border focus:border-brand-orange"}`} />
             </div>
-            <button type="submit" disabled={isLoading} className="w-full bg-brand-orange text-black font-bold uppercase py-3 rounded-xl hover:bg-brand-gold hover:shadow-glow transition-all flex justify-center items-center">
+            <button type="submit" disabled={isLoading} className="w-full bg-brand-orange text-white sm:text-black font-normal uppercase py-3 rounded-xl hover:bg-brand-gold hover:shadow-glow transition-all flex justify-center items-center">
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign In"}
             </button>
           </form>
@@ -183,26 +183,26 @@ export function AuthPanel() {
         {activeTab === 'signup' && (
           <form onSubmit={handleSignUpSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-[10px] text-slate-500 font-bold uppercase block">Full Name</label>
+              <label className="text-[10px] text-slate-500 font-normal uppercase block">Full Name</label>
               <input type="text" value={signUpName} onChange={(e) => setSignUpName(e.target.value)} disabled={isLoading} className="w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none border-brand-border focus:border-brand-orange" />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] text-slate-500 font-bold uppercase block">Phone Number</label>
+              <label className="text-[10px] text-slate-500 font-normal uppercase block">Phone Number</label>
               <input type="text" value={signUpPhone} onChange={(e) => setSignUpPhone(e.target.value)} disabled={isLoading} className="w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none border-brand-border focus:border-brand-orange" />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] text-slate-500 font-bold uppercase block">Email Address</label>
+              <label className="text-[10px] text-slate-500 font-normal uppercase block">Email Address</label>
               <input type="email" value={signUpEmail} onChange={(e) => setSignUpEmail(e.target.value)} disabled={isLoading} className="w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none border-brand-border focus:border-brand-orange" />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] text-slate-500 font-bold uppercase block">Password</label>
+              <label className="text-[10px] text-slate-500 font-normal uppercase block">Password</label>
               <input type="password" value={signUpPassword} onChange={(e) => setSignUpPassword(e.target.value)} disabled={isLoading} className="w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none border-brand-border focus:border-brand-orange" />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] text-slate-500 font-bold uppercase block">Pincode</label>
+              <label className="text-[10px] text-slate-500 font-normal uppercase block">Pincode</label>
               <input type="text" value={signUpPincode} onChange={(e) => setSignUpPincode(e.target.value)} disabled={isLoading} className="w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none border-brand-border focus:border-brand-orange" />
             </div>
-            <button type="submit" disabled={isLoading} className="w-full bg-brand-orange text-black font-bold uppercase py-3 rounded-xl hover:bg-brand-gold hover:shadow-glow transition-all flex justify-center items-center">
+            <button type="submit" disabled={isLoading} className="w-full bg-brand-orange text-white sm:text-black font-normal uppercase py-3 rounded-xl hover:bg-brand-gold hover:shadow-glow transition-all flex justify-center items-center">
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create Account"}
             </button>
           </form>
