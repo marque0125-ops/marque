@@ -381,7 +381,7 @@ export default function HomeView() {
       </section>
 
       {/* ==================== BRANDS INFINITY SCROLLING MARQUEE ==================== */}
-      <section className="hidden sm:block space-y-6 overflow-hidden">
+      <section className="space-y-6 overflow-hidden">
         {/* Style block for reverse marquee animation keyframe */}
         <style dangerouslySetInnerHTML={{
           __html: `
