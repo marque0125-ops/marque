@@ -75,7 +75,7 @@ export function OrdersTab() {
                 <OrderTrackingMap status={order.status} />
               </div>
 
-              <div className="flex justify-between items-center gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pt-2">
                 <span className="text-[10px] text-slate-500 font-mono">AWB Code: {order.trackingNumber}</span>
                 <div className="flex gap-2">
                   {order.status !== 'delivered' && order.status !== 'cancelled' && (

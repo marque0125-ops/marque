@@ -165,8 +165,8 @@ export function CategoriesTab() {
           </div>
         </form>
       ) : (
-        <div className="rounded-2xl border border-brand-border bg-slate-950 overflow-hidden">
-          <table className="w-full text-left text-xs">
+        <div className="rounded-2xl border border-brand-border bg-slate-950 overflow-x-auto">
+          <table className="w-full text-left text-xs min-w-[600px]">
             <thead className="bg-slate-900 border-b border-brand-border text-[10px] uppercase font-normal text-slate-400 tracking-wider">
               <tr>
                 <th className="px-6 py-4">Image</th>

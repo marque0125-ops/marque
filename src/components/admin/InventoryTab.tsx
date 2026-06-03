@@ -182,7 +182,7 @@ export function InventoryTab() {
 
       {(isAddingProduct || isEditingProduct) ? (
         <form onSubmit={handleSaveProduct} className="space-y-6 bg-slate-900/60 p-6 rounded-2xl border border-brand-border backdrop-blur-md">
-          <div className="flex items-center justify-between border-b border-brand-border pb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-brand-border pb-3 gap-2">
             <h4 className="font-display text-base font-normal uppercase text-white flex items-center gap-2">
               <Car className="h-5 w-5 text-brand-orange" /> {isEditingProduct ? `Edit Model: ${formName}` : "Register New RC Model Chassis"}
             </h4>
@@ -208,6 +208,10 @@ export function InventoryTab() {
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">MRP (Compare Price)</label><input type="number" value={formComparePrice || ""} onChange={(e) => setFormComparePrice(parseInt(e.target.value) || 0)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Scale (e.g. 1:10)</label><input type="text" value={formScale} onChange={(e) => setFormScale(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Top Speed (KM/H)</label><input type="number" value={formSpeedKmh || ""} onChange={(e) => setFormSpeedKmh(parseInt(e.target.value) || 0)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5 md:col-span-4">
+              <label className="text-[10px] text-slate-400 font-normal uppercase block">Product Description</label>
+              <textarea value={formDescription} onChange={(e) => setFormDescription(e.target.value)} required rows={3} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange text-white" />
+            </div>
             <div className="space-y-1.5 md:col-span-4">
               <label className="text-[10px] text-slate-400 font-normal uppercase block">Product Gallery Images</label>
               <div className="flex flex-col gap-4">
@@ -271,7 +275,7 @@ export function InventoryTab() {
           <div className="border-t border-brand-border pt-4 text-xs space-y-4">
             <span className="text-[10px] text-brand-gold font-normal uppercase block">Variants</span>
             <div className="flex flex-col gap-2">
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <input type="text" value={newVarColor} onChange={e => setNewVarColor(e.target.value)} placeholder="Color" className="w-24 rounded bg-slate-900 border border-brand-border p-1.5 text-white" />
                 <input type="text" value={newVarBattery} onChange={e => setNewVarBattery(e.target.value)} placeholder="Battery" className="w-28 rounded bg-slate-900 border border-brand-border p-1.5 text-white" />
                 <input type="text" value={newVarImageUrl} onChange={e => setNewVarImageUrl(e.target.value)} placeholder="Img URL (Opt)" className="w-28 rounded bg-slate-900 border border-brand-border p-1.5 text-white" />
@@ -319,7 +323,7 @@ export function InventoryTab() {
               const brand = BRANDS.find(b => b.id === p.brandId);
               return (
                 <div key={p.id} className="py-6 first:pt-0 last:pb-0 space-y-4">
-                  <div className="flex justify-between border-b border-brand-border/40 pb-3">
+                  <div className="flex flex-col sm:flex-row justify-between sm:items-center border-b border-brand-border/40 pb-3 gap-3">
                     <div className="flex items-center gap-3">
                       <img src={p.images[0]} alt={p.name} className="h-12 w-12 rounded object-cover border border-brand-border" />
                       <div>
@@ -336,7 +340,7 @@ export function InventoryTab() {
                     {p.variants.map((v) => {
                       const isEditing = editingVariantId === v.id;
                       return (
-                        <div key={v.id} className="p-3 rounded-lg border border-brand-border/60 bg-slate-900/60 flex items-center justify-between">
+                        <div key={v.id} className="p-3 rounded-lg border border-brand-border/60 bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="space-y-0.5">
                             <span className="text-[10px] text-slate-300 font-normal block">{v.attributes.color}</span>
                             <span className="text-[9px] font-normal block text-slate-400">Stock: {v.stockQty}</span>

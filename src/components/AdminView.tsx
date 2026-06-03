@@ -26,7 +26,7 @@ export default function AdminView() {
         </div>
 
         {/* Tab triggers */}
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2 mt-2 md:mt-0">
           {[
             { id: 'analytics', label: 'Analytics' },
             { id: 'categories', label: 'Categories' },

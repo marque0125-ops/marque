@@ -339,11 +339,7 @@ export default function PdpView() {
               <span className="text-slate-600">|</span>
               <span className="text-slate-400 uppercase tracking-wider">{selectedProduct.buildType} Class</span>
             </div>
-          </div>
-
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            {selectedProduct.description}
-          </p>
+        </div>
 
           {/* Pricing panel */}
           <div className="p-4 rounded-xl border border-brand-border bg-slate-900/40 space-y-1">
@@ -494,11 +490,11 @@ export default function PdpView() {
         </section>
       )}
 
-      {/* CORE SPECIFICATIONS TABLE & WHAT'S IN THE BOX */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+      {/* CORE SPECIFICATIONS TABLE, DESCRIPTION & WHAT'S IN THE BOX */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start flex-col md:flex-row">
         
         {/* Specs Table */}
-        <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4">
+        <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4 order-1">
           <h3 className="font-display text-lg font-normal text-white uppercase border-b border-brand-border pb-3">
             Chassis Specifications
           </h3>
@@ -512,8 +508,18 @@ export default function PdpView() {
           </div>
         </div>
 
+        {/* Product Description */}
+        <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4 order-2 md:order-3 md:col-span-2">
+          <h3 className="font-display text-lg font-normal text-white uppercase border-b border-brand-border pb-3">
+            Product Details & Description
+          </h3>
+          <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">
+            {selectedProduct.description}
+          </p>
+        </div>
+
         {/* What's In the Box */}
-        <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4">
+        <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4 order-3 md:order-2">
           <h3 className="font-display text-lg font-normal text-white uppercase border-b border-brand-border pb-3">
             What's in the Box?
           </h3>
@@ -669,8 +675,7 @@ export default function PdpView() {
                 <div 
                   key={p.id}
                   onClick={() => {
-                    setSelectedProduct(p);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    router.push('/product/' + p.slug);
                   }}
                   className="group cursor-pointer relative flex flex-col rounded-2xl border border-brand-border bg-slate-900/30 overflow-hidden hover:border-brand-orange hover:bg-slate-900/80 transition-all duration-300 shadow-lg hover:shadow-glow"
                 >

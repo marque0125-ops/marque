@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { User, AlertCircle, Loader2 } from "lucide-react";
+import { User, AlertCircle, Loader2, Eye, EyeOff } from "lucide-react";
 import { supabase } from '../../utils/supabase';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useUIStore } from '../../store/useUIStore';
@@ -23,6 +23,8 @@ export function AuthPanel() {
   const [signUpPassword, setSignUpPassword] = useState("");
   const [signUpAddress, setSignUpAddress] = useState("");
   const [signUpPincode, setSignUpPincode] = useState("600091");
+  const [showSignInPassword, setShowSignInPassword] = useState(false);
+  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -176,7 +178,12 @@ export function AuthPanel() {
             </div>
             <div className="space-y-1.5">
               <label className="text-[10px] text-slate-500 font-normal uppercase block">Password</label>
-              <input type="password" value={signInPassword} onChange={(e) => setSignInPassword(e.target.value)} disabled={isLoading} className={`w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none transition-all ${fieldErrors.signInPassword ? "border-red-500" : "border-brand-border focus:border-brand-orange"}`} />
+              <div className="relative">
+                <input type={showSignInPassword ? "text" : "password"} value={signInPassword} onChange={(e) => setSignInPassword(e.target.value)} disabled={isLoading} className={`w-full rounded-xl border bg-slate-900 py-3 pl-4 pr-10 text-sm text-slate-200 outline-none transition-all ${fieldErrors.signInPassword ? "border-red-500" : "border-brand-border focus:border-brand-orange"}`} />
+                <button type="button" onClick={() => setShowSignInPassword(!showSignInPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+                  {showSignInPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
             <button type="submit" disabled={isLoading} className="w-full bg-brand-orange text-white sm:text-black font-normal uppercase py-3 rounded-xl hover:bg-brand-gold hover:shadow-glow transition-all flex justify-center items-center">
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign In"}
@@ -200,7 +207,12 @@ export function AuthPanel() {
             </div>
             <div className="space-y-1.5">
               <label className="text-[10px] text-slate-500 font-normal uppercase block">Password</label>
-              <input type="password" value={signUpPassword} onChange={(e) => setSignUpPassword(e.target.value)} disabled={isLoading} className="w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none border-brand-border focus:border-brand-orange" />
+              <div className="relative">
+                <input type={showSignUpPassword ? "text" : "password"} value={signUpPassword} onChange={(e) => setSignUpPassword(e.target.value)} disabled={isLoading} className="w-full rounded-xl border bg-slate-900 py-3 pl-4 pr-10 text-sm text-slate-200 outline-none border-brand-border focus:border-brand-orange" />
+                <button type="button" onClick={() => setShowSignUpPassword(!showSignUpPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+                  {showSignUpPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
             <div className="space-y-1.5">
               <label className="text-[10px] text-slate-500 font-normal uppercase block">Pincode</label>

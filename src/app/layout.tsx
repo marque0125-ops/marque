@@ -25,6 +25,7 @@ const Header = dynamic(() => import('../components/Header'), { ssr: false });
 const Footer = dynamic(() => import('../components/Footer'), { ssr: false });
 const GlobalDialog = dynamic(() => import('../components/GlobalDialog').then(mod => mod.GlobalDialog), { ssr: false });
 const ClientProviders = dynamic(() => import('../components/ClientProviders'), { ssr: false });
+const WhatsAppButton = dynamic(() => import('../components/WhatsAppButton'), { ssr: false });
 
 export default function RootLayout({
   children,
@@ -50,6 +51,9 @@ export default function RootLayout({
 
           {/* Global Modals */}
           <GlobalDialog />
+          
+          {/* Floating WhatsApp Button */}
+          <WhatsAppButton />
         </div>
       </body>
     </html>
