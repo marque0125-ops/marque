@@ -10,13 +10,13 @@ export default function RacingView() {
   const router = useRouter();
 
   return (
-    <div className="space-y-16 pb-24">
+    <div className="space-y-4 pb-24">
       {/* Hero Header Section */}
-      <section className="relative rounded-3xl border border-brand-border bg-slate-950 py-16 px-6 sm:px-12 text-center overflow-hidden">
+      <section className="relative rounded-3xl border border-brand-border bg-slate-950 py-2 px-6 sm:px-12 text-center overflow-hidden">
         {/* Glows */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[400px] w-[800px] rounded-full bg-brand-orange/10 blur-[120px] pointer-events-none" />
         
-        <div className="relative z-10 max-w-4xl mx-auto space-y-6">
+        <div className="relative z-10 max-w-4xl mx-auto space-y-2">
           <div className="inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-brand-orange/10 px-4 py-1.5 text-xs font-normal text-brand-orange uppercase tracking-wider">
             <Flame className="h-4 w-4" />
             Live Event Coverage & Bashing
