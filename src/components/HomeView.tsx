@@ -211,11 +211,6 @@ export default function HomeView() {
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Left Column (Copy and CTA) */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-brand-orange/10 px-3 py-1 text-xs font-normal text-brand-orange uppercase tracking-wider">
-              <Flame className="h-3.5 w-3.5" />
-              Spotlight: Traxxas X-Maxx 8S
-            </div>
-
             <h1 className="font-display text-2xl sm:text-5xl lg:text-6xl font-normal uppercase tracking-tight text-white leading-none">
               Ultimate destination for<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-gold">
@@ -227,20 +222,20 @@ export default function HomeView() {
               Experience 130+ km/h runs, fully waterproof brushless motors, and high-performance accessories/spares. MARQUE brings the world's most extreme RC cars and accessories to Indian bashers and track racers.
             </p>
 
-            <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-2">
               <button
-                onClick={() => { setFilterBrand('ALL'); router.push('/shop'); }}
+                onClick={() => router.push('/new-arrival')}
                 className="group flex items-center justify-center gap-2 rounded-xl bg-brand-orange px-6 py-3.5 text-sm font-normal text-white sm:text-black hover:bg-brand-gold hover:shadow-glow transition-all duration-300 uppercase tracking-wider"
               >
-                Explore Track Rigs
+                🆕 NEW ARRIVAL: EXPLORE NOW
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </button>
 
               <button
-                onClick={() => handleBrandClick('traxxas')}
+                onClick={() => router.push('/racing')}
                 className="rounded-xl border border-brand-border bg-slate-900/60 hover:bg-slate-900 px-6 py-3.5 text-sm font-normal text-white hover:border-brand-orange transition-all duration-300 uppercase tracking-wider"
               >
-                Shop Traxxas VXL
+                WATCH LIVE RACING & BASHING 🎬
               </button>
             </div>
           </div>

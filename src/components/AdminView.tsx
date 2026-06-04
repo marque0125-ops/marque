@@ -7,9 +7,11 @@ import { InventoryTab } from "./admin/InventoryTab";
 import { OrdersTab } from "./admin/OrdersTab";
 import BlogTab from "./admin/BlogTab";
 import { BannersTab } from "./admin/BannersTab";
+import { VideosTab } from "./admin/VideosTab";
+import { RacingVideosTab } from "./admin/RacingVideosTab";
 
 export default function AdminView() {
-  const [activeTab, setActiveTab] = useState<'analytics' | 'categories' | 'inventory' | 'orders' | 'blog' | 'banners'>('analytics');
+  const [activeTab, setActiveTab] = useState<'analytics' | 'categories' | 'inventory' | 'orders' | 'blog' | 'banners' | 'videos' | 'racing'>('analytics');
 
   return (
     <div className="space-y-10 pb-20">
@@ -33,7 +35,9 @@ export default function AdminView() {
             { id: 'inventory', label: 'Inventory (CRUD)' },
             { id: 'orders', label: 'Order Dispatch' },
             { id: 'blog', label: 'Blog Articles' },
-            { id: 'banners', label: 'Hero Banners' }
+            { id: 'banners', label: 'Hero Banners' },
+            { id: 'videos', label: 'Unboxing Videos' },
+            { id: 'racing', label: 'Racing Videos' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -52,6 +56,8 @@ export default function AdminView() {
       {activeTab === 'orders' && <OrdersTab />}
       {activeTab === 'blog' && <BlogTab />}
       {activeTab === 'banners' && <BannersTab />}
+      {activeTab === 'videos' && <VideosTab />}
+      {activeTab === 'racing' && <RacingVideosTab />}
     </div>
   );
 }

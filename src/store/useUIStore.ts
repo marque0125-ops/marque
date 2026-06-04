@@ -10,6 +10,20 @@ export interface BannerSlide {
   titleSub: string;
 }
 
+export interface UnboxingVideo {
+  id: string;
+  title: string;
+  url: string;
+  description: string;
+}
+
+export interface RacingVideo {
+  id: string;
+  title: string;
+  url: string;
+  description: string;
+}
+
 export interface DialogOptions {
   isOpen: boolean;
   type: 'alert' | 'confirm';
@@ -52,6 +66,16 @@ export interface UIState {
   addPromoBanner: (banner: BannerSlide) => void;
   updatePromoBanner: (banner: BannerSlide) => void;
   removePromoBanner: (id: string) => void;
+
+  unboxingVideos: UnboxingVideo[];
+  addUnboxingVideo: (video: UnboxingVideo) => void;
+  updateUnboxingVideo: (video: UnboxingVideo) => void;
+  removeUnboxingVideo: (id: string) => void;
+
+  racingVideos: RacingVideo[];
+  addRacingVideo: (video: RacingVideo) => void;
+  updateRacingVideo: (video: RacingVideo) => void;
+  removeRacingVideo: (id: string) => void;
 }
 
 const safeStorage = {
@@ -168,6 +192,24 @@ export const useUIStore = create<UIState>()(
       removePromoBanner: (id) => set((state) => ({
         promoBanners: state.promoBanners.filter((b) => b.id !== id)
       })),
+
+      unboxingVideos: [],
+      addUnboxingVideo: (video) => set((state) => ({ unboxingVideos: [...state.unboxingVideos, video] })),
+      updateUnboxingVideo: (video) => set((state) => ({
+        unboxingVideos: state.unboxingVideos.map((v) => v.id === video.id ? video : v)
+      })),
+      removeUnboxingVideo: (id) => set((state) => ({
+        unboxingVideos: state.unboxingVideos.filter((v) => v.id !== id)
+      })),
+
+      racingVideos: [],
+      addRacingVideo: (video) => set((state) => ({ racingVideos: [...state.racingVideos, video] })),
+      updateRacingVideo: (video) => set((state) => ({
+        racingVideos: state.racingVideos.map((v) => v.id === video.id ? video : v)
+      })),
+      removeRacingVideo: (id) => set((state) => ({
+        racingVideos: state.racingVideos.filter((v) => v.id !== id)
+      })),
     }),
     {
       name: "marque-ui-storage",
@@ -176,7 +218,9 @@ export const useUIStore = create<UIState>()(
         lowStockAlerts: state.lowStockAlerts,
         announcementText: state.announcementText,
         heroBanners: state.heroBanners,
-        promoBanners: state.promoBanners
+        promoBanners: state.promoBanners,
+        unboxingVideos: state.unboxingVideos,
+        racingVideos: state.racingVideos
       }),
       version: 1
     }
