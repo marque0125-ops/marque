@@ -65,9 +65,6 @@ export function OrdersTab() {
                 <div>
                   <span className="text-[9px] text-slate-500 font-normal uppercase tracking-wider block">Consignment Value</span>
                   <span className="font-mono text-slate-200 font-normal block">₹{order.totalAmount.toLocaleString('en-IN')}</span>
-                  {order.shippingAddress.gstin && (
-                    <span className="text-[9px] text-brand-gold font-normal block mt-1 uppercase">B2B GSTIN INCLUDED</span>
-                  )}
                 </div>
               </div>
 

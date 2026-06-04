@@ -35,7 +35,6 @@ export interface Order {
     city: string;
     state: string;
     pincode: string;
-    gstin?: string;
   };
   createdAt: string;
   logs: { status: string; timestamp: string; message: string }[];

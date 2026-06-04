@@ -9,7 +9,6 @@ export interface Address {
   city: string;
   state: string;
   pincode: string;
-  gstin?: string;
 }
 
 interface AuthState {
@@ -37,7 +36,6 @@ export const useAuthStore = create<AuthState>()(
         city: "Chennai",
         state: "Tamil Nadu",
         pincode: "600091",
-        gstin: ""
       },
       setUserEmail: (email) => set({ userEmail: email }),
       setAddress: (fields) => set(state => ({ address: { ...state.address, ...fields } })),
@@ -117,7 +115,6 @@ export const useAuthStore = create<AuthState>()(
           city: profile.city || "Chennai",
           state: profile.state || "Tamil Nadu",
           pincode: profile.pincode || "600091",
-          gstin: profile.gstin || ""
         }
       })),
       logout: () => {
@@ -137,7 +134,6 @@ export const useAuthStore = create<AuthState>()(
             city: "",
             state: "",
             pincode: "",
-            gstin: ""
           }
         });
       }

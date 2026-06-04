@@ -77,7 +77,6 @@ export interface Database {
           city: string | null
           state: string | null
           pincode: string | null
-          gstin: string | null
           updated_at: string
         }
         Insert: {
@@ -88,7 +87,6 @@ export interface Database {
           city?: string | null
           state?: string | null
           pincode?: string | null
-          gstin?: string | null
           updated_at?: string
         }
         Update: Partial<Database['public']['Tables']['profiles']['Insert']>

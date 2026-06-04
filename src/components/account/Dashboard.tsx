@@ -27,8 +27,7 @@ export function Dashboard() {
     addressLine: address.addressLine || "",
     city: address.city || "",
     state: address.state || "",
-    pincode: address.pincode || "",
-    gstin: address.gstin || ""
+    pincode: address.pincode || ""
   });
 
   const handleEditOpen = () => {
@@ -38,8 +37,7 @@ export function Dashboard() {
       addressLine: address.addressLine || "",
       city: address.city || "",
       state: address.state || "",
-      pincode: address.pincode || "",
-      gstin: address.gstin || ""
+      pincode: address.pincode || ""
     });
     setIsEditingProfile(true);
   };
@@ -128,10 +126,7 @@ export function Dashboard() {
                   <label className="text-[10px] text-slate-400 font-normal uppercase block">Pincode</label>
                   <input type="text" value={editForm.pincode} onChange={e => setEditForm({...editForm, pincode: e.target.value})} required className="w-full rounded-xl bg-slate-950 border border-brand-border py-2 px-3 text-xs focus:border-brand-orange" />
                 </div>
-                <div className="space-y-1.5">
-                  <label className="text-[10px] text-slate-400 font-normal uppercase block">B2B GSTIN (Optional)</label>
-                  <input type="text" value={editForm.gstin} onChange={e => setEditForm({...editForm, gstin: e.target.value})} className="w-full rounded-xl bg-slate-950 border border-brand-border py-2 px-3 text-xs focus:border-brand-orange font-mono" />
-                </div>
+
               </div>
               <div className="flex gap-2 pt-2 border-t border-brand-border/40">
                 <button type="button" onClick={() => setIsEditingProfile(false)} className="flex-1 py-2 text-xs font-normal uppercase rounded-lg border border-brand-border text-slate-400 hover:bg-slate-800">Cancel</button>
@@ -154,10 +149,7 @@ export function Dashboard() {
                 <MapPin className="h-4 w-4 text-slate-500 shrink-0 mt-0.5" />
                 <div><span className="text-[9px] text-slate-500 font-normal uppercase block">Default Delivery Address</span><span className="text-xs text-slate-200">{address.addressLine}</span><span className="text-xs text-slate-200 block">{address.city}, {address.state} - {address.pincode}</span></div>
               </div>
-              <div className="flex items-start gap-3">
-                <ShieldCheck className="h-4 w-4 text-brand-gold shrink-0 mt-0.5" />
-                <div><span className="text-[9px] text-slate-500 font-normal uppercase block">B2B GSTIN</span><span className="text-xs text-slate-200 font-mono">{address.gstin || "Not Registered for B2B"}</span></div>
-              </div>
+
             </div>
           )}
         </div>

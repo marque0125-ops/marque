@@ -9,9 +9,10 @@ import BlogTab from "./admin/BlogTab";
 import { BannersTab } from "./admin/BannersTab";
 import { VideosTab } from "./admin/VideosTab";
 import { RacingVideosTab } from "./admin/RacingVideosTab";
+import { SiteContentTab } from "./admin/SiteContentTab";
 
 export default function AdminView() {
-  const [activeTab, setActiveTab] = useState<'analytics' | 'categories' | 'inventory' | 'orders' | 'blog' | 'banners' | 'videos' | 'racing'>('analytics');
+  const [activeTab, setActiveTab] = useState<'analytics' | 'categories' | 'inventory' | 'orders' | 'blog' | 'banners' | 'videos' | 'racing' | 'site_content'>('analytics');
 
   return (
     <div className="space-y-10 pb-20">
@@ -36,6 +37,7 @@ export default function AdminView() {
             { id: 'orders', label: 'Order Dispatch' },
             { id: 'blog', label: 'Blog Articles' },
             { id: 'banners', label: 'Hero Banners' },
+            { id: 'site_content', label: 'Site Content' },
             { id: 'videos', label: 'Unboxing Videos' },
             { id: 'racing', label: 'Racing Videos' }
           ].map((tab) => (
@@ -56,6 +58,7 @@ export default function AdminView() {
       {activeTab === 'orders' && <OrdersTab />}
       {activeTab === 'blog' && <BlogTab />}
       {activeTab === 'banners' && <BannersTab />}
+      {activeTab === 'site_content' && <SiteContentTab />}
       {activeTab === 'videos' && <VideosTab />}
       {activeTab === 'racing' && <RacingVideosTab />}
     </div>

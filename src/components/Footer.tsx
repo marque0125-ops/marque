@@ -101,7 +101,7 @@ export default function Footer() {
               <li className="flex items-start gap-2">
                 <HelpCircle className="h-4.5 w-4.5 text-brand-gold shrink-0 mt-0.5" />
                 <span>
-                  <strong>GST (18%) auto-applied</strong>. HSN Code 9503 standard. Business input credit (GSTIN invoices auto-generated).
+                  <strong>GST (18%) auto-applied</strong>. HSN Code 9503 standard. Tax invoices auto-generated.
                 </span>
               </li>
               <li className="flex items-start gap-2">

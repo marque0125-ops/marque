@@ -29,8 +29,7 @@ describe('useAuthStore', () => {
         addressLine: '',
         city: '',
         state: '',
-        pincode: '',
-        gstin: ''
+        pincode: '600091'
       }
     });
   });

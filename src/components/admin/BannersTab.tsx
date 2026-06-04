@@ -9,7 +9,8 @@ export function BannersTab() {
   const { showDialog } = useUIStore();
   const { 
     heroBanners, addHeroBanner, updateHeroBanner, removeHeroBanner,
-    promoBanners, addPromoBanner, updatePromoBanner, removePromoBanner
+    promoBanners, addPromoBanner, updatePromoBanner, removePromoBanner,
+    heroTitleLine1, heroTitleLine2, heroDescription, updateHeroText
   } = useUIStore();
 
   const [activeTab, setActiveTab] = useState<'hero' | 'promo'>('hero');
@@ -22,6 +23,29 @@ export function BannersTab() {
   const [formBadgeText, setFormBadgeText] = useState("");
   const [formTitleMain, setFormTitleMain] = useState("");
   const [formTitleSub, setFormTitleSub] = useState("");
+
+  const [isEditingHeroText, setIsEditingHeroText] = useState(false);
+  const [heroTextForm, setHeroTextForm] = useState({
+    line1: "",
+    line2: "",
+    desc: ""
+  });
+
+  const handleEditHeroText = () => {
+    setHeroTextForm({
+      line1: heroTitleLine1,
+      line2: heroTitleLine2,
+      desc: heroDescription
+    });
+    setIsEditingHeroText(true);
+  };
+
+  const handleSaveHeroText = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateHeroText(heroTextForm.line1, heroTextForm.line2, heroTextForm.desc);
+    setIsEditingHeroText(false);
+    showDialog({ title: 'Success', message: 'Hero text updated successfully!' });
+  };
 
   const resetForm = () => {
     setFormImageUrl("");
@@ -114,6 +138,53 @@ export function BannersTab() {
           Standalone Promo Slider
         </button>
       </div>
+
+      {/* Hero Text Editor Section */}
+      {activeTab === 'hero' && (
+        <div className="bg-slate-950 p-6 rounded-2xl border border-brand-border space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200">
+              Hero Header Text
+            </h3>
+            {!isEditingHeroText && (
+              <button onClick={handleEditHeroText} className="text-slate-400 hover:text-brand-orange text-xs uppercase flex items-center gap-1">
+                <Edit2 className="h-3 w-3" /> Edit Text
+              </button>
+            )}
+          </div>
+
+          {isEditingHeroText ? (
+            <form onSubmit={handleSaveHeroText} className="space-y-4 bg-slate-900/50 p-4 rounded-xl border border-brand-border">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] text-slate-400 font-normal uppercase block">Line 1</label>
+                  <input type="text" value={heroTextForm.line1} onChange={(e) => setHeroTextForm({...heroTextForm, line1: e.target.value})} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 text-xs focus:border-brand-orange text-white" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] text-slate-400 font-normal uppercase block">Line 2 (Colored)</label>
+                  <input type="text" value={heroTextForm.line2} onChange={(e) => setHeroTextForm({...heroTextForm, line2: e.target.value})} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 text-xs focus:border-brand-orange text-white" />
+                </div>
+                <div className="space-y-1.5 md:col-span-2">
+                  <label className="text-[10px] text-slate-400 font-normal uppercase block">Description</label>
+                  <textarea value={heroTextForm.desc} onChange={(e) => setHeroTextForm({...heroTextForm, desc: e.target.value})} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 text-xs focus:border-brand-orange text-white" rows={2} />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <button type="button" onClick={() => setIsEditingHeroText(false)} className="px-4 py-2 text-xs uppercase text-slate-400">Cancel</button>
+                <button type="submit" className="bg-brand-orange px-4 py-2 rounded-lg text-xs uppercase text-black hover:bg-brand-gold flex items-center gap-1">
+                  <Save className="h-3 w-3" /> Save Text
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className="space-y-2 text-sm">
+              <div className="flex gap-4"><span className="w-24 text-[10px] uppercase text-slate-500">Line 1:</span> <span className="text-white font-display">{heroTitleLine1}</span></div>
+              <div className="flex gap-4"><span className="w-24 text-[10px] uppercase text-slate-500">Line 2:</span> <span className="text-brand-orange font-display">{heroTitleLine2}</span></div>
+              <div className="flex gap-4"><span className="w-24 text-[10px] uppercase text-slate-500">Desc:</span> <span className="text-slate-300 text-xs">{heroDescription}</span></div>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-950 p-6 rounded-2xl border border-brand-border">
         <div className="space-y-1">

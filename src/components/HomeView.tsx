@@ -52,7 +52,13 @@ export default function HomeView() {
   const {
     setSelectedProduct,
     heroBanners,
-    promoBanners
+    promoBanners,
+    heroTitleLine1,
+    heroTitleLine2,
+    heroDescription,
+    brandsBadge, brandsTitle, brandsSubtitle, brandsList,
+    aboutBadge, aboutTitleLine1, aboutTitleLine2, aboutSubtitle, aboutDescription, aboutBullets, aboutImage, aboutImageOverlayTitle, aboutImageOverlaySubtitle,
+    testimonialsBadge, testimonialsTitle, testimonialsList
   } = useUIStore();
   const router = useRouter();
 
@@ -134,28 +140,6 @@ export default function HomeView() {
     })
     .slice(0, 6); // Impel displays 6 items in this showcase
 
-  // Testimonials database
-  const testimonials = [
-    {
-      name: "Vikram Malhotra",
-      role: "Verified Traxxas X-Maxx Owner • Chennai",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
-      quote: "Purchased the Solar Flare Orange X-Maxx and it has been absolute insanity. Handled rocky terrains in Lonavala and water streams effortlessly. Unbelievable construction and raw power! Delivery to Madipakkam was incredibly fast."
-    },
-    {
-      name: "Rohan Das",
-      role: "Club Racer • Bengaluru",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
-      quote: "I've jumped the Arrma Infraction off a 6-foot mud ramp at least 30 times. Not a single suspension arm or gear broke. It's expensive but you get exactly what you pay for: bulletproof RC engineering. Spektrum Smart telemetry is top-tier!"
-    },
-    {
-      name: "Priyanjali Sen",
-      role: "Drift Enthusiast • Mumbai",
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
-      quote: "For the price, the carbon fiber and anodized aluminum on the AM-X12 speed car is unbelievable. The car is super responsive and literally flies on a 3S pack. Tuning options are usually reserved for high-end kits."
-    }
-  ];
-
   return (
 
     <div className="space-y-8 sm:space-y-24 pb-12 sm:pb-24">
@@ -212,14 +196,14 @@ export default function HomeView() {
           {/* Left Column (Copy and CTA) */}
           <div className="lg:col-span-7 space-y-6">
             <h1 className="font-display text-2xl sm:text-5xl lg:text-6xl font-normal uppercase tracking-tight text-white leading-none">
-              Ultimate destination for<br />
+              {heroTitleLine1}<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-gold">
-                extreme RC cars
+                {heroTitleLine2}
               </span>
             </h1>
 
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-              Experience 130+ km/h runs, fully waterproof brushless motors, and high-performance accessories/spares. MARQUE brings the world's most extreme RC cars and accessories to Indian bashers and track racers.
+              {heroDescription}
             </p>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-2">
@@ -395,13 +379,13 @@ export default function HomeView() {
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-1.5 text-xs font-normal text-brand-gold uppercase tracking-widest">
             <Sparkles className="h-4 w-4" />
-            Elite Racing Makes
+            {brandsBadge}
           </div>
           <h2 className="font-display text-2xl sm:text-3xl font-normal uppercase text-white tracking-tight">
-            Championship Lineup
+            {brandsTitle}
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm max-w-md mx-auto">
-            Click any manufacturer badge to immediately filter the garage catalog.
+            {brandsSubtitle}
           </p>
         </div>
 
@@ -410,23 +394,7 @@ export default function HomeView() {
           {/* Parallax Left-scrolling ribbon */}
           <div className="flex w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]">
             <div className="flex gap-8 shrink-0 animate-marquee-normal hover:[animation-play-state:paused] py-2">
-              {[
-                { name: "TRAXXAS", logo: "/logo_traxxas.png", country: "USA", flag: "🇺🇸" },
-                { name: "ARRMA", logo: "/logo_arrma.png", country: "UK", flag: "🇬🇧" },
-                { name: "RLAARLO", logo: "/logo_rlaarlo.png", country: "Hong Kong", flag: "🇭🇰" },
-                { name: "MJX", logo: "/logo_mjx.png", country: "China", flag: "🇨🇳" },
-                { name: "FMS", logo: "/logo_fms.png", country: "China", flag: "🇨🇳" },
-                { name: "MN MODEL", logo: "/logo_mnmodel.png", country: "China", flag: "🇨🇳" },
-                { name: "HOT WHEELS", logo: "/logo_hotwheels.png", country: "USA", flag: "🇺🇸" }
-              ].concat([
-                { name: "TRAXXAS", logo: "/logo_traxxas.png", country: "USA", flag: "🇺🇸" },
-                { name: "ARRMA", logo: "/logo_arrma.png", country: "UK", flag: "🇬🇧" },
-                { name: "RLAARLO", logo: "/logo_rlaarlo.png", country: "Hong Kong", flag: "🇭🇰" },
-                { name: "MJX", logo: "/logo_mjx.png", country: "China", flag: "🇨🇳" },
-                { name: "FMS", logo: "/logo_fms.png", country: "China", flag: "🇨🇳" },
-                { name: "MN MODEL", logo: "/logo_mnmodel.png", country: "China", flag: "🇨🇳" },
-                { name: "HOT WHEELS", logo: "/logo_hotwheels.png", country: "USA", flag: "🇺🇸" }
-              ]).map((brand, idx) => {
+              {brandsList.concat(brandsList).map((brand, idx) => {
                 let glowColor = "rgba(239, 68, 68, 0.25)"; // Default Red
                 if (brand.name === "ARRMA") glowColor = "rgba(220, 38, 38, 0.3)";
                 if (brand.name === "RLAARLO") glowColor = "rgba(34, 197, 94, 0.3)";
@@ -596,26 +564,22 @@ export default function HomeView() {
             <div className="space-y-6">
               <span className="flex items-center gap-3 text-xs text-brand-orange font-normal uppercase tracking-[0.2em]">
                 <span className="w-8 h-px bg-brand-orange/50"></span>
-                Welcome to MARQUE
+                {aboutBadge}
               </span>
               <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-normal uppercase tracking-tight text-white leading-[1.05]">
-                Sleek Rigs,<br />Smart Prices.<br />
+                {aboutTitleLine1}<br />{aboutTitleLine2}<br />
                 <span className="text-slate-400 font-normal tracking-normal normal-case text-2xl sm:text-3xl block mt-4">
-                  Your ideal car is a click away.
+                  {aboutSubtitle}
                 </span>
               </h2>
             </div>
 
             <p className="text-slate-300 text-base leading-relaxed max-w-lg">
-              MARQUE is India's dedicated hub for authentic, hobby-grade remote control scale engineering and premium accessories. We source directly from elite international manufacturers, providing bash-tested rigs, performance upgrades, and spare parts.
+              {aboutDescription}
             </p>
 
             <ul className="space-y-4 pt-2">
-              {[
-                "100% Genuine models with sealed manufacturer pack guarantees.",
-                "18% Inclusive GST billing with business HSN inputs.",
-                "Dedicated Madipakkam technical support for repairs."
-              ].map((bullet, idx) => (
+              {aboutBullets.map((bullet, idx) => (
                 <li key={idx} className="flex items-start gap-4">
                   <div className="mt-1 bg-brand-orange rounded-full p-0.5 shrink-0">
                     <CheckCircle2 className="h-3 w-3 text-black" />
@@ -637,7 +601,7 @@ export default function HomeView() {
 
           <div className="order-1 lg:order-2 relative w-full aspect-square sm:aspect-[4/3] rounded-[2rem] overflow-hidden group border border-white/5 shadow-2xl">
             <Image
-              src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80"
+              src={aboutImage}
               alt="Premium RC Engineering"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -651,8 +615,8 @@ export default function HomeView() {
                   <Trophy className="h-6 w-6 text-black" />
                 </div>
                 <div>
-                  <p className="text-white font-normal text-sm sm:text-base tracking-wide">Premium Quality</p>
-                  <p className="text-slate-300 text-xs sm:text-sm font-normal">Guaranteed Performance</p>
+                  <p className="text-white font-normal text-sm sm:text-base tracking-wide">{aboutImageOverlayTitle}</p>
+                  <p className="text-slate-300 text-xs sm:text-sm font-normal">{aboutImageOverlaySubtitle}</p>
                 </div>
               </div>
             </div>
@@ -706,7 +670,7 @@ export default function HomeView() {
             },
             {
               title: "Transparent GST Invoicing",
-              desc: "Standard 18% inclusive GSTIN pricing on all parts, accessories, and RTR vehicles.",
+              desc: "Standard 18% inclusive GST pricing on all parts, accessories, and RTR vehicles.",
               icon: Layers
             },
             {
@@ -747,10 +711,10 @@ export default function HomeView() {
         <div className="space-y-8 relative z-10">
           <div className="text-center space-y-2">
             <span className="text-[10px] text-brand-orange font-normal uppercase tracking-widest block">
-              Pilot Reviews
+              {testimonialsBadge}
             </span>
             <h2 className="font-display text-xl sm:text-2xl font-normal uppercase text-white">
-              What Our Customers Say
+              {testimonialsTitle}
             </h2>
           </div>
 
@@ -758,22 +722,22 @@ export default function HomeView() {
           <div className="space-y-6">
             <Quote className="mx-auto h-8 w-8 text-brand-orange/30 rotate-180" />
             <blockquote className="font-display text-sm sm:text-lg font-normal text-slate-200 leading-relaxed italic max-w-2xl mx-auto">
-              "{testimonials[testimonialIndex].quote}"
+              "{testimonialsList[testimonialIndex]?.quote}"
             </blockquote>
             <div className="flex items-center justify-center gap-3">
               <Image
-                src={testimonials[testimonialIndex].avatar}
-                alt={testimonials[testimonialIndex].name}
+                src={testimonialsList[testimonialIndex]?.avatar || "/placeholder.jpg"}
+                alt={testimonialsList[testimonialIndex]?.name || ""}
                 width={40}
                 height={40}
                 className="rounded-full border border-brand-border object-cover"
               />
               <div className="text-left">
                 <span className="font-normal text-white block text-xs sm:text-sm">
-                  {testimonials[testimonialIndex].name}
+                  {testimonialsList[testimonialIndex]?.name}
                 </span>
                 <span className="text-[10px] text-slate-500 font-normal uppercase tracking-wider block">
-                  {testimonials[testimonialIndex].role}
+                  {testimonialsList[testimonialIndex]?.role}
                 </span>
               </div>
             </div>
@@ -781,11 +745,11 @@ export default function HomeView() {
 
           {/* Testimonial Slide Buttons */}
           <div className="flex justify-center gap-2 pt-2">
-            {testimonials.map((_, idx) => (
+            {testimonialsList.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setTestimonialIndex(idx)}
-                className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${testimonialIndex === idx ? "bg-brand-orange w-6" : "bg-slate-800"
+                className={`h-2 rounded-full transition-all duration-300 ${idx === testimonialIndex ? "bg-brand-orange w-6" : "bg-brand-orange/20 hover:bg-brand-orange/50 w-2"
                   }`}
               />
             ))}

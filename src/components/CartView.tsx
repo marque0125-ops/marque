@@ -54,12 +54,6 @@ export default function CartView() {
   const [couponInput, setCouponInput] = useState("");
   const [couponFeedback, setCouponFeedback] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-  // B2B state
-  const [isB2B, setIsB2B] = useState(false);
-  const [gstinInput, setGstinInput] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [gstinError, setGstinError] = useState("");
-
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
 
   // Subtotal calculation
@@ -110,21 +104,6 @@ export default function CartView() {
     checkPincode(pin);
   };
 
-  const handleGstinValidate = (e: React.FocusEvent<HTMLInputElement>) => {
-    const val = e.target.value.toUpperCase();
-    setGstinInput(val);
-
-    // 15 Character GSTIN standard validation regex
-    const regex = /\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}/;
-    if (val && !regex.test(val)) {
-      setGstinError("Invalid Indian GSTIN structure. Example: 27AAAAA1111A1Z1");
-      setAddress({ gstin: "" });
-    } else {
-      setGstinError("");
-      setAddress({ gstin: val });
-    }
-  };
-
   const handleProceed = () => {
     if (cart.length === 0) return;
 
@@ -146,11 +125,6 @@ export default function CartView() {
 
     if (!address.name || !address.phone || !address.addressLine) {
       showDialog({ title: 'Notice', message: "DELIVERY DETAILS REQUIRED: Please fill in receiver's name, phone, and complete street address." });
-      return;
-    }
-
-    if (isB2B && (!gstinInput || gstinError)) {
-      showDialog({ title: 'Notice', message: "B2B INVOICING: Please supply a valid GSTIN or uncheck business billing." });
       return;
     }
 
@@ -343,11 +317,6 @@ export default function CartView() {
                   <span className="text-slate-500 block uppercase font-normal text-[9px]">State & Pincode</span>
                   <span className="text-slate-200 font-normal">{address.state} - {address.pincode}</span>
                 </div>
-                {isB2B && address.gstin && (
-                  <div className="col-span-2 p-2 bg-slate-900 rounded border border-brand-border/40 text-[10px] text-brand-gold">
-                    <strong>B2B Invoicing Active:</strong> {companyName} (GSTIN: {address.gstin})
-                  </div>
-                )}
               </div>
             </div>
 
@@ -727,53 +696,6 @@ export default function CartView() {
               )}
             </div>
 
-            {/* B2B Invoicing section */}
-            <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-4">
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  id="b2b-check"
-                  checked={isB2B}
-                  onChange={(e) => setIsB2B(e.target.checked)}
-                  className="accent-brand-orange h-4 w-4"
-                />
-                <label htmlFor="b2b-check" className="text-xs font-normal text-slate-300 uppercase cursor-pointer select-none">
-                  Request B2B GSTIN Tax Invoice
-                </label>
-              </div>
-
-              {isB2B && (
-                <div className="space-y-3 text-xs pt-1">
-                  <div className="space-y-1">
-                    <label className="text-[9px] text-slate-500 uppercase font-normal tracking-wider">Registered Corporate Entity Name</label>
-                    <input
-                      type="text"
-                      value={companyName}
-                      onChange={(e) => setCompanyName(e.target.value)}
-                      placeholder="e.g. Speedster RC Club Private Limited"
-                      className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-slate-200 outline-none focus:border-brand-orange"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex justify-between">
-                      <label className="text-[9px] text-slate-500 uppercase font-normal tracking-wider">15-Digit India GSTIN Number</label>
-                      {gstinError && <span className="text-[8px] text-red-500 font-normal">{gstinError}</span>}
-                    </div>
-                    <input
-                      type="text"
-                      value={gstinInput}
-                      onChange={(e) => setGstinInput(e.target.value.toUpperCase())}
-                      onBlur={handleGstinValidate}
-                      placeholder="e.g. 27AAAAA1111A1Z1"
-                      className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-slate-200 outline-none focus:border-brand-orange font-mono"
-                    />
-                  </div>
-                  <p className="text-[9px] text-slate-500 leading-relaxed">
-                    GST input credit requires validation matches. If successful, 18% HSN 9503 tax will reflect on your official credit invoice.
-                  </p>
-                </div>
-              )}
-            </div>
 
             {/* Checkout Pricing Manifest */}
             <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-6">

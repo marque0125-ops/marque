@@ -24,6 +24,22 @@ export interface RacingVideo {
   description: string;
 }
 
+export interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  quote: string;
+  avatar: string;
+}
+
+export interface BrandLogo {
+  id: string;
+  name: string;
+  logo: string;
+  country: string;
+  flag: string;
+}
+
 export interface DialogOptions {
   isOpen: boolean;
   type: 'alert' | 'confirm';
@@ -56,6 +72,39 @@ export interface UIState {
 
   announcementText: string;
   setAnnouncementText: (text: string) => void;
+
+  heroTitleLine1: string;
+  heroTitleLine2: string;
+  heroDescription: string;
+  updateHeroText: (line1: string, line2: string, desc: string) => void;
+
+  brandsBadge: string;
+  brandsTitle: string;
+  brandsSubtitle: string;
+  updateBrandsText: (badge: string, title: string, subtitle: string) => void;
+  brandsList: BrandLogo[];
+  addBrand: (brand: BrandLogo) => void;
+  updateBrand: (brand: BrandLogo) => void;
+  removeBrand: (id: string) => void;
+
+  aboutBadge: string;
+  aboutTitleLine1: string;
+  aboutTitleLine2: string;
+  aboutSubtitle: string;
+  aboutDescription: string;
+  aboutBullets: string[];
+  aboutImage: string;
+  aboutImageOverlayTitle: string;
+  aboutImageOverlaySubtitle: string;
+  updateAboutText: (badge: string, t1: string, t2: string, sub: string, desc: string, bullets: string[], image: string, overT: string, overS: string) => void;
+
+  testimonialsBadge: string;
+  testimonialsTitle: string;
+  updateTestimonialsText: (badge: string, title: string) => void;
+  testimonialsList: Testimonial[];
+  addTestimonial: (test: Testimonial) => void;
+  updateTestimonial: (test: Testimonial) => void;
+  removeTestimonial: (id: string) => void;
 
   heroBanners: BannerSlide[];
   addHeroBanner: (banner: BannerSlide) => void;
@@ -152,6 +201,74 @@ export const useUIStore = create<UIState>()(
       announcementText: "⚡ EXTREME 8S BRUSHLESS ACTION • GST-INCLUSIVE PRICES • FREE SHIPPING ABOVE ₹10,000 ⚡",
       setAnnouncementText: (text) => set({ announcementText: text }),
 
+      heroTitleLine1: "ULTIMATE DESTINATION FOR",
+      heroTitleLine2: "EXTREME RC CARS",
+      heroDescription: "Experience 130+ km/h runs, fully waterproof brushless motors, and high-performance accessories/spares. MARQUE brings the world's most extreme RC cars and accessories to Indian bashers and track racers.",
+      updateHeroText: (line1, line2, desc) => set({ heroTitleLine1: line1, heroTitleLine2: line2, heroDescription: desc }),
+
+      brandsBadge: "Elite Racing Makes",
+      brandsTitle: "Championship Lineup",
+      brandsSubtitle: "Click any manufacturer badge to immediately filter the garage catalog.",
+      updateBrandsText: (badge, title, subtitle) => set({ brandsBadge: badge, brandsTitle: title, brandsSubtitle: subtitle }),
+      brandsList: [
+        { id: "b1", name: "TRAXXAS", logo: "/logo_traxxas.png", country: "USA", flag: "🇺🇸" },
+        { id: "b2", name: "ARRMA", logo: "/logo_arrma.png", country: "UK", flag: "🇬🇧" },
+        { id: "b3", name: "RLAARLO", logo: "/logo_rlaarlo.png", country: "Hong Kong", flag: "🇭🇰" },
+        { id: "b4", name: "MJX", logo: "/logo_mjx.png", country: "China", flag: "🇨🇳" },
+        { id: "b5", name: "FMS", logo: "/logo_fms.png", country: "China", flag: "🇨🇳" },
+        { id: "b6", name: "MN MODEL", logo: "/logo_mnmodel.png", country: "China", flag: "🇨🇳" },
+        { id: "b7", name: "HOT WHEELS", logo: "/logo_hotwheels.png", country: "USA", flag: "🇺🇸" }
+      ],
+      addBrand: (brand) => set(state => ({ brandsList: [...state.brandsList, brand] })),
+      updateBrand: (brand) => set(state => ({ brandsList: state.brandsList.map(b => b.id === brand.id ? brand : b) })),
+      removeBrand: (id) => set(state => ({ brandsList: state.brandsList.filter(b => b.id !== id) })),
+
+      aboutBadge: "Welcome to MARQUE",
+      aboutTitleLine1: "Sleek Rigs,",
+      aboutTitleLine2: "Smart Prices.",
+      aboutSubtitle: "Your ideal car is a click away.",
+      aboutDescription: "MARQUE is India's dedicated hub for authentic, hobby-grade remote control scale engineering and premium accessories. We source directly from elite international manufacturers, providing bash-tested rigs, performance upgrades, and spare parts.",
+      aboutBullets: [
+        "100% Genuine models with sealed manufacturer pack guarantees.",
+        "18% Inclusive GST billing with business HSN inputs.",
+        "Dedicated Madipakkam technical support for repairs."
+      ],
+      aboutImage: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80",
+      aboutImageOverlayTitle: "Premium Quality",
+      aboutImageOverlaySubtitle: "Guaranteed Performance",
+      updateAboutText: (badge, t1, t2, sub, desc, bullets, image, overT, overS) => set({ 
+        aboutBadge: badge, aboutTitleLine1: t1, aboutTitleLine2: t2, 
+        aboutSubtitle: sub, aboutDescription: desc, aboutBullets: bullets,
+        aboutImage: image, aboutImageOverlayTitle: overT, aboutImageOverlaySubtitle: overS
+      }),
+
+      testimonialsBadge: "Pilot Reviews",
+      testimonialsTitle: "What Our Customers Say",
+      updateTestimonialsText: (badge, title) => set({ testimonialsBadge: badge, testimonialsTitle: title }),
+      testimonialsList: [
+        {
+          id: "t1",
+          name: "Vikram Malhotra",
+          role: "Verified Traxxas X-Maxx Owner • Chennai",
+          quote: "Purchased the Solar Flare Orange X-Maxx and it has been absolute insanity. Handled rocky terrains in Lonavala and water streams effortlessly. Unbelievable construction and raw power! Delivery to Madipakkam was incredibly fast.",
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop"
+        },
+        {
+          id: "t2",
+          name: "Rohan Desai",
+          role: "Track Racer • Mumbai",
+          quote: "The ARRMA Typhon 6S BLX completely blew me away. Speed runs are stable, and cornering is sharp as a tack. Customer service was stellar answering all my lipo battery queries before purchase.",
+          avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&auto=format&fit=crop"
+        }
+      ],
+      addTestimonial: (test) => set(state => ({ testimonialsList: [...state.testimonialsList, test] })),
+      updateTestimonial: (test) => set(state => ({
+        testimonialsList: state.testimonialsList.map(t => t.id === test.id ? test : t)
+      })),
+      removeTestimonial: (id) => set(state => ({
+        testimonialsList: state.testimonialsList.filter(t => t.id !== id)
+      })),
+
       heroBanners: [
         {
           id: "banner-1",
@@ -217,6 +334,25 @@ export const useUIStore = create<UIState>()(
       partialize: (state) => ({
         lowStockAlerts: state.lowStockAlerts,
         announcementText: state.announcementText,
+        heroTitleLine1: state.heroTitleLine1,
+        heroTitleLine2: state.heroTitleLine2,
+        heroDescription: state.heroDescription,
+        brandsBadge: state.brandsBadge,
+        brandsTitle: state.brandsTitle,
+        brandsSubtitle: state.brandsSubtitle,
+        brandsList: state.brandsList,
+        aboutBadge: state.aboutBadge,
+        aboutTitleLine1: state.aboutTitleLine1,
+        aboutTitleLine2: state.aboutTitleLine2,
+        aboutSubtitle: state.aboutSubtitle,
+        aboutDescription: state.aboutDescription,
+        aboutBullets: state.aboutBullets,
+        aboutImage: state.aboutImage,
+        aboutImageOverlayTitle: state.aboutImageOverlayTitle,
+        aboutImageOverlaySubtitle: state.aboutImageOverlaySubtitle,
+        testimonialsBadge: state.testimonialsBadge,
+        testimonialsTitle: state.testimonialsTitle,
+        testimonialsList: state.testimonialsList,
         heroBanners: state.heroBanners,
         promoBanners: state.promoBanners,
         unboxingVideos: state.unboxingVideos,
