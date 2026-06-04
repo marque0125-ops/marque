@@ -47,7 +47,8 @@ export default function CartView() {
 
   const {
     address,
-    setAddress
+    setAddress,
+    isAuthenticated
   } = useAuthStore();
 
   const [couponInput, setCouponInput] = useState("");
@@ -78,7 +79,9 @@ export default function CartView() {
   }
 
   // Shiprocket Shipping calculation
-  const shippingCost = pinDetail ? pinDetail.shippingCost : 500;
+  // Free shipping on orders over ₹10,000 as per site banner
+  const isFreeShipping = (subtotal - discountAmount) >= 10000;
+  const shippingCost = isFreeShipping ? 0 : (pinDetail ? pinDetail.shippingCost : 200);
 
   // Indian GST 18% inclusive calculation:
   // Tax = Subtotal - (Subtotal / 1.18)
@@ -124,6 +127,18 @@ export default function CartView() {
 
   const handleProceed = () => {
     if (cart.length === 0) return;
+
+    if (!isAuthenticated) {
+      showDialog({ 
+        title: 'Authentication Required', 
+        message: 'To ensure a secure checkout and proper order tracking, please sign in or create an account first.' 
+      });
+      setTimeout(() => {
+        router.push('/account');
+      }, 1500);
+      return;
+    }
+
     if (!address.city || !address.state || !address.pincode) {
       showDialog({ title: 'Notice', message: "DELIVERY DETAILS REQUIRED: Please fill in your city, state, and pincode." });
       return;
@@ -142,6 +157,7 @@ export default function CartView() {
     setCheckoutStep(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
 
   const [checkoutStep, setCheckoutStep] = useState(false);
 
@@ -248,6 +264,32 @@ export default function CartView() {
     }
   };
 
+  const handlePhonePeCheckout = async () => {
+    try {
+      showDialog({ title: 'Notice', message: "Initializing PhonePe Secure Checkout..." });
+      
+      const res = await fetch('/api/phonepe/pay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: grandTotal })
+      });
+
+      const data = await res.json();
+
+      if (!data || !data.redirectUrl) {
+        showDialog({ title: 'Notice', message: "PhonePe initialization failed from backend. Please try again." });
+        return;
+      }
+
+      // Redirect the user to PhonePe page
+      window.location.href = data.redirectUrl;
+
+    } catch (err: any) {
+      console.error("PhonePe trigger error:", err);
+      showDialog({ title: 'Notice', message: `Error securely contacting payment gateway: ${err.message}` });
+    }
+  };
+
   // If in Checkout step, let's render the checkout page. We can handle it in the same file or write it dynamically!
   if (checkoutStep) {
     return (
@@ -309,46 +351,45 @@ export default function CartView() {
               </div>
             </div>
 
-            {/* RAZORPAY PAYMENT SIMULATION DRAWER */}
+            {/* SECURE PAYMENT GATEWAY DRAWER */}
             <div className="rounded-2xl border border-brand-orange bg-slate-900/10 p-6 space-y-6 relative overflow-hidden animate-pulse-glow">
               <div className="absolute top-0 right-0 bg-brand-orange text-white sm:text-black font-normal uppercase text-[9px] px-3 py-1 rounded-bl">
-                Razorpay Live Sandbox
+                Secure Live Checkout
               </div>
 
               <div className="space-y-2">
-                <span className="text-[10px] text-brand-orange font-normal uppercase tracking-wider block">Select Razorpay Payment Gateway API</span>
+                <span className="text-[10px] text-brand-orange font-normal uppercase tracking-wider block">Select Secure Payment Gateway</span>
                 <h3 className="font-display text-base font-normal text-white uppercase flex items-center gap-1.5">
                   <Zap className="h-5 w-5 text-brand-orange animate-bounce" />
                   India UPI / Credit Card Portal
                 </h3>
               </div>
 
-              {/* UPI Deep links options */}
-              <div className="space-y-3">
-                <span className="text-xs font-normal text-slate-300 block">Preferred Mobile Deep-links (UPI Autopay Preferred):</span>
-                <div className="grid grid-cols-3 gap-3">
-                  {['Google Pay', 'PhonePe', 'Paytm'].map((upi) => (
-                    <button
-                      key={upi}
-                      onClick={() => handlePlaceOrder('UPI')}
-                      className="p-3 rounded-xl border border-brand-border bg-slate-950 text-center hover:border-brand-orange hover:bg-slate-900 text-xs font-normal text-slate-200 flex flex-col items-center justify-center gap-1 transition-all"
-                    >
-                      <span className="text-[10px] font-normal text-brand-gold">⚡ UPI</span>
-                      <span>{upi}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+              {/* PhonePe Option */}
+              <button
+                  onClick={handlePhonePeCheckout}
+                  className="w-full p-4 rounded-xl border border-brand-border bg-slate-950 text-left hover:border-brand-orange hover:bg-slate-900 flex flex-col justify-between transition-all"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-slate-500 font-normal uppercase block flex items-center gap-1">
+                      <Zap className="h-3 w-3 text-brand-orange" />
+                      PhonePe PG
+                    </span>
+                    <span className="text-[9px] bg-brand-gold/10 text-brand-gold px-2 py-0.5 rounded border border-brand-gold/30">Recommended</span>
+                  </div>
+                  <span className="text-xs font-normal text-slate-200 mt-2 block">All UPI Apps, Cards, Netbanking via PhonePe</span>
+              </button>
 
-              <div className="grid grid-cols-2 gap-4">
-                {/* Direct Card payment */}
+              <div className="grid grid-cols-1 gap-4">
+                {/* Razorpay Option - Hidden as requested, uncomment to bring back
                 <button
                   onClick={() => handlePlaceOrder('Card')}
                   className="p-4 rounded-xl border border-brand-border bg-slate-950 text-left hover:border-brand-orange hover:bg-slate-900 flex flex-col justify-between transition-all"
                 >
-                  <span className="text-[10px] text-slate-500 font-normal uppercase block">Credit/Debit Card</span>
-                  <span className="text-xs font-normal text-slate-200 mt-2 block">Visa, Mastercard, RuPay</span>
+                  <span className="text-[10px] text-slate-500 font-normal uppercase block">Razorpay PG</span>
+                  <span className="text-xs font-normal text-slate-200 mt-2 block">Alternative Gateway</span>
                 </button>
+                */}
 
                 {/* COD option */}
                 <button
@@ -365,7 +406,7 @@ export default function CartView() {
               </div>
 
               <p className="text-[10px] text-slate-500 text-center leading-relaxed">
-                By pressing any gateway method above, you simulate Razorpay's overlay webhook token confirmation. System automatically reserves stock and returns checkout invoice details.
+                By pressing any gateway method above, you will be securely redirected to the payment provider. System automatically reserves stock.
               </p>
             </div>
 
@@ -405,7 +446,7 @@ export default function CartView() {
                 </div>
               )}
               <div className="flex justify-between">
-                <span>Express Freight Charges</span>
+                <span>Shipping Charges</span>
                 <span className="font-mono text-slate-300">₹{shippingCost.toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between text-[10px] text-slate-500 border-t border-brand-border/40 pt-2.5">
@@ -752,7 +793,7 @@ export default function CartView() {
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span>Express Freight Charges</span>
+                  <span>Shipping Charges</span>
                   <span className="font-mono text-slate-300">₹{shippingCost.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="flex justify-between text-[10px] text-slate-500 border-t border-brand-border/40 pt-2.5">

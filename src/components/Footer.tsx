@@ -95,7 +95,7 @@ export default function Footer() {
               <li className="flex items-start gap-2">
                 <Truck className="h-4.5 w-4.5 text-brand-orange shrink-0 mt-0.5" />
                 <span>
-                  <strong>MARQUE Logistics Desk</strong>. All consignments tracked and updated manually by admin command.
+                  <strong>MARQUE Logistics Desk</strong>: ST courier, DDTC COURIER, DELIVERY IN. All consignments tracked and updated manually by admin command.
                 </span>
               </li>
               <li className="flex items-start gap-2">
