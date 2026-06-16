@@ -1,15 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
-import { AnalyticsTab } from "./admin/AnalyticsTab";
-import { CategoriesTab } from "./admin/CategoriesTab";
-import { InventoryTab } from "./admin/InventoryTab";
-import { OrdersTab } from "./admin/OrdersTab";
-import BlogTab from "./admin/BlogTab";
-import { BannersTab } from "./admin/BannersTab";
-import { VideosTab } from "./admin/VideosTab";
-import { RacingVideosTab } from "./admin/RacingVideosTab";
-import { SiteContentTab } from "./admin/SiteContentTab";
+import dynamic from 'next/dynamic';
+import { Loader2 } from 'lucide-react';
+
+const LoadingFallback = () => (
+  <div className="py-20 flex justify-center items-center">
+    <Loader2 className="h-8 w-8 text-brand-orange animate-spin" />
+  </div>
+);
+
+const AnalyticsTab = dynamic(() => import('./admin/AnalyticsTab').then(mod => mod.AnalyticsTab), { ssr: false, loading: LoadingFallback });
+const CategoriesTab = dynamic(() => import('./admin/CategoriesTab').then(mod => mod.CategoriesTab), { ssr: false, loading: LoadingFallback });
+const InventoryTab = dynamic(() => import('./admin/InventoryTab').then(mod => mod.InventoryTab), { ssr: false, loading: LoadingFallback });
+const OrdersTab = dynamic(() => import('./admin/OrdersTab').then(mod => mod.OrdersTab), { ssr: false, loading: LoadingFallback });
+const BlogTab = dynamic(() => import('./admin/BlogTab'), { ssr: false, loading: LoadingFallback });
+const BannersTab = dynamic(() => import('./admin/BannersTab').then(mod => mod.BannersTab), { ssr: false, loading: LoadingFallback });
+const VideosTab = dynamic(() => import('./admin/VideosTab').then(mod => mod.VideosTab), { ssr: false, loading: LoadingFallback });
+const RacingVideosTab = dynamic(() => import('./admin/RacingVideosTab').then(mod => mod.RacingVideosTab), { ssr: false, loading: LoadingFallback });
+const SiteContentTab = dynamic(() => import('./admin/SiteContentTab').then(mod => mod.SiteContentTab), { ssr: false, loading: LoadingFallback });
 
 export default function AdminView() {
   const [activeTab, setActiveTab] = useState<'analytics' | 'categories' | 'inventory' | 'orders' | 'blog' | 'banners' | 'videos' | 'racing' | 'site_content'>('analytics');

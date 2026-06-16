@@ -169,9 +169,9 @@ export function InventoryTab() {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-950 p-6 rounded-2xl border border-brand-border">
         <div className="space-y-1">
-          <h3 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200 flex items-center gap-2">
+          <h2 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200 flex items-center gap-2">
             <Layers className="h-4.5 w-4.5 text-brand-orange" /> Warehouse Inventory Registry & CRUD
-          </h3>
+          </h2>
         </div>
         {!isAddingProduct && !isEditingProduct && (
           <button onClick={() => { resetProductForm(); setIsAddingProduct(true); }} className="bg-brand-orange text-white sm:text-black px-4 py-2.5 rounded-lg text-xs font-normal uppercase flex items-center gap-1.5 hover:bg-brand-gold">
@@ -183,10 +183,10 @@ export function InventoryTab() {
       {(isAddingProduct || isEditingProduct) ? (
         <form onSubmit={handleSaveProduct} className="space-y-6 bg-slate-900/60 p-6 rounded-2xl border border-brand-border backdrop-blur-md">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-brand-border pb-3 gap-2">
-            <h4 className="font-display text-base font-normal uppercase text-white flex items-center gap-2">
+            <h3 className="font-display text-base font-normal uppercase text-white flex items-center gap-2">
               <Car className="h-5 w-5 text-brand-orange" /> {isEditingProduct ? `Edit Model: ${formName}` : "Register New RC Model Chassis"}
-            </h4>
-            <button type="button" onClick={resetProductForm} className="text-slate-500 hover:text-red-500"><X className="h-5 w-5" /></button>
+            </h3>
+            <button type="button" onClick={resetProductForm} className="text-slate-400 hover:text-red-500"><X className="h-5 w-5" /></button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-xs text-slate-300">
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Model Name</label><input type="text" value={formName} onChange={(e) => setFormName(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
@@ -237,7 +237,7 @@ export function InventoryTab() {
                     onChange={handleImageUpload}
                     className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-normal file:uppercase file:bg-brand-orange file:text-white sm:text-black hover:file:bg-brand-gold file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
                   />
-                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-normal tracking-wider">Max size: 2MB per image. Select multiple files.</p>
+                  <p className="text-[10px] text-slate-400 mt-1.5 uppercase font-normal tracking-wider">Max size: 2MB per image. Select multiple files.</p>
                 </div>
               </div>
             </div>
@@ -255,7 +255,7 @@ export function InventoryTab() {
                     placeholder="YouTube/Vimeo Embed URL" 
                     className="w-full rounded-lg bg-slate-950 border border-brand-border py-2.5 px-3 focus:border-brand-orange text-white" 
                   />
-                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-normal tracking-wider">Paste embed URL directly</p>
+                  <p className="text-[10px] text-slate-400 mt-1.5 uppercase font-normal tracking-wider">Paste embed URL directly</p>
                 </div>
                 <div>
                   <input
@@ -264,7 +264,7 @@ export function InventoryTab() {
                     onChange={handleVideoUpload}
                     className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-normal file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
                   />
-                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-normal tracking-wider">Or upload video file (Max 5MB).</p>
+                  <p className="text-[10px] text-slate-400 mt-1.5 uppercase font-normal tracking-wider">Or upload video file (Max 5MB).</p>
                 </div>
               </div>
               {formVideoUrl && formVideoUrl.startsWith("data:video") && (
@@ -333,7 +333,7 @@ export function InventoryTab() {
                     </div>
                     <div className="flex gap-2">
                       <button onClick={() => handleOpenEditProduct(p)} className="border border-brand-orange text-brand-orange px-3 py-1.5 rounded font-normal uppercase text-[9px]"><Edit2 className="h-3 w-3 inline" /> Edit</button>
-                      <button onClick={() => handleDeleteProductClick(p.id, p.name)} className="border border-brand-border text-slate-500 hover:text-red-400 px-3 py-1.5 rounded font-normal uppercase text-[9px]"><Trash2 className="h-3 w-3 inline" /> Remove</button>
+                      <button onClick={() => handleDeleteProductClick(p.id, p.name)} className="border border-brand-border text-slate-400 hover:text-red-400 px-3 py-1.5 rounded font-normal uppercase text-[9px]"><Trash2 className="h-3 w-3 inline" /> Remove</button>
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">

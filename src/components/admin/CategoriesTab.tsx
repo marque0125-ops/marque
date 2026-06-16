@@ -96,9 +96,9 @@ export function CategoriesTab() {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-950 p-6 rounded-2xl border border-brand-border">
         <div className="space-y-1">
-          <h3 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200 flex items-center gap-2">
+          <h2 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200 flex items-center gap-2">
             <FolderTree className="h-4.5 w-4.5 text-brand-orange" /> Category Management
-          </h3>
+          </h2>
           <p className="text-[10px] text-slate-400">Manage homepage category sections and product groupings.</p>
         </div>
         {!isAdding && !isEditing && (
@@ -111,10 +111,10 @@ export function CategoriesTab() {
       {(isAdding || isEditing) ? (
         <form onSubmit={handleSave} className="space-y-6 bg-slate-900/60 p-6 rounded-2xl border border-brand-border backdrop-blur-md">
           <div className="flex items-center justify-between border-b border-brand-border pb-3">
-            <h4 className="font-display text-base font-normal uppercase text-white flex items-center gap-2">
+            <h3 className="font-display text-base font-normal uppercase text-white flex items-center gap-2">
               <FolderTree className="h-5 w-5 text-brand-orange" /> {isEditing ? `Edit Category: ${formName}` : "Create New Category"}
-            </h4>
-            <button type="button" onClick={resetForm} className="text-slate-500 hover:text-red-500"><X className="h-5 w-5" /></button>
+            </h3>
+            <button type="button" onClick={resetForm} className="text-slate-400 hover:text-red-500"><X className="h-5 w-5" /></button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-300">
             <div className="space-y-1.5">
@@ -154,7 +154,7 @@ export function CategoriesTab() {
                     </div>
                   )}
                 </div>
-                <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-normal tracking-wider">Max size: 1MB. Square format recommended.</p>
+                <p className="text-[10px] text-slate-400 mt-1.5 uppercase font-normal tracking-wider">Max size: 1MB. Square format recommended.</p>
               </div>
             </div>
           </div>
@@ -204,7 +204,7 @@ export function CategoriesTab() {
               })}
               {categories.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-slate-500 font-normal uppercase tracking-wider">
+                  <td colSpan={5} className="px-6 py-12 text-center text-slate-400 font-normal uppercase tracking-wider">
                     No Categories Found
                   </td>
                 </tr>

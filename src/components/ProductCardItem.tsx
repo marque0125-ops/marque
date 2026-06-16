@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { Heart, Car } from "lucide-react";
 import { Product } from "../data/mockData";
 import { BRANDS } from "../data/mockData";
 import { useCartStore } from "../store/useCartStore";
 import { useUIStore } from "../store/useUIStore";
+import { trackAddToCart } from "../utils/analytics";
 
 interface ProductCardItemProps {
   p: Product;
@@ -37,6 +39,10 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
   const handleQuickAdd = (e: React.MouseEvent, product: Product) => {
     e.stopPropagation();
     addToCart(product, selectedVariant, 1);
+    
+    // Track AddToCart event
+    trackAddToCart(product.name, product.sku, product.price, 'INR');
+
     showDialog({
       title: 'Added to Cart',
       message: `${product.name} (${selectedVariant.attributes.color || "Standard"}) has been added to your cart.`
@@ -61,10 +67,12 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
     >
       {/* Image Section */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-900 border-b border-brand-border">
-        <img
-          src={currentImage}
+        <Image
+          src={currentImage || "https://images.unsplash.com/photo-1594784260907-28dc0fbfb14e?w=800&q=80"}
           alt={p.name}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          fill
+          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
         {/* Absolute Badges */}
@@ -78,6 +86,7 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
         </div>
 
         <button
+          aria-label="Toggle Wishlist"
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist(p.id);
@@ -117,6 +126,7 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
               return (
                 <button
                   key={idx}
+                  aria-label={`Select color ${color}`}
                   onClick={(e) => handleColorClick(e, color)}
                   title={color}
                   className={`h-4 w-4 rounded-full border-2 transition-all ${isSelected ? 'border-brand-orange scale-110 shadow-glow' : 'border-slate-800 hover:border-slate-500'}`}

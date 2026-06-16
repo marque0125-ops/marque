@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
 import { useUIStore } from "../store/useUIStore";
@@ -46,6 +46,13 @@ export default function ShopView() {
   const router = useRouter();
 
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
+
+  // Reset to page 1 when any filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filterCategory, filterBrand, filterTerrain, filterScale, filterBuildType, priceRange, sortBy]);
 
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
@@ -107,6 +114,13 @@ export default function ShopView() {
     (filterBuildType !== "ALL" ? 1 : 0) +
     (priceRange[0] > 0 || priceRange[1] < 150000 ? 1 : 0) +
     (searchQuery !== "" ? 1 : 0);
+
+  // Pagination logic
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+  const currentProducts = sortedProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   // Shared filter controls (used in sidebar and bottom sheet)
   const FilterControls = () => (
@@ -322,7 +336,7 @@ export default function ShopView() {
                   </div>
                 ))
               ) : (
-                sortedProducts.map((p) => (
+                currentProducts.map((p) => (
                   <ProductCardItem
                     key={p.id}
                     p={p}
@@ -332,6 +346,43 @@ export default function ShopView() {
                   />
                 ))
               )}
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="mt-8 flex items-center justify-center gap-2">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 rounded-lg bg-slate-900 border border-brand-border text-xs text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed hover:border-brand-orange hover:text-white transition-all"
+              >
+                Previous
+              </button>
+              
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }).map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentPage(idx + 1)}
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs transition-all ${
+                      currentPage === idx + 1 
+                        ? 'bg-brand-orange text-white sm:text-black border border-brand-orange' 
+                        : 'bg-slate-900 border border-brand-border text-slate-400 hover:border-brand-orange hover:text-white'
+                    }`}
+                  >
+                    {idx + 1}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 rounded-lg bg-slate-900 border border-brand-border text-xs text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed hover:border-brand-orange hover:text-white transition-all"
+              >
+                Next
+              </button>
             </div>
           )}
         </div>
@@ -363,7 +414,7 @@ export default function ShopView() {
                     <RotateCcw className="h-3 w-3" /> Reset
                   </button>
                 )}
-                <button onClick={() => setShowMobileFilters(false)} className="text-slate-400 hover:text-white transition-colors">
+                <button aria-label="Close Filters" onClick={() => setShowMobileFilters(false)} className="text-slate-400 hover:text-white transition-colors">
                   <X className="h-5 w-5" />
                 </button>
               </div>

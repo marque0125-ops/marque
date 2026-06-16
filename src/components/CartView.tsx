@@ -21,8 +21,12 @@ import {
   RotateCcw,
   Truck,
   FileSpreadsheet,
-  Zap
+  Zap,
+  Search,
+  CheckCircle2,
+  Package
 } from "lucide-react";
+import { trackInitiateCheckout, trackPurchase } from "../utils/analytics";
 
 export default function CartView() {
   const {
@@ -128,6 +132,9 @@ export default function CartView() {
       return;
     }
 
+    // Track InitiateCheckout event
+    trackInitiateCheckout(grandTotal, cart.length, 'INR');
+
     setCheckoutStep(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -156,6 +163,10 @@ export default function CartView() {
     if (method === 'COD') {
       const store = useOrderStore.getState();
       const order = store.createOrder(method);
+      
+      // Track COD Purchase
+      trackPurchase(order.id, grandTotal, 'INR');
+
       router.push('/account');
       setCheckoutStep(false);
       clearCart();
@@ -203,6 +214,9 @@ export default function CartView() {
           const order = store.createOrder(method);
           order.status = "confirmed";
           order.paymentMethod = method;
+
+          // Track Razorpay Purchase
+          trackPurchase(order.id, grandTotal, 'INR');
 
           router.push('/account');
           setCheckoutStep(false);

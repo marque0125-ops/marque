@@ -23,16 +23,16 @@ export function OrdersTab() {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h3 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200">
+        <h2 className="font-display text-sm font-normal uppercase tracking-wider text-slate-200">
           Courier Dispatch manifest console
-        </h3>
+        </h2>
         <p className="text-xs text-slate-400">
           Manage order delivery stages, ship consignments, generate AWB tracking barcodes, or fulfill refunds.
         </p>
       </div>
 
       {orders.length === 0 ? (
-        <div className="rounded-2xl border border-brand-border bg-slate-950 py-16 text-center text-xs text-slate-500">
+        <div className="rounded-2xl border border-brand-border bg-slate-950 py-16 text-center text-xs text-slate-400">
           No orders logged. Place test orders from checkout to manage them here.
         </div>
       ) : (
@@ -46,24 +46,24 @@ export function OrdersTab() {
                     Payment: {order.paymentStatus} ({order.paymentMethod})
                   </span>
                 </div>
-                <span className="text-[10px] text-slate-500 font-normal uppercase tracking-wide">
+                <span className="text-[10px] text-slate-400 font-normal uppercase tracking-wide">
                   Status Node: <strong className="text-brand-orange uppercase">{order.status}</strong>
                 </span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-brand-border pb-3 text-slate-400">
                 <div>
-                  <span className="text-[9px] text-slate-500 font-normal uppercase tracking-wider block">Receiver</span>
+                  <span className="text-[9px] text-slate-400 font-normal uppercase tracking-wider block">Receiver</span>
                   <span className="text-slate-200 font-normal block">{order.shippingAddress.name}</span>
                   <span className="block mt-0.5">{order.shippingAddress.phone}</span>
                 </div>
                 <div>
-                  <span className="text-[9px] text-slate-500 font-normal uppercase tracking-wider block">Address</span>
+                  <span className="text-[9px] text-slate-400 font-normal uppercase tracking-wider block">Address</span>
                   <span className="text-slate-200 block truncate">{order.shippingAddress.addressLine}</span>
                   <span className="block mt-0.5">{order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}</span>
                 </div>
                 <div>
-                  <span className="text-[9px] text-slate-500 font-normal uppercase tracking-wider block">Consignment Value</span>
+                  <span className="text-[9px] text-slate-400 font-normal uppercase tracking-wider block">Consignment Value</span>
                   <span className="font-mono text-slate-200 font-normal block">₹{order.totalAmount.toLocaleString('en-IN')}</span>
                 </div>
               </div>
@@ -73,7 +73,7 @@ export function OrdersTab() {
               </div>
 
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pt-2">
-                <span className="text-[10px] text-slate-500 font-mono">AWB Code: {order.trackingNumber}</span>
+                <span className="text-[10px] text-slate-400 font-mono">AWB Code: {order.trackingNumber}</span>
                 <div className="flex gap-2">
                   {order.status !== 'delivered' && order.status !== 'cancelled' && (
                     <button onClick={() => advanceOrderStatus(order.id)} className="bg-brand-orange text-white sm:text-black px-3.5 py-1.5 rounded font-normal uppercase text-[9px] hover:bg-brand-gold">

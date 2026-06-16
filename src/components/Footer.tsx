@@ -146,10 +146,10 @@ export default function Footer() {
             <a href="https://marque.co.in" target="_blank" rel="noopener noreferrer" className="text-brand-orange hover:text-brand-gold font-normal">marque.co.in</a>
           </div>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-brand-orange">Privacy Policy</a>
-            <Link href="/terms" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange">Terms of Service</Link>
-            <Link href="/shipping" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange">Shipping Rates</Link>
-            <a href="#" className="hover:text-brand-orange">Refund & Replacements</a>
+            <a href="#" className="hover:text-brand-orange underline underline-offset-2">Privacy Policy</a>
+            <Link href="/terms" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange underline underline-offset-2">Terms of Service</Link>
+            <Link href="/shipping" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange underline underline-offset-2">Shipping Rates</Link>
+            <a href="#" className="hover:text-brand-orange underline underline-offset-2">Refund & Replacements</a>
           </div>
         </div>
 

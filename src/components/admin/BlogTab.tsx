@@ -94,7 +94,7 @@ export default function BlogTab() {
             <div className="space-y-1.5">
               <label className="text-xs font-normal uppercase tracking-wider text-slate-400">Article Title *</label>
               <div className="relative">
-                <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input
                   type="text"
                   value={editingGuide.title || ""}
@@ -109,7 +109,7 @@ export default function BlogTab() {
               <div className="space-y-1.5">
                 <label className="text-xs font-normal uppercase tracking-wider text-slate-400">Category *</label>
                 <div className="relative">
-                  <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                  <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <input
                     type="text"
                     value={editingGuide.category || ""}
@@ -122,7 +122,7 @@ export default function BlogTab() {
               <div className="space-y-1.5">
                 <label className="text-xs font-normal uppercase tracking-wider text-slate-400">Read Time</label>
                 <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <input
                     type="text"
                     value={editingGuide.readTime || ""}
@@ -148,7 +148,7 @@ export default function BlogTab() {
                     </button>
                   </div>
                 ) : (
-                  <div className="h-16 w-16 rounded border border-brand-border border-dashed flex items-center justify-center bg-slate-900/50 shrink-0 text-slate-500">
+                  <div className="h-16 w-16 rounded border border-brand-border border-dashed flex items-center justify-center bg-slate-900/50 shrink-0 text-slate-400">
                     <ImageIcon className="h-6 w-6" />
                   </div>
                 )}
@@ -165,7 +165,7 @@ export default function BlogTab() {
                       <Loader2 className="h-5 w-5 animate-spin text-brand-orange" />
                     </div>
                   )}
-                  <p className="text-[10px] text-slate-500 mt-1.5 uppercase font-normal tracking-wider">Recommended: JPG, PNG, WEBP.</p>
+                  <p className="text-[10px] text-slate-400 mt-1.5 uppercase font-normal tracking-wider">Recommended: JPG, PNG, WEBP.</p>
                 </div>
               </div>
             </div>
@@ -246,11 +246,11 @@ export default function BlogTab() {
             </div>
             
             <div className="p-4 flex-1 flex flex-col">
-              <h3 className="font-normal text-white text-sm line-clamp-2 mb-2 leading-snug">{guide.title}</h3>
+              <h2 className="font-normal text-white text-sm line-clamp-2 mb-2 leading-snug">{guide.title}</h2>
               <p className="text-xs text-slate-400 line-clamp-2 mb-4 flex-1">{guide.excerpt}</p>
               
               <div className="flex items-center justify-between pt-4 border-t border-brand-border/50">
-                <span className="text-[10px] text-slate-500 font-normal">{guide.readTime}</span>
+                <span className="text-[10px] text-slate-400 font-normal">{guide.readTime}</span>
                 <div className="flex items-center gap-2">
                   <button 
                     onClick={() => startEdit(guide)}
@@ -270,7 +270,7 @@ export default function BlogTab() {
           </div>
         ))}
         {guides.length === 0 && (
-          <div className="col-span-full py-12 text-center text-slate-500 border border-dashed border-brand-border rounded-xl">
+          <div className="col-span-full py-12 text-center text-slate-400 border border-dashed border-brand-border rounded-xl">
             No articles found. Click "New Article" to create one.
           </div>
         )}

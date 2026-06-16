@@ -165,9 +165,9 @@ export function SiteContentTab() {
       {/* 1. Brands Text Section */}
       <div className="bg-slate-950 p-6 rounded-2xl border border-brand-border space-y-4">
         <div className="flex justify-between items-center border-b border-brand-border pb-4">
-          <h3 className="font-display text-base font-normal uppercase tracking-wider text-slate-200">
+          <h2 className="font-display text-base font-normal uppercase tracking-wider text-slate-200">
             1. Brands Section (Championship Lineup)
-          </h3>
+          </h2>
           {!isEditingBrands && (
             <button onClick={handleEditBrands} className="text-slate-400 hover:text-brand-orange text-xs uppercase flex items-center gap-1">
               <Edit2 className="h-3 w-3" /> Edit Texts
@@ -188,16 +188,16 @@ export function SiteContentTab() {
           </form>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm bg-slate-900/30 p-4 rounded-xl">
-            <div><span className="text-[10px] uppercase text-slate-500 block mb-1">Badge:</span><span className="text-brand-gold font-display">{brandsBadge}</span></div>
-            <div><span className="text-[10px] uppercase text-slate-500 block mb-1">Title:</span><span className="text-white font-display">{brandsTitle}</span></div>
-            <div className="md:col-span-3"><span className="text-[10px] uppercase text-slate-500 block mb-1">Subtitle:</span><span className="text-slate-300 text-xs">{brandsSubtitle}</span></div>
+            <div><span className="text-[10px] uppercase text-slate-400 block mb-1">Badge:</span><span className="text-brand-gold font-display">{brandsBadge}</span></div>
+            <div><span className="text-[10px] uppercase text-slate-400 block mb-1">Title:</span><span className="text-white font-display">{brandsTitle}</span></div>
+            <div className="md:col-span-3"><span className="text-[10px] uppercase text-slate-400 block mb-1">Subtitle:</span><span className="text-slate-300 text-xs">{brandsSubtitle}</span></div>
           </div>
         )}
 
         {/* Brand Logos List */}
         <div className="space-y-4 pt-4 border-t border-brand-border/40">
           <div className="flex justify-between items-center">
-             <h4 className="text-xs font-normal uppercase text-slate-400">Brand Logos</h4>
+             <h3 className="text-xs font-normal uppercase text-slate-400">Brand Logos</h3>
              {!isAddingBrand && !isEditingBrandId && (
                <button onClick={() => setIsAddingBrand(true)} className="bg-brand-orange text-black px-3 py-1.5 rounded text-[10px] uppercase flex items-center gap-1 hover:bg-brand-gold">
                  <Plus className="h-3 w-3" /> Add Brand
@@ -207,7 +207,7 @@ export function SiteContentTab() {
 
           {(isAddingBrand || isEditingBrandId) ? (
             <form onSubmit={handleSaveBrand} className="space-y-4 bg-slate-900/50 p-4 rounded-xl border border-brand-border relative">
-              <button type="button" onClick={resetBrandForm} className="absolute top-4 right-4 text-slate-500 hover:text-red-500"><X className="h-4 w-4" /></button>
+              <button type="button" onClick={resetBrandForm} className="absolute top-4 right-4 text-slate-400 hover:text-red-500"><X className="h-4 w-4" /></button>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                 <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Brand Name</label><input type="text" value={brandForm.name} onChange={(e) => setBrandForm({...brandForm, name: e.target.value})} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 text-xs focus:border-brand-orange text-white" /></div>
                 
@@ -238,8 +238,8 @@ export function SiteContentTab() {
                       <img src={brand.logo} alt={brand.name} className="max-w-full max-h-full object-contain" />
                     </div>
                     <div>
-                      <h5 className="text-white text-xs font-bold uppercase">{brand.name}</h5>
-                      <span className="text-[10px] text-slate-500 uppercase block">{brand.flag} {brand.country}</span>
+                      <h4 className="text-white text-xs font-bold uppercase">{brand.name}</h4>
+                      <span className="text-[10px] text-slate-400 uppercase block">{brand.flag} {brand.country}</span>
                     </div>
                   </div>
                   <div className="flex gap-2 shrink-0">
@@ -258,9 +258,9 @@ export function SiteContentTab() {
       {/* 2. About Section */}
       <div className="bg-slate-950 p-6 rounded-2xl border border-brand-border space-y-4">
         <div className="flex justify-between items-center border-b border-brand-border pb-4">
-          <h3 className="font-display text-base font-normal uppercase tracking-wider text-slate-200">
+          <h2 className="font-display text-base font-normal uppercase tracking-wider text-slate-200">
             2. About Section (Sleek Rigs)
-          </h3>
+          </h2>
           {!isEditingAbout && (
             <button onClick={handleEditAbout} className="text-slate-400 hover:text-brand-orange text-xs uppercase flex items-center gap-1">
               <Edit2 className="h-3 w-3" /> Edit Section
@@ -317,7 +317,7 @@ export function SiteContentTab() {
             <div className="pt-2 border-t border-brand-border/40 flex items-center gap-4">
               <img src={aboutImage} alt="about" className="w-16 h-16 rounded object-cover" />
               <div>
-                <span className="text-[10px] uppercase text-slate-500 block">Overlay Texts:</span>
+                <span className="text-[10px] uppercase text-slate-400 block">Overlay Texts:</span>
                 <span className="text-white text-xs block font-bold">{aboutImageOverlayTitle}</span>
                 <span className="text-slate-400 text-xs block">{aboutImageOverlaySubtitle}</span>
               </div>
@@ -329,15 +329,15 @@ export function SiteContentTab() {
       {/* 3. Testimonials Section */}
       <div className="bg-slate-950 p-6 rounded-2xl border border-brand-border space-y-6">
         <div className="flex justify-between items-center border-b border-brand-border pb-4">
-          <h3 className="font-display text-base font-normal uppercase tracking-wider text-slate-200">
+          <h2 className="font-display text-base font-normal uppercase tracking-wider text-slate-200">
             3. Customer Reviews Section
-          </h3>
+          </h2>
         </div>
 
         {/* Testimonial Headers */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h4 className="text-xs font-normal uppercase text-slate-400">Header Texts</h4>
+            <h3 className="text-xs font-normal uppercase text-slate-400">Header Texts</h3>
             {!isEditingTestimonialsText && (
               <button onClick={handleEditTestTexts} className="text-slate-400 hover:text-brand-orange text-[10px] uppercase flex items-center gap-1">
                 <Edit2 className="h-3 w-3" /> Edit Headers
@@ -358,7 +358,7 @@ export function SiteContentTab() {
           ) : (
             <div className="flex gap-4 text-sm bg-slate-900/30 p-3 rounded-lg border border-brand-border/50">
               <span className="text-brand-orange font-display">{testimonialsBadge}</span>
-              <span className="text-slate-500">/</span>
+              <span className="text-slate-400">/</span>
               <span className="text-white font-display">{testimonialsTitle}</span>
             </div>
           )}
@@ -367,7 +367,7 @@ export function SiteContentTab() {
         {/* Testimonials List */}
         <div className="space-y-4 pt-4 border-t border-brand-border/40">
           <div className="flex justify-between items-center">
-             <h4 className="text-xs font-normal uppercase text-slate-400">Review Cards</h4>
+             <h3 className="text-xs font-normal uppercase text-slate-400">Review Cards</h3>
              {!isAddingTest && !isEditingTestId && (
                <button onClick={() => setIsAddingTest(true)} className="bg-brand-orange text-black px-3 py-1.5 rounded text-[10px] uppercase flex items-center gap-1 hover:bg-brand-gold">
                  <Plus className="h-3 w-3" /> Add Review
@@ -377,7 +377,7 @@ export function SiteContentTab() {
 
           {(isAddingTest || isEditingTestId) ? (
             <form onSubmit={handleSaveTestimonial} className="space-y-4 bg-slate-900/50 p-4 rounded-xl border border-brand-border relative">
-              <button type="button" onClick={resetTestForm} className="absolute top-4 right-4 text-slate-500 hover:text-red-500"><X className="h-4 w-4" /></button>
+              <button type="button" onClick={resetTestForm} className="absolute top-4 right-4 text-slate-400 hover:text-red-500"><X className="h-4 w-4" /></button>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                 <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Customer Name</label><input type="text" value={testForm.name} onChange={(e) => setTestForm({...testForm, name: e.target.value})} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 text-xs focus:border-brand-orange text-white" /></div>
                 <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Subtitle / Role / Location</label><input type="text" value={testForm.role} onChange={(e) => setTestForm({...testForm, role: e.target.value})} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 text-xs focus:border-brand-orange text-white" /></div>
@@ -404,8 +404,8 @@ export function SiteContentTab() {
                   <div className="flex gap-3 items-start">
                     <img src={test.avatar || "/placeholder.jpg"} alt={test.name} className="w-10 h-10 rounded-full border border-brand-border object-cover mt-1" />
                     <div>
-                      <h5 className="text-white text-xs font-normal">{test.name}</h5>
-                      <span className="text-[9px] text-slate-500 uppercase block mb-2">{test.role}</span>
+                      <h4 className="text-white text-xs font-normal">{test.name}</h4>
+                      <span className="text-[9px] text-slate-400 uppercase block mb-2">{test.role}</span>
                       <p className="text-slate-300 text-xs italic">"{test.quote}"</p>
                     </div>
                   </div>
@@ -417,7 +417,7 @@ export function SiteContentTab() {
                   </div>
                 </div>
               ))}
-              {testimonialsList.length === 0 && <p className="text-xs text-slate-500">No testimonials found.</p>}
+              {testimonialsList.length === 0 && <p className="text-xs text-slate-400">No testimonials found.</p>}
             </div>
           )}
         </div>

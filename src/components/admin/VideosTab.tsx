@@ -90,13 +90,13 @@ export function VideosTab() {
         {/* Form Panel */}
         <div className="lg:col-span-4 space-y-6">
           <div className="rounded-xl border border-brand-border bg-slate-900/30 p-6 space-y-4">
-            <h3 className="font-display text-sm font-normal uppercase text-brand-orange">
+            <h2 className="font-display text-sm font-normal uppercase text-brand-orange">
               {isEditing ? 'Edit Video' : 'Add New Video'}
-            </h3>
+            </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] text-slate-500 uppercase tracking-wider mb-1 block">Video Title</label>
+                <label className="text-[10px] text-slate-400 uppercase tracking-wider mb-1 block">Video Title</label>
                 <input
                   type="text"
                   value={formData.title}
@@ -108,7 +108,7 @@ export function VideosTab() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[10px] text-slate-500 uppercase tracking-wider mb-1 block">Video Embed URL</label>
+                  <label className="text-[10px] text-slate-400 uppercase tracking-wider mb-1 block">Video Embed URL</label>
                   <input
                     type="text"
                     value={formData.url}
@@ -119,7 +119,7 @@ export function VideosTab() {
                 </div>
 
                 <div>
-                  <label className="text-[10px] text-slate-500 uppercase tracking-wider mb-1 block">Or Upload Video</label>
+                  <label className="text-[10px] text-slate-400 uppercase tracking-wider mb-1 block">Or Upload Video</label>
                   <input
                     type="file"
                     accept="video/*"
@@ -133,7 +133,7 @@ export function VideosTab() {
               </div>
 
               <div>
-                <label className="text-[10px] text-slate-500 uppercase tracking-wider mb-1 block">Description</label>
+                <label className="text-[10px] text-slate-400 uppercase tracking-wider mb-1 block">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -169,7 +169,7 @@ export function VideosTab() {
         <div className="lg:col-span-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {unboxingVideos.length === 0 ? (
-              <div className="col-span-2 rounded-xl border border-dashed border-brand-border bg-slate-900/10 p-12 text-center text-slate-500">
+              <div className="col-span-2 rounded-xl border border-dashed border-brand-border bg-slate-900/10 p-12 text-center text-slate-400">
                 <PlayCircle className="mx-auto h-8 w-8 mb-2 opacity-50" />
                 <p className="text-sm">No unboxing videos added yet.</p>
               </div>
@@ -194,7 +194,7 @@ export function VideosTab() {
                   </div>
                   <div className="p-4 flex-1 flex flex-col justify-between gap-4">
                     <div>
-                      <h4 className="font-display text-sm text-white uppercase">{video.title}</h4>
+                      <h3 className="font-display text-sm text-white uppercase">{video.title}</h3>
                       <p className="text-xs text-slate-400 mt-1 line-clamp-2">{video.description}</p>
                     </div>
                     

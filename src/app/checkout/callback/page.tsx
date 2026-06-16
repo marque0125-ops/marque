@@ -6,6 +6,7 @@ import { useOrderStore } from "../../../store/useOrderStore";
 import { useCartStore } from "../../../store/useCartStore";
 import { useUIStore } from "../../../store/useUIStore";
 import { Check, AlertTriangle, Loader2 } from "lucide-react";
+import { trackPurchase } from "../../../utils/analytics";
 
 function CallbackContent() {
   const router = useRouter();
@@ -24,11 +25,15 @@ function CallbackContent() {
       if (status === "PAYMENT_SUCCESS") {
         // Only create order if cart has items to prevent duplicate orders on refresh
         if (cartStore.cart.length > 0) {
+          const grandTotal = cartStore.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
           const order = orderStore.createOrder('UPI'); // Use UPI/Online as generic label for PhonePe
           order.id = orderId || order.id; // Override with PhonePe order ID if available
           order.status = "confirmed";
           order.paymentMethod = "Card"; 
           
+          // Track PhonePe Purchase
+          trackPurchase(order.id, grandTotal, 'INR');
+
           cartStore.clearCart();
           uiStore.showDialog({ 
             title: 'Notice', 

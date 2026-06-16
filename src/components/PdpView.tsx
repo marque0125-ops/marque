@@ -24,6 +24,7 @@ import {
   AlertTriangle,
   X
 } from "lucide-react";
+import { trackAddToCart } from "../utils/analytics";
 
 export default function PdpView() {
   const { addToCart } = useCartStore();
@@ -141,6 +142,9 @@ export default function PdpView() {
     if (!activeVariant) return;
     addToCart(selectedProduct, activeVariant, 1);
     
+    // Track main product AddToCart event
+    trackAddToCart(selectedProduct.name, selectedProduct.sku, activePrice, 'INR');
+
     // Also add selected upgrade parts
     selectedParts.forEach(partSku => {
       const part = selectedProduct.compatibleParts.find(p => p.sku === partSku);
@@ -173,6 +177,9 @@ export default function PdpView() {
           reviewCount: 1
         };
         addToCart(accessoryProduct, accessoryProduct.variants[0], 1);
+        
+        // Track accessory AddToCart event
+        trackAddToCart(accessoryProduct.name, accessoryProduct.sku, accessoryProduct.price, 'INR');
       }
     });
 
@@ -282,6 +289,7 @@ export default function PdpView() {
               {selectedProduct.images.map((img, idx) => (
                 <button
                   key={idx}
+                  aria-label={`View image ${idx + 1}`}
                   onClick={() => setActiveImageIndex(idx)}
                   className={`relative aspect-square w-full rounded-xl overflow-hidden border bg-slate-950 transition-all ${activeImageIndex === idx ? 'border-brand-orange shadow-glow' : 'border-brand-border opacity-70 hover:opacity-100'}`}
                 >
@@ -320,6 +328,7 @@ export default function PdpView() {
                 {brand?.name} AUTHORIZED
               </span>
               <button 
+                aria-label="Toggle Wishlist"
                 onClick={() => toggleWishlist(selectedProduct.id)}
                 className="p-2 rounded-full border border-brand-border bg-slate-900 text-slate-400 hover:text-brand-orange"
               >
@@ -604,6 +613,7 @@ export default function PdpView() {
                   <button
                     key={star}
                     type="button"
+                    aria-label={`Rate ${star} stars`}
                     onClick={() => setNewRating(star)}
                     className="p-1 rounded bg-slate-900 border border-brand-border text-brand-gold hover:scale-110 transition-transform"
                   >
@@ -709,6 +719,7 @@ export default function PdpView() {
 
                     {/* Wishlist button */}
                     <button 
+                      aria-label="Add to Wishlist"
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleWishlist(p.id);
@@ -795,6 +806,7 @@ export default function PdpView() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90">
           <div className="relative w-full max-w-3xl aspect-video rounded-2xl overflow-hidden border border-brand-border bg-black shadow-2xl">
             <button 
+              aria-label="Close Video"
               onClick={() => setShowVideo(false)}
               className="absolute top-4 right-4 text-white hover:text-brand-orange z-10 bg-black/80 p-2 rounded-full border border-slate-800"
             >

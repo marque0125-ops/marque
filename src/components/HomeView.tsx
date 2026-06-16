@@ -157,6 +157,8 @@ export default function HomeView() {
                 alt={slide.titleMain || "Promo Banner"}
                 fill
                 sizes="(max-width: 1152px) 100vw, 1152px"
+                priority={idx === 0}
+                quality={80}
                 className="object-cover transition-transform duration-1000 group-hover:scale-105"
               />
               {/* Optional Text Overlay */}
@@ -176,6 +178,7 @@ export default function HomeView() {
               {promoBanners.map((_, idx) => (
                 <button
                   key={idx}
+                  aria-label={`Go to promo slide ${idx + 1}`}
                   onClick={() => setCurrentPromoSlide(idx)}
                   className={`h-2 rounded-full transition-all duration-300 ${idx === currentPromoSlide ? "bg-brand-orange w-6" : "bg-black/50 w-2 hover:bg-white/50"
                     }`}
@@ -211,7 +214,7 @@ export default function HomeView() {
                 onClick={() => router.push('/new-arrival')}
                 className="group flex items-center justify-center gap-2 rounded-xl bg-brand-orange px-6 py-3.5 text-sm font-normal text-white sm:text-black hover:bg-brand-gold hover:shadow-glow transition-all duration-300 uppercase tracking-wider"
               >
-                🆕 NEW ARRIVAL: EXPLORE NOW
+                WATCH UNBOXING VIDEOS 👇
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </button>
 
@@ -240,6 +243,7 @@ export default function HomeView() {
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     priority={idx === 0}
+                    quality={80}
                     className="object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
                   <div className="absolute bottom-4 right-4 flex flex-col items-end gap-1 p-3 rounded-xl bg-slate-950/80 backdrop-blur border border-white/10 text-right">
@@ -256,6 +260,7 @@ export default function HomeView() {
                   {heroBanners.map((_, idx) => (
                     <button
                       key={idx}
+                      aria-label={`Go to hero slide ${idx + 1}`}
                       onClick={() => setCurrentSlide(idx)}
                       className={`h-2 rounded-full transition-all duration-300 ${idx === currentSlide ? "bg-brand-orange w-6" : "bg-white/30 w-2 hover:bg-white/50"
                         }`}
@@ -736,7 +741,7 @@ export default function HomeView() {
                 <span className="font-normal text-white block text-xs sm:text-sm">
                   {testimonialsList[testimonialIndex]?.name}
                 </span>
-                <span className="text-[10px] text-slate-500 font-normal uppercase tracking-wider block">
+                <span className="text-[10px] text-slate-400 font-normal uppercase tracking-wider block">
                   {testimonialsList[testimonialIndex]?.role}
                 </span>
               </div>
@@ -748,6 +753,7 @@ export default function HomeView() {
             {testimonialsList.map((_, idx) => (
               <button
                 key={idx}
+                aria-label={`Go to testimonial ${idx + 1}`}
                 onClick={() => setTestimonialIndex(idx)}
                 className={`h-2 rounded-full transition-all duration-300 ${idx === testimonialIndex ? "bg-brand-orange w-6" : "bg-brand-orange/20 hover:bg-brand-orange/50 w-2"
                   }`}
@@ -819,6 +825,7 @@ export default function HomeView() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
           <div className="relative w-full max-w-2xl rounded-2xl border border-brand-border bg-slate-950 p-6 md:p-8 max-h-[85vh] overflow-y-auto shadow-2xl space-y-6">
             <button
+              aria-label="Close Guide"
               onClick={() => setActiveGuide(null)}
               className="absolute top-4 right-4 text-slate-400 hover:text-white"
             >

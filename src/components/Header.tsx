@@ -83,6 +83,7 @@ export default function Header() {
 
           {/* Mobile Menu Toggle */}
           <button 
+            aria-label="Toggle Mobile Menu"
             className="md:hidden p-1.5 text-slate-300 hover:text-brand-orange"
             onClick={() => setShowMobileMenu(true)}
           >
@@ -164,6 +165,7 @@ export default function Header() {
 
             {/* Mobile Search Toggle */}
             <button
+              aria-label="Toggle Mobile Search"
               onClick={() => setShowSearchBox(!showSearchBox)}
               className="p-1.5 sm:p-2 text-slate-300 hover:text-brand-orange transition-colors lg:hidden"
             >
@@ -172,6 +174,7 @@ export default function Header() {
 
             {/* Wishlist */}
             <button
+              aria-label="View Wishlist"
               onClick={() => { setSelectedProduct(null); router.push('/shop'); }}
               className="relative p-2 text-slate-300 hover:text-brand-orange transition-colors hidden sm:block"
             >
@@ -186,6 +189,7 @@ export default function Header() {
             {/* Low stock Warning alerts indicator */}
             <div className="relative hidden sm:block">
               <button
+                aria-label="View Notifications"
                 onClick={() => setShowNotifications(!showNotifications)}
                 className={`relative p-1.5 sm:p-2 rounded-full transition-colors ${lowStockAlerts.length > 0 ? 'text-brand-gold animate-bounce' : 'text-slate-300 hover:text-brand-orange'}`}
               >
@@ -205,6 +209,7 @@ export default function Header() {
                     </span>
                     {lowStockAlerts.length > 0 && (
                       <button
+                        aria-label="Clear all notifications"
                         onClick={clearLowStockAlerts}
                         className="text-[10px] text-slate-400 hover:text-brand-orange transition-colors underline"
                       >
@@ -232,6 +237,7 @@ export default function Header() {
 
             {/* Cart Button */}
             <button
+              aria-label="View Shopping Cart"
               onClick={() => { setSelectedProduct(null); router.push('/cart'); }}
               className={`relative p-1.5 sm:p-2.5 rounded-xl border transition-all ${pathname === '/cart' ? 'bg-brand-orange border-brand-orange text-white sm:text-black' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
             >
@@ -245,6 +251,7 @@ export default function Header() {
 
             {/* User Account */}
             <button
+              aria-label="User Account Profile"
               onClick={() => { setSelectedProduct(null); router.push('/account'); }}
               className={`hidden sm:block relative p-1.5 sm:p-2.5 rounded-xl border transition-all ${pathname === '/account' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
               title={isAuthenticated ? "Pilot Dashboard (Authorized)" : "Pilot Authorization Login"}
@@ -258,6 +265,7 @@ export default function Header() {
             {/* Admin Controls */}
             {isAdmin && (
               <button
+                aria-label="Admin Control Panel"
                 onClick={() => { setSelectedProduct(null); router.push('/admin'); }}
                 className={`hidden sm:block p-1.5 sm:p-2.5 rounded-xl border transition-all ${pathname === '/admin' ? 'border-brand-orange text-brand-orange' : 'border-brand-border bg-slate-900 hover:border-brand-orange text-slate-300'}`}
                 title="Admin Panel"

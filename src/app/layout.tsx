@@ -26,6 +26,7 @@ const Footer = dynamic(() => import('../components/Footer'), { ssr: false });
 const GlobalDialog = dynamic(() => import('../components/GlobalDialog').then(mod => mod.GlobalDialog), { ssr: false });
 const ClientProviders = dynamic(() => import('../components/ClientProviders'), { ssr: false });
 const WhatsAppButton = dynamic(() => import('../components/WhatsAppButton'), { ssr: false });
+const AnalyticsProvider = dynamic(() => import('../components/AnalyticsProvider'), { ssr: false });
 
 export default function RootLayout({
   children,
@@ -37,6 +38,7 @@ export default function RootLayout({
       <head>
       </head>
       <body className={`${inter.variable} ${outfit.variable} antialiased font-sans`}>
+        <AnalyticsProvider />
         <div className="flex flex-col min-h-screen bg-brand-dark text-slate-100 font-sans selection:bg-brand-orange selection:text-black">
           {/* Dynamic Global Navigation Header */}
           <Header />
