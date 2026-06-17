@@ -148,12 +148,7 @@ export const useProductStore = create<ProductState>()(
           !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
 
         if (!isConfigured) {
-          const currentProducts = get().products;
-          if (currentProducts.length > 0 && currentProducts !== PRODUCTS) {
-            set({ isLoading: false });
-            return;
-          }
-          set({ products: PRODUCTS, isLoading: false });
+          set({ isLoading: false });
           return;
         }
 
@@ -165,30 +160,37 @@ export const useProductStore = create<ProductState>()(
 
           if (error) {
             console.warn("Fetch products error:", error.message);
-            set({ products: PRODUCTS });
+            // Preserve local state if DB fetch fails
             return;
           }
 
           if (data && data.length > 0) {
             const dbProducts = data.map(normalizeProduct);
-            const mergedProducts = dbProducts.map(dbProd => {
-              return dbProd;
-            });
-            
-            // Merge missing PRODUCTS (like our new accessories and vehicles) that don't exist in DB yet
-            PRODUCTS.forEach(mockProd => {
-              if (!mergedProducts.some(p => p.id === mockProd.id)) {
-                mergedProducts.push(mockProd);
-              }
-            });
-            
-            set({ products: mergedProducts });
-          } else {
-            set({ products: PRODUCTS });
+            set({ products: dbProducts });
+          } else if (data && data.length === 0) {
+            // DB is empty. If local state has products, seed the DB.
+            const currentProducts = get().products;
+            if (currentProducts.length > 0) {
+              currentProducts.forEach(async (product) => {
+                try {
+                  const dbProduct = {
+                    id: product.id, name: product.name, slug: product.slug, description: product.description,
+                    price: product.price, compare_price: product.comparePrice, sku: product.sku, weight_grams: product.weightGrams,
+                    scale: product.scale, terrain_type: product.terrainType, is_featured: product.isFeatured, is_active: product.isActive,
+                    speed_kmh: product.speedKmh, build_type: product.buildType, images: product.images, video_url: product.videoUrl,
+                    whats_in_the_box: product.whatsInTheBox, specs: product.specs, compatible_parts: product.compatibleParts,
+                    variants: product.variants, stock_qty: product.stockQty, average_rating: product.averageRating, review_count: product.reviewCount,
+                    brand_id: product.brandId, category_id: product.categoryId
+                  };
+                  await supabase.from("products").insert(dbProduct);
+                } catch (e) {}
+              });
+            } else {
+              set({ products: [] });
+            }
           }
         } catch (err: any) {
           console.error("Supabase error:", err.message);
-          set({ products: PRODUCTS });
         } finally {
           set({ isLoading: false });
         }
