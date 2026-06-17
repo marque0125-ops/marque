@@ -33,6 +33,7 @@ export interface ProductState {
 
   toggleWishlist: (productId: string) => void;
   fetchProducts: () => Promise<void>;
+  fetchCategories: () => Promise<void>;
   updateProductStock: (productId: string, variantId: string, newStock: number) => void;
   addProduct: (product: Product) => void;
   updateProduct: (product: Product) => void;
@@ -196,6 +197,49 @@ export const useProductStore = create<ProductState>()(
         }
       },
 
+      fetchCategories: async () => {
+        const isConfigured = 
+          process.env.NEXT_PUBLIC_SUPABASE_URL && 
+          !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+
+        if (!isConfigured) {
+          return;
+        }
+
+        try {
+          const { data, error } = await supabase
+            .from("categories")
+            .select("*");
+
+          if (error) {
+            console.warn("Fetch categories error:", error.message);
+            return;
+          }
+
+          if (data && data.length > 0) {
+            set({ categories: data });
+          } else if (data && data.length === 0) {
+            // Seed DB with local categories if empty
+            const currentCategories = get().categories;
+            if (currentCategories.length > 0) {
+              currentCategories.forEach(async (category) => {
+                try {
+                  await supabase.from("categories").insert({
+                    id: category.id,
+                    name: category.name,
+                    image: category.image
+                  });
+                } catch (e) {}
+              });
+            } else {
+              set({ categories: [] });
+            }
+          }
+        } catch (err: any) {
+          console.error("Supabase error:", err.message);
+        }
+      },
+
       updateProductStock: (productId, variantId, newStock) => {
         set(state => ({
           products: state.products.map(p => {
@@ -286,13 +330,50 @@ export const useProductStore = create<ProductState>()(
         });
       },
 
-      addCategory: (category) => set(state => ({ categories: [...state.categories, category] })),
-      updateCategory: (updatedCategory) => set(state => ({
-        categories: state.categories.map(c => c.id === updatedCategory.id ? updatedCategory : c)
-      })),
-      deleteCategory: (categoryId) => set(state => ({
-        categories: state.categories.filter(c => c.id !== categoryId)
-      })),
+      addCategory: (category) => {
+        set(state => ({ categories: [...state.categories, category] }));
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (isConfigured) {
+          (async () => {
+            try {
+              await supabase.from("categories").insert({
+                id: category.id,
+                name: category.name,
+                image: category.image
+              });
+            } catch (err) {}
+          })();
+        }
+      },
+      updateCategory: (updatedCategory) => {
+        set(state => ({
+          categories: state.categories.map(c => c.id === updatedCategory.id ? updatedCategory : c)
+        }));
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (isConfigured) {
+          (async () => {
+            try {
+              await supabase.from("categories").update({
+                name: updatedCategory.name,
+                image: updatedCategory.image
+              }).eq("id", updatedCategory.id);
+            } catch (err) {}
+          })();
+        }
+      },
+      deleteCategory: (categoryId) => {
+        set(state => ({
+          categories: state.categories.filter(c => c.id !== categoryId)
+        }));
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (isConfigured) {
+          (async () => {
+            try {
+              await supabase.from("categories").delete().eq("id", categoryId);
+            } catch (err) {}
+          })();
+        }
+      },
 
       addGuide: (guide) => set(state => ({
         guides: [...state.guides, guide]
