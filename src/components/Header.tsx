@@ -143,6 +143,20 @@ export default function Header() {
             >
               Accessories
             </button>
+
+            <button
+              onClick={() => { setSelectedProduct(null); router.push('/blog'); }}
+              className={`hover:text-brand-orange transition-colors ${pathname === '/blog' || pathname.startsWith('/blog/') ? 'text-brand-orange font-normal' : 'text-slate-300'}`}
+            >
+              Blog
+            </button>
+
+            <button
+              onClick={() => { setSelectedProduct(null); router.push('/contact'); }}
+              className={`hover:text-brand-orange transition-colors ${pathname === '/contact' ? 'text-brand-orange font-normal' : 'text-slate-300'}`}
+            >
+              Contact
+            </button>
           </nav>
 
           {/* Search bar middle */}
@@ -325,6 +339,18 @@ export default function Header() {
                 className={`text-left uppercase hover:text-brand-orange transition-colors ${pathname === '/accessories' ? 'text-brand-orange' : 'text-slate-300'}`}
               >
                 Accessories & Parts
+              </button>
+              <button 
+                onClick={() => { setSelectedProduct(null); router.push('/blog'); setShowMobileMenu(false); }}
+                className={`text-left uppercase hover:text-brand-orange transition-colors ${pathname === '/blog' || pathname.startsWith('/blog/') ? 'text-brand-orange' : 'text-slate-300'}`}
+              >
+                Knowledge Base (Blog)
+              </button>
+              <button 
+                onClick={() => { setSelectedProduct(null); router.push('/contact'); setShowMobileMenu(false); }}
+                className={`text-left uppercase hover:text-brand-orange transition-colors ${pathname === '/contact' ? 'text-brand-orange' : 'text-slate-300'}`}
+              >
+                Contact Support
               </button>
               <button 
                 onClick={() => { setSelectedProduct(null); router.push('/account'); setShowMobileMenu(false); }}

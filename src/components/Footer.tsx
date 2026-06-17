@@ -122,7 +122,10 @@ export default function Footer() {
               Need technical support or custom part compatibility advice? Our expert RC pilots are ready to help.
             </p>
             <div className="space-y-2.5 text-xs text-[#cbd5e1]">
-              <a href="tel:+918754498038" className="flex items-center gap-2 hover:text-brand-orange transition-colors">
+              <Link href="/contact" onClick={() => window.scrollTo(0, 0)} className="inline-block mb-1 text-brand-orange hover:text-brand-gold font-normal uppercase tracking-wider border border-brand-orange/30 rounded px-3 py-1.5 bg-brand-orange/10 transition-colors">
+                Open Support Ticket
+              </Link>
+              <a href="tel:+918754498038" className="flex items-center gap-2 hover:text-brand-orange transition-colors mt-2">
                 <Phone className="h-4 w-4 text-brand-orange" />
                 <span>+91 87544 98038</span>
               </a>
@@ -145,11 +148,11 @@ export default function Footer() {
             <span className="hidden md:inline text-[#334155]">|</span>
             <a href="https://marque.co.in" target="_blank" rel="noopener noreferrer" className="text-brand-orange hover:text-brand-gold font-normal">marque.co.in</a>
           </div>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-brand-orange underline underline-offset-2">Privacy Policy</a>
+          <div className="flex flex-wrap gap-4 md:gap-6 justify-center md:justify-end">
+            <Link href="/blog" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange underline underline-offset-2">Knowledge Base</Link>
+            <Link href="/contact" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange underline underline-offset-2">Contact Us</Link>
             <Link href="/terms" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange underline underline-offset-2">Terms of Service</Link>
             <Link href="/shipping" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange underline underline-offset-2">Shipping Rates</Link>
-            <a href="#" className="hover:text-brand-orange underline underline-offset-2">Refund & Replacements</a>
           </div>
         </div>
 
