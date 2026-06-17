@@ -17,6 +17,29 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "MARQUE | Premium RC Cars India • Traxxas, Arrma, FMS, Rlaarlo",
   description: "Authorized e-commerce portal for high-performance remote control cars in India. Professional support, verified 18% HSN 9503 GST invoices, and live order tracking systems.",
+  keywords: ["RC Cars India", "Traxxas India", "Arrma RC", "FMS models", "Rlaarlo RC", "Remote Control Cars", "Hobby Grade RC"],
+  authors: [{ name: "MARQUE Technical Garage" }],
+  openGraph: {
+    title: "MARQUE | Premium RC Cars India",
+    description: "Authorized e-commerce portal for high-performance remote control cars in India.",
+    url: "https://marque.co.in",
+    siteName: "MARQUE",
+    images: [
+      {
+        url: "https://marque.co.in/logo.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MARQUE | Premium RC Cars India",
+    description: "Authorized e-commerce portal for high-performance remote control cars in India.",
+    images: ["https://marque.co.in/logo.png"],
+  },
 };
 
 import dynamic from 'next/dynamic';
