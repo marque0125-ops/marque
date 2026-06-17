@@ -28,7 +28,8 @@ export default function Header() {
     wishlist,
     searchQuery,
     setSearchQuery,
-    setFilterBrand
+    setFilterBrand,
+    products
   } = useProductStore();
   const { isAuthenticated, userEmail } = useAuthStore();
   const router = useRouter();
@@ -47,8 +48,17 @@ export default function Header() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
 
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
+
+  const searchResults = searchQuery.length > 1 ? products.filter(p => {
+    const q = searchQuery.toLowerCase();
+    const matchName = p.name.toLowerCase().includes(q);
+    const brand = BRANDS.find(b => b.id === p.brandId);
+    const matchBrand = brand ? brand.name.toLowerCase().includes(q) : false;
+    return matchName || matchBrand;
+  }).slice(0, 4) : [];
 
   const handleBrandClick = (slug: string) => {
     setFilterBrand(slug);
@@ -160,19 +170,65 @@ export default function Header() {
           </nav>
 
           {/* Search bar middle */}
-          <form
-            onSubmit={handleSearchSubmit}
-            className="hidden lg:flex relative max-w-md w-full items-center"
-          >
-            <Search className="absolute left-3.5 h-4.5 w-4.5 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search legendary crawlers, bashers, street racers..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-full border border-brand-border bg-slate-900/60 py-2.5 pl-10 pr-4 text-sm text-slate-200 placeholder-slate-400 outline-none transition-all focus:border-brand-orange focus:bg-slate-900/90 focus:shadow-glow"
-            />
-          </form>
+          <div className="hidden lg:flex relative max-w-md w-full items-center">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="w-full relative"
+            >
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search legendary crawlers, bashers, street racers..."
+                value={searchQuery}
+                onFocus={() => setShowSearchDropdown(true)}
+                onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowSearchDropdown(true);
+                }}
+                className="w-full rounded-full border border-brand-border bg-slate-900/60 py-2.5 pl-10 pr-4 text-sm text-slate-200 placeholder-slate-400 outline-none transition-all focus:border-brand-orange focus:bg-slate-900/90 focus:shadow-glow"
+              />
+            </form>
+            
+            {showSearchDropdown && searchQuery.length > 1 && (
+              <div className="absolute top-full left-0 right-0 mt-2 rounded-xl border border-brand-border bg-slate-950 shadow-2xl z-[100] overflow-hidden">
+                {searchResults.length > 0 ? (
+                  <div className="flex flex-col">
+                    {searchResults.map(p => (
+                      <div 
+                        key={p.id} 
+                        onClick={() => {
+                          setSelectedProduct(p);
+                          router.push(`/product/${p.slug}`);
+                          setShowSearchDropdown(false);
+                          setSearchQuery('');
+                        }}
+                        className="flex items-center gap-3 p-3 hover:bg-slate-900 cursor-pointer border-b border-brand-border/50 last:border-0 transition-colors"
+                      >
+                        <div className="h-10 w-14 bg-slate-800 rounded overflow-hidden relative shrink-0 border border-slate-700">
+                          <Image src={p.images[0]} alt={p.name} fill sizes="56px" className="object-cover" />
+                        </div>
+                        <div className="flex flex-col overflow-hidden">
+                          <span className="text-sm text-slate-200 font-normal truncate">{p.name}</span>
+                          <span className="text-xs text-brand-orange font-mono">₹{p.price.toLocaleString('en-IN')}</span>
+                        </div>
+                      </div>
+                    ))}
+                    <button 
+                      onClick={handleSearchSubmit}
+                      className="p-3 text-center text-xs font-normal uppercase tracking-wider text-slate-400 hover:text-brand-orange hover:bg-slate-900 bg-slate-950/50 transition-colors w-full"
+                    >
+                      View all results for "{searchQuery}"
+                    </button>
+                  </div>
+                ) : (
+                  <div className="p-4 text-center text-sm text-slate-500">
+                    No models found matching "{searchQuery}"
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Icons Right */}
           <div className="flex items-center gap-1.5 sm:gap-4">
@@ -293,21 +349,71 @@ export default function Header() {
 
         {/* Mobile Search Overlay Input */}
         {showSearchBox && (
-          <form
-            onSubmit={handleSearchSubmit}
-            className="py-3 border-t border-brand-border flex gap-2 lg:hidden"
-          >
-            <input
-              type="text"
-              placeholder="Search crawlers, parts..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-sm text-slate-200 outline-none focus:border-brand-orange"
-            />
-            <button type="submit" className="bg-brand-orange text-white sm:text-black px-4 py-2 rounded-lg font-normal text-xs uppercase">
-              Go
-            </button>
-          </form>
+          <div className="py-3 border-t border-brand-border lg:hidden relative">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="flex gap-2"
+            >
+              <input
+                type="text"
+                placeholder="Search crawlers, parts..."
+                value={searchQuery}
+                onFocus={() => setShowSearchDropdown(true)}
+                onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowSearchDropdown(true);
+                }}
+                className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-sm text-slate-200 outline-none focus:border-brand-orange"
+              />
+              <button type="submit" className="bg-brand-orange text-white sm:text-black px-4 py-2 rounded-lg font-normal text-xs uppercase">
+                Go
+              </button>
+            </form>
+
+            {showSearchDropdown && searchQuery.length > 1 && (
+              <div className="absolute top-full left-0 right-0 mt-1 rounded-xl border border-brand-border bg-slate-950 shadow-2xl z-[100] overflow-hidden">
+                {searchResults.length > 0 ? (
+                  <div className="flex flex-col">
+                    {searchResults.map(p => (
+                      <div 
+                        key={p.id} 
+                        onClick={() => {
+                          setSelectedProduct(p);
+                          router.push(`/product/${p.slug}`);
+                          setShowSearchDropdown(false);
+                          setShowSearchBox(false);
+                          setSearchQuery('');
+                        }}
+                        className="flex items-center gap-3 p-3 hover:bg-slate-900 cursor-pointer border-b border-brand-border/50 last:border-0 transition-colors"
+                      >
+                        <div className="h-10 w-14 bg-slate-800 rounded overflow-hidden relative shrink-0 border border-slate-700">
+                          <Image src={p.images[0]} alt={p.name} fill sizes="56px" className="object-cover" />
+                        </div>
+                        <div className="flex flex-col overflow-hidden">
+                          <span className="text-sm text-slate-200 font-normal truncate">{p.name}</span>
+                          <span className="text-xs text-brand-orange font-mono">₹{p.price.toLocaleString('en-IN')}</span>
+                        </div>
+                      </div>
+                    ))}
+                    <button 
+                      onClick={(e) => {
+                         handleSearchSubmit(e);
+                         setShowSearchBox(false);
+                      }}
+                      className="p-3 text-center text-xs font-normal uppercase tracking-wider text-slate-400 hover:text-brand-orange hover:bg-slate-900 bg-slate-950/50 transition-colors w-full"
+                    >
+                      View all results for "{searchQuery}"
+                    </button>
+                  </div>
+                ) : (
+                  <div className="p-4 text-center text-sm text-slate-500">
+                    No models found matching "{searchQuery}"
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         )}
       </div>
     </header>
