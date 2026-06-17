@@ -241,6 +241,7 @@ export const useProductStore = create<ProductState>()(
       },
 
       updateProductStock: (productId, variantId, newStock) => {
+        let updatedProduct: Product | null = null;
         set(state => ({
           products: state.products.map(p => {
             if (p.id === productId) {
@@ -248,11 +249,26 @@ export const useProductStore = create<ProductState>()(
                 v.id === variantId ? { ...v, stockQty: newStock } : v
               );
               const newTotalStock = updatedVariants.reduce((sum, v) => sum + v.stockQty, 0);
-              return { ...p, variants: updatedVariants, stockQty: newTotalStock };
+              updatedProduct = { ...p, variants: updatedVariants, stockQty: newTotalStock };
+              return updatedProduct;
             }
             return p;
           })
         }));
+
+        if (updatedProduct) {
+          const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+          if (isConfigured) {
+            (async () => {
+              try {
+                await supabase.from("products").update({
+                  variants: (updatedProduct as Product).variants as any,
+                  stock_qty: (updatedProduct as Product).stockQty
+                }).eq("id", productId);
+              } catch (err) {}
+            })();
+          }
+        }
       },
 
       addProduct: (product) => {

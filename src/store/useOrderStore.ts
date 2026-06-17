@@ -179,6 +179,7 @@ export const useOrderStore = create<OrderState>()(
 
       advanceOrderStatus: (orderId) => {
         const orderList = get().orders;
+        let updatedOrder: Order | null = null;
         const updated = orderList.map(order => {
           if (order.id === orderId) {
             let nextStatus: Order['status'] = 'placed';
@@ -209,7 +210,7 @@ export const useOrderStore = create<OrderState>()(
                 return order;
             }
 
-            return {
+            const nextOrder = {
               ...order,
               status: nextStatus,
               paymentStatus,
@@ -218,16 +219,34 @@ export const useOrderStore = create<OrderState>()(
                 { status: nextStatus, timestamp: new Date().toLocaleTimeString(), message }
               ]
             };
+            updatedOrder = nextOrder;
+            return nextOrder;
           }
           return order;
         });
 
         set({ orders: updated });
+
+        if (updatedOrder) {
+          const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+          if (isConfigured) {
+            (async () => {
+              try {
+                await supabase.from("orders").update({
+                  status: (updatedOrder as Order).status,
+                  payment_status: (updatedOrder as Order).paymentStatus,
+                  logs: (updatedOrder as Order).logs as any
+                }).eq("id", orderId);
+              } catch (err) {}
+            })();
+          }
+        }
       },
 
       cancelOrder: (orderId) => {
         const productState = useProductStore.getState();
         const orderList = get().orders;
+        let updatedOrder: Order | null = null;
         const updated = orderList.map(order => {
           if (order.id === orderId && order.status !== 'delivered' && order.status !== 'cancelled') {
             order.items.forEach(item => {
@@ -238,7 +257,7 @@ export const useOrderStore = create<OrderState>()(
               }
             });
 
-            return {
+            const nextOrder = {
               ...order,
               status: 'cancelled' as const,
               paymentStatus: order.paymentStatus === 'paid' ? 'refunded' as const : order.paymentStatus,
@@ -247,10 +266,27 @@ export const useOrderStore = create<OrderState>()(
                 { status: 'cancelled', timestamp: new Date().toLocaleTimeString(), message: 'Order has been cancelled by customer. Inventory stock returned.' }
               ]
             };
+            updatedOrder = nextOrder;
+            return nextOrder;
           }
           return order;
         });
         set({ orders: updated });
+
+        if (updatedOrder) {
+          const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+          if (isConfigured) {
+            (async () => {
+              try {
+                await supabase.from("orders").update({
+                  status: (updatedOrder as Order).status,
+                  payment_status: (updatedOrder as Order).paymentStatus,
+                  logs: (updatedOrder as Order).logs as any
+                }).eq("id", orderId);
+              } catch (err) {}
+            })();
+          }
+        }
       }
     }),
     {
