@@ -252,14 +252,16 @@ export default function CartView() {
     }
   };
 
-  const handlePhonePeCheckout = async () => {
+  const handlePhonePeCheckout = async (isCodAdvance: boolean = false) => {
     try {
       showDialog({ title: 'Notice', message: "Initializing PhonePe Secure Checkout..." });
       
+      const paymentAmount = isCodAdvance ? Math.round(grandTotal * 0.4) : grandTotal;
+
       const res = await fetch('/api/phonepe/pay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: grandTotal })
+        body: JSON.stringify({ amount: paymentAmount, isCodAdvance })
       });
 
       const data = await res.json();
@@ -350,7 +352,7 @@ export default function CartView() {
 
               {/* PhonePe Option */}
               <button
-                  onClick={handlePhonePeCheckout}
+                  onClick={() => handlePhonePeCheckout(false)}
                   className="w-full p-4 rounded-xl border border-brand-border bg-slate-950 text-left hover:border-brand-orange hover:bg-slate-900 flex flex-col justify-between transition-all"
                 >
                   <div className="flex items-center justify-between">
@@ -375,17 +377,19 @@ export default function CartView() {
                 */}
 
                 {/* COD option */}
-                <button
-                  onClick={() => handlePlaceOrder('COD')}
-                  className="p-4 rounded-xl border flex flex-col justify-between transition-all border-brand-border bg-slate-950 hover:border-brand-orange hover:bg-slate-900 text-slate-200 cursor-pointer"
-                >
-                  <div className="flex justify-between w-full gap-2">
-                    <span className="text-[10px] text-slate-500 font-normal uppercase">Cash on Delivery</span>
-                  </div>
-                  <span className="text-xs font-normal mt-2 block text-left">
-                    Pay Cash to Courier
-                  </span>
-                </button>
+                {grandTotal <= 5000 && (
+                  <button
+                    onClick={() => handlePhonePeCheckout(true)}
+                    className="p-4 rounded-xl border flex flex-col justify-between transition-all border-brand-border bg-slate-950 hover:border-brand-orange hover:bg-slate-900 text-slate-200 cursor-pointer"
+                  >
+                    <div className="flex justify-between w-full gap-2">
+                      <span className="text-[10px] text-slate-500 font-normal uppercase">Cash on Delivery (40% Advance)</span>
+                    </div>
+                    <span className="text-xs font-normal mt-2 block text-left">
+                      Pay ₹{Math.round(grandTotal * 0.4).toLocaleString('en-IN')} Advance Online, Rest to Courier
+                    </span>
+                  </button>
+                )}
               </div>
 
               <p className="text-[10px] text-slate-500 text-center leading-relaxed">
@@ -432,10 +436,7 @@ export default function CartView() {
                 <span>Shipping Charges</span>
                 <span className="font-mono text-slate-300">₹{shippingCost.toLocaleString('en-IN')}</span>
               </div>
-              <div className="flex justify-between text-[10px] text-slate-500 border-t border-brand-border/40 pt-2.5">
-                <span>GST HSN-9503 Portion (18% inclusive)</span>
-                <span className="font-mono">₹{gstAmount.toLocaleString('en-IN')}</span>
-              </div>
+
               <div className="flex justify-between text-sm font-normal text-brand-gold border-t border-brand-border pt-2.5">
                 <span className="font-display uppercase">Net Payable INR (₹)</span>
                 <span className="font-mono">₹{grandTotal.toLocaleString('en-IN')}</span>
@@ -732,10 +733,7 @@ export default function CartView() {
                   <span>Shipping Charges</span>
                   <span className="font-mono text-slate-300">₹{shippingCost.toLocaleString('en-IN')}</span>
                 </div>
-                <div className="flex justify-between text-[10px] text-slate-500 border-t border-brand-border/40 pt-2.5">
-                  <span>GST HSN-9503 Portion (18% inclusive)</span>
-                  <span className="font-mono">₹{gstAmount.toLocaleString('en-IN')}</span>
-                </div>
+
                 <div className="flex justify-between text-base font-normal text-brand-gold border-t border-brand-border pt-2.5">
                   <span className="font-display uppercase">Net Payable</span>
                   <span className="font-mono">₹{grandTotal.toLocaleString('en-IN')}</span>

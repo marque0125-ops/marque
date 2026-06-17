@@ -27,6 +27,7 @@ export interface Order {
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
   paymentMethod: string;
   paymentId?: string;
+  advancePaidAmount?: number;
   trackingNumber: string;
   shippingAddress: {
     name: string;

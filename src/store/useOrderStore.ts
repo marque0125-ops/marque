@@ -50,6 +50,7 @@ export const useOrderStore = create<OrderState>()(
               paymentStatus: o.payment_status,
               paymentMethod: o.payment_method,
               paymentId: o.payment_id,
+              advancePaidAmount: o.advance_paid_amount,
               trackingNumber: o.tracking_number,
               shippingAddress: o.shipping_address as any,
               createdAt: o.created_at,
@@ -109,6 +110,7 @@ export const useOrderStore = create<OrderState>()(
           paymentStatus: paymentMethod === 'COD' ? 'pending' : 'paid',
           paymentMethod,
           paymentId: paymentId || `pay_rzp_${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
+          advancePaidAmount: paymentMethod === 'COD' ? Math.round(totalAmount * 0.4) : undefined,
           trackingNumber: `SR-${Math.floor(10000000 + Math.random() * 90000000)}`,
           shippingAddress: { ...address },
           createdAt: new Date().toLocaleString('en-IN'),
@@ -146,6 +148,7 @@ export const useOrderStore = create<OrderState>()(
                 payment_status: newOrder.paymentStatus,
                 payment_method: newOrder.paymentMethod,
                 payment_id: newOrder.paymentId,
+                advance_paid_amount: newOrder.advancePaidAmount,
                 tracking_number: newOrder.trackingNumber,
                 shipping_address: newOrder.shippingAddress as any,
                 logs: newOrder.logs as any

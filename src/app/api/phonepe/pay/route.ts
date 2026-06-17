@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { amount } = body; // Amount in rupees
+    const { amount, isCodAdvance } = body; // Amount in rupees
 
     if (!amount) {
       return NextResponse.json({ error: 'Amount is required' }, { status: 400 });
@@ -21,7 +21,8 @@ export async function POST(request: Request) {
     
     // Convert to paise
     const amountInPaise = Math.round(amount * 100);
-    const merchantOrderId = `ORDER_${Date.now()}_${uuidv4().substring(0, 8)}`;
+    const prefix = isCodAdvance ? 'CODADV' : 'ORDER';
+    const merchantOrderId = `${prefix}_${Date.now()}_${uuidv4().substring(0, 8)}`;
     
     // Construct the callback URL
     // Try to get base URL dynamically if possible, or fallback to localhost
