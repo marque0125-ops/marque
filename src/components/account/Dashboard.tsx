@@ -64,7 +64,7 @@ export function Dashboard() {
     const product = products.find((p: any) => p.id === productId);
     if (product) {
       setSelectedProduct(product);
-      router.push('/pdp');
+      router.push(`/product/${product.slug}`);
       window.scrollTo(0, 0);
     }
   };

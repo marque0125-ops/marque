@@ -38,7 +38,7 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
 
   const handleShare = async (e: React.MouseEvent, product: Product) => {
     e.stopPropagation();
-    const shareUrl = `${window.location.origin}/products/${product.id}`;
+    const shareUrl = `${window.location.origin}/product/${product.slug}`;
     if (navigator.share) {
       try {
         await navigator.share({
