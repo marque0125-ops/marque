@@ -1,12 +1,47 @@
-import React from 'react';
+"use client";
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Mail, Phone, MapPin, Clock, MessageSquare, ChevronRight } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, MessageSquare, ChevronRight, Loader2 } from 'lucide-react';
+import { useUIStore } from '../store/useUIStore';
 
 export default function ContactView() {
+  const { showDialog } = useUIStore();
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.message) {
+      showDialog({ title: 'Error', message: 'Please fill in all required fields.' });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        showDialog({ title: 'Message Sent', message: 'Your dispatch has been successfully transmitted to HQ!' });
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        throw new Error(data.error || 'Failed to send message');
+      }
+    } catch (err: any) {
+      showDialog({ title: 'Transmission Failed', message: err.message || 'Could not send the message. Please try again later.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="bg-black min-h-screen pt-24 pb-20 px-4">
       <div className="max-w-6xl mx-auto space-y-12">
-        
+
         {/* Header Section */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">
           <span className="text-[10px] text-brand-orange font-normal uppercase tracking-widest">Reach Out</span>
@@ -19,31 +54,31 @@ export default function ContactView() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pt-8">
-          
+
           {/* Left Column: Contact Form */}
           <div className="bg-slate-900/50 border border-brand-border/40 rounded-3xl p-8 lg:p-10">
             <h2 className="font-display text-2xl text-white uppercase tracking-wider mb-6">Send a Dispatch</h2>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-[10px] text-slate-500 font-normal uppercase tracking-widest block">Pilot Name</label>
-                  <input type="text" className="w-full bg-black border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-all" placeholder="John Doe" />
+                  <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-black border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-all" placeholder="John Doe" required />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] text-slate-500 font-normal uppercase tracking-widest block">Comms Channel (Email)</label>
-                  <input type="email" className="w-full bg-black border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-all" placeholder="john@example.com" />
+                  <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full bg-black border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-all" placeholder="john@example.com" required />
                 </div>
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] text-slate-500 font-normal uppercase tracking-widest block">Telemetry Data (Subject)</label>
-                <input type="text" className="w-full bg-black border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-all" placeholder="Order Issue / Product Question" />
+                <input type="text" value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})} className="w-full bg-black border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-all" placeholder="Order Issue / Product Question" />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] text-slate-500 font-normal uppercase tracking-widest block">Message Payload</label>
-                <textarea rows={5} className="w-full bg-black border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-all resize-none" placeholder="Describe your issue or inquiry..."></textarea>
+                <textarea rows={5} value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} className="w-full bg-black border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-all resize-none" placeholder="Describe your issue or inquiry..." required></textarea>
               </div>
-              <button type="button" className="w-full bg-brand-orange text-black hover:bg-orange-500 font-normal uppercase tracking-widest text-sm py-4 rounded-xl transition-colors flex items-center justify-center gap-2">
-                Transmit Message <ChevronRight className="w-4 h-4" />
+              <button type="submit" disabled={isSubmitting} className="w-full bg-brand-orange text-black hover:bg-orange-500 disabled:opacity-50 font-normal uppercase tracking-widest text-sm py-4 rounded-xl transition-colors flex items-center justify-center gap-2">
+                {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Transmitting...</> : <>Transmit Message <ChevronRight className="w-4 h-4" /></>}
               </button>
             </form>
           </div>
@@ -51,14 +86,14 @@ export default function ContactView() {
           {/* Right Column: Contact Info */}
           <div className="space-y-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              
+
               <div className="bg-slate-900/30 border border-brand-border/40 rounded-2xl p-6 flex flex-col items-center text-center space-y-4 hover:border-brand-orange/50 transition-colors">
                 <div className="w-12 h-12 bg-black border border-slate-800 rounded-full flex items-center justify-center text-brand-orange">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="text-white font-display uppercase tracking-wider mb-1">Email Support</h3>
-                  <a href="mailto:support@marque.co.in" className="text-sm text-slate-400 hover:text-brand-orange transition-colors">support@marque.co.in</a>
+                  <a href="mailto:marque0125@gmail.com" className="text-sm text-slate-400 hover:text-brand-orange transition-colors">marque0125@gmail.com</a>
                 </div>
               </div>
 
@@ -68,7 +103,7 @@ export default function ContactView() {
                 </div>
                 <div>
                   <h3 className="text-white font-display uppercase tracking-wider mb-1">Direct Line</h3>
-                  <a href="tel:+919999999999" className="text-sm text-slate-400 hover:text-brand-orange transition-colors">+91 99999 99999</a>
+                  <a href="tel:+9187544 98038" className="text-sm text-slate-400 hover:text-brand-orange transition-colors">+91 87544 98038</a>
                 </div>
               </div>
 
