@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 import { Loader2, Bell } from 'lucide-react';
 import { useOrderStore } from '../store/useOrderStore';
 
+let sharedAudioCtx: AudioContext | null = null;
+
 const LoadingFallback = () => (
   <div className="py-20 flex justify-center items-center">
     <Loader2 className="h-8 w-8 text-brand-orange animate-spin" />
@@ -33,21 +35,27 @@ export default function AdminView() {
       if (topOrderIdRef.current && orders[0].id !== topOrderIdRef.current) {
         setNewOrderCount(prev => prev + 1);
         try {
-          const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-          if (AudioContext) {
-            const audioCtx = new AudioContext();
+          const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+          if (AudioContextClass) {
+            if (!sharedAudioCtx) {
+              sharedAudioCtx = new AudioContextClass();
+            }
+            if (sharedAudioCtx.state === 'suspended') {
+              sharedAudioCtx.resume();
+            }
             const playTone = (freq: number, startTime: number, duration: number) => {
-              const oscillator = audioCtx.createOscillator();
-              const gainNode = audioCtx.createGain();
+              if (!sharedAudioCtx) return;
+              const oscillator = sharedAudioCtx.createOscillator();
+              const gainNode = sharedAudioCtx.createGain();
               oscillator.type = 'sine';
-              oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
-              gainNode.gain.setValueAtTime(0, audioCtx.currentTime + startTime);
-              gainNode.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + startTime + 0.05);
-              gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + startTime + duration);
+              oscillator.frequency.setValueAtTime(freq, sharedAudioCtx.currentTime + startTime);
+              gainNode.gain.setValueAtTime(0, sharedAudioCtx.currentTime + startTime);
+              gainNode.gain.linearRampToValueAtTime(0.5, sharedAudioCtx.currentTime + startTime + 0.05);
+              gainNode.gain.exponentialRampToValueAtTime(0.01, sharedAudioCtx.currentTime + startTime + duration);
               oscillator.connect(gainNode);
-              gainNode.connect(audioCtx.destination);
-              oscillator.start(audioCtx.currentTime + startTime);
-              oscillator.stop(audioCtx.currentTime + startTime + duration);
+              gainNode.connect(sharedAudioCtx.destination);
+              oscillator.start(sharedAudioCtx.currentTime + startTime);
+              oscillator.stop(sharedAudioCtx.currentTime + startTime + duration);
             };
             playTone(880, 0, 0.3);
             playTone(1046.50, 0.15, 0.4);

@@ -119,13 +119,6 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
             <Heart className={`h-3.5 w-3.5 ${wishlist.includes(p.id) ? 'fill-brand-orange text-brand-orange' : ''}`} />
           </button>
 
-          <button
-            aria-label="Share Product"
-            onClick={(e) => handleShare(e, p)}
-            className="rounded-full bg-slate-950/80 p-2 border border-slate-800 text-slate-400 hover:text-brand-orange hover:scale-110 transition-all"
-          >
-            <Share2 className="h-3.5 w-3.5" />
-          </button>
         </div>
       </div>
 
@@ -186,14 +179,21 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
         </div>
 
         {/* Cart Action */}
-        <div className="border-t border-brand-border pt-3 w-full">
+        <div className="border-t border-brand-border pt-3 w-full flex items-center gap-2">
           <button
             onClick={(e) => handleQuickAdd(e, p)}
-            className="w-full rounded-lg bg-brand-orange hover:bg-brand-gold font-normal uppercase px-3 py-2 text-[10px] sm:text-xs transition-colors flex items-center justify-center gap-1"
+            className="flex-1 rounded-lg bg-brand-orange hover:bg-brand-gold font-normal uppercase px-3 py-2 text-[10px] sm:text-xs transition-colors flex items-center justify-center gap-1"
             style={{ color: '#ffffff' }}
           >
             <Car className="h-3.5 w-3.5" />
             Buy Rig
+          </button>
+          <button
+            aria-label="Share Product"
+            onClick={(e) => handleShare(e, p)}
+            className="rounded-lg bg-slate-900 border border-brand-border p-2 text-slate-400 hover:text-brand-orange hover:border-brand-orange transition-all flex items-center justify-center shrink-0"
+          >
+            <Share2 className="h-5 w-5" />
           </button>
         </div>
       </div>

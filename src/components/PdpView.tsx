@@ -22,7 +22,8 @@ import {
   RotateCw,
   Eye,
   AlertTriangle,
-  X
+  X,
+  Share2
 } from "lucide-react";
 import { trackAddToCart } from "../utils/analytics";
 
@@ -37,7 +38,8 @@ export default function PdpView() {
   } = useProductStore();
   const {
     selectedProduct,
-    setSelectedProduct
+    setSelectedProduct,
+    showDialog
   } = useUIStore();
   const router = useRouter();
 
@@ -195,6 +197,28 @@ export default function PdpView() {
     }
   };
 
+  const handleShare = async () => {
+    if (!selectedProduct) return;
+    const shareUrl = `${window.location.origin}/product/${selectedProduct.slug}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: selectedProduct.name,
+          text: `Check out this ${selectedProduct.name} RC rig!`,
+          url: shareUrl,
+        });
+      } catch (error) {
+        console.error('Error sharing', error);
+      }
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      showDialog({
+        title: 'Link Copied',
+        message: 'Product link copied to clipboard!'
+      });
+    }
+  };
+
   const handleReviewSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!reviewerName || !newTitle || !newBody) return;
@@ -327,13 +351,22 @@ export default function PdpView() {
               <span className="text-xs text-brand-orange font-normal uppercase tracking-widest font-display">
                 {brand?.name} AUTHORIZED
               </span>
-              <button 
-                aria-label="Toggle Wishlist"
-                onClick={() => toggleWishlist(selectedProduct.id)}
-                className="p-2 rounded-full border border-brand-border bg-slate-900 text-slate-400 hover:text-brand-orange"
-              >
-                <Heart className={`h-4.5 w-4.5 ${isWished ? 'fill-brand-orange text-brand-orange' : 'text-slate-300'}`} />
-              </button>
+              <div className="flex items-center gap-2">
+                <button 
+                  aria-label="Toggle Wishlist"
+                  onClick={() => toggleWishlist(selectedProduct.id)}
+                  className="p-2 rounded-full border border-brand-border bg-slate-900 text-slate-400 hover:text-brand-orange transition-all"
+                >
+                  <Heart className={`h-4.5 w-4.5 ${isWished ? 'fill-brand-orange text-brand-orange' : 'text-slate-300'}`} />
+                </button>
+                <button 
+                  aria-label="Share Product"
+                  onClick={handleShare}
+                  className="p-2 rounded-full border border-brand-border bg-slate-900 text-slate-400 hover:text-brand-orange transition-all"
+                >
+                  <Share2 className="h-4.5 w-4.5" />
+                </button>
+              </div>
             </div>
             
             <h1 className="font-display text-3xl font-normal uppercase text-white leading-tight">
@@ -789,9 +822,34 @@ export default function PdpView() {
                           ₹{p.price.toLocaleString('en-IN')}
                         </span>
                       </div>
-                      <button className="flex items-center justify-center rounded-lg bg-brand-orange px-3 py-1.5 text-[10px] font-normal text-white sm:text-black uppercase hover:bg-brand-gold transition-colors">
-                        {p.categoryId === 'accessories' ? 'Buy Item' : 'Buy Rig'}
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button className="flex items-center justify-center rounded-lg bg-brand-orange px-3 py-1.5 text-[10px] font-normal text-white sm:text-black uppercase hover:bg-brand-gold transition-colors">
+                          {p.categoryId === 'accessories' ? 'Buy Item' : 'Buy Rig'}
+                        </button>
+                        <button
+                          aria-label="Share Product"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const shareUrl = `${window.location.origin}/product/${p.slug}`;
+                            if (navigator.share) {
+                              navigator.share({
+                                title: p.name,
+                                text: `Check out this ${p.name} RC rig!`,
+                                url: shareUrl,
+                              }).catch(console.error);
+                            } else {
+                              navigator.clipboard.writeText(shareUrl);
+                              showDialog({
+                                title: 'Link Copied',
+                                message: 'Product link copied to clipboard!'
+                              });
+                            }
+                          }}
+                          className="rounded-lg bg-slate-900 border border-brand-border p-1.5 text-slate-400 hover:text-brand-orange hover:border-brand-orange transition-all flex items-center justify-center shrink-0"
+                        >
+                          <Share2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
