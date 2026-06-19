@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Heart, Car } from "lucide-react";
+import { Heart, Car, Share2 } from "lucide-react";
 import { Product } from "../data/mockData";
 import { BRANDS } from "../data/mockData";
 import { useCartStore } from "../store/useCartStore";
@@ -35,6 +35,28 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
   const { showDialog } = useUIStore();
   const brand = BRANDS.find((b) => b.id === p.brandId);
   const [selectedVariant, setSelectedVariant] = useState(p.variants[0]);
+
+  const handleShare = async (e: React.MouseEvent, product: Product) => {
+    e.stopPropagation();
+    const shareUrl = `${window.location.origin}/products/${product.id}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: product.name,
+          text: `Check out this ${product.name} RC rig!`,
+          url: shareUrl,
+        });
+      } catch (error) {
+        console.error('Error sharing', error);
+      }
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      showDialog({
+        title: 'Link Copied',
+        message: 'Product link copied to clipboard!'
+      });
+    }
+  };
 
   const handleQuickAdd = (e: React.MouseEvent, product: Product) => {
     e.stopPropagation();
@@ -85,16 +107,26 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
           </span>
         </div>
 
-        <button
-          aria-label="Toggle Wishlist"
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleWishlist(p.id);
-          }}
-          className="absolute top-3 right-3 z-10 rounded-full bg-slate-950/80 p-2 border border-slate-800 text-slate-400 hover:text-brand-orange hover:scale-110 transition-all"
-        >
-          <Heart className={`h-3.5 w-3.5 ${wishlist.includes(p.id) ? 'fill-brand-orange text-brand-orange' : ''}`} />
-        </button>
+        <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
+          <button
+            aria-label="Toggle Wishlist"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleWishlist(p.id);
+            }}
+            className="rounded-full bg-slate-950/80 p-2 border border-slate-800 text-slate-400 hover:text-brand-orange hover:scale-110 transition-all"
+          >
+            <Heart className={`h-3.5 w-3.5 ${wishlist.includes(p.id) ? 'fill-brand-orange text-brand-orange' : ''}`} />
+          </button>
+
+          <button
+            aria-label="Share Product"
+            onClick={(e) => handleShare(e, p)}
+            className="rounded-full bg-slate-950/80 p-2 border border-slate-800 text-slate-400 hover:text-brand-orange hover:scale-110 transition-all"
+          >
+            <Share2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </div>
 
       {/* Info Section */}
