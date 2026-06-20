@@ -32,20 +32,6 @@ export function AdminLogin() {
     setIsLoading(true);
 
     try {
-      const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
-      
-      if (!isConfigured) {
-        // Fallback for local testing without Supabase
-        if (email === "2002dineshmurugan@gmail.com" && password === "admin123") {
-          login("Dinesh Admin", "9999999999", email);
-        } else {
-          setErrorMsg("ACCESS DENIED: Unauthorized clearance code.");
-          triggerShake();
-        }
-        setIsLoading(false);
-        return;
-      }
-
       // Real Supabase Auth Flow
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
       

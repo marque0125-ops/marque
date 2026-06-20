@@ -52,28 +52,21 @@ export function AuthPanel() {
 
     setIsLoading(true);
     try {
-      const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
-      if (isConfigured) {
-        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
-        if (authError) {
-          setErrorMsg(authError.message);
-          triggerShake(); setIsLoading(false); return;
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
+      if (authError) {
+        setErrorMsg(authError.message);
+        triggerShake(); setIsLoading(false); return;
+      }
+      if (authData?.user) {
+        const { data: profile } = await supabase.from("profiles").select("*").eq("id", authData.user.id).maybeSingle();
+        const prof = profile as any;
+        if (prof?.wishlist) {
+          setWishlist(prof.wishlist);
         }
-        if (authData?.user) {
-          const { data: profile } = await supabase.from("profiles").select("*").eq("id", authData.user.id).maybeSingle();
-          const prof = profile as any;
-          if (prof?.wishlist) {
-            setWishlist(prof.wishlist);
-          }
-          const name = prof?.name || authData.user.user_metadata?.full_name || email.split("@")[0];
-          const phone = prof?.phone || authData.user.user_metadata?.phone || "9999999999";
-          const token = authData.session?.access_token || "";
-          loginWithSession(name, phone, email, profile || {}, token, prof?.is_admin || false);
-          setIsLoading(false); return;
-        }
-      } else {
-        const mockName = email.split("@")[0];
-        login(mockName, "9999999999", email);
+        const name = prof?.name || authData.user.user_metadata?.full_name || email.split("@")[0];
+        const phone = prof?.phone || authData.user.user_metadata?.phone || "9999999999";
+        const token = authData.session?.access_token || "";
+        loginWithSession(name, phone, email, profile || {}, token, prof?.is_admin || false);
         setIsLoading(false); return;
       }
     } catch (err: any) {
@@ -101,26 +94,20 @@ export function AuthPanel() {
 
     setIsLoading(true);
     try {
-      const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
-      if (isConfigured) {
-        const { data: authData, error: authError } = await supabase.auth.signUp({
-          email, password, options: { data: { full_name: name, phone: phone } }
-        });
-        if (authError) {
-          setErrorMsg(authError.message);
-          triggerShake(); setIsLoading(false); return;
-        }
-        if (authData?.user) {
-          await supabase.from("profiles").upsert([{
-            id: authData.user.id, name, phone, address_line: addressLine || "Medavakkam main road, Madipakkam",
-            city: pincode === "600091" ? "Chennai" : "India", state: pincode === "600091" ? "Tamil Nadu" : "State", pincode
-          }] as any);
-          const token = authData.session?.access_token || "";
-          loginWithSession(name, phone, email, { address_line: addressLine, city: pincode === "600091" ? "Chennai" : "India", state: pincode === "600091" ? "Tamil Nadu" : "State", pincode }, token);
-          setIsLoading(false); return;
-        }
-      } else {
-        login(name, phone, email);
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email, password, options: { data: { full_name: name, phone: phone } }
+      });
+      if (authError) {
+        setErrorMsg(authError.message);
+        triggerShake(); setIsLoading(false); return;
+      }
+      if (authData?.user) {
+        await supabase.from("profiles").upsert([{
+          id: authData.user.id, name, phone, address_line: addressLine || "Medavakkam main road, Madipakkam",
+          city: pincode === "600091" ? "Chennai" : "India", state: pincode === "600091" ? "Tamil Nadu" : "State", pincode
+        }] as any);
+        const token = authData.session?.access_token || "";
+        loginWithSession(name, phone, email, { address_line: addressLine, city: pincode === "600091" ? "Chennai" : "India", state: pincode === "600091" ? "Tamil Nadu" : "State", pincode }, token);
         setIsLoading(false); return;
       }
     } catch (err: any) {
@@ -142,15 +129,12 @@ export function AuthPanel() {
 
     setIsLoading(true);
     try {
-      const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
-      if (isConfigured) {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/account`,
-        });
-        if (error) {
-          setErrorMsg(error.message);
-          triggerShake(); setIsLoading(false); return;
-        }
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/account`,
+      });
+      if (error) {
+        setErrorMsg(error.message);
+        triggerShake(); setIsLoading(false); return;
       }
       setForgotSuccess(true);
     } catch (err: any) {
