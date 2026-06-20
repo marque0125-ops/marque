@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 
-const razorpay = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID as string,
-  key_secret: process.env.RAZORPAY_KEY_SECRET as string,
-});
-
 export async function POST(request: Request) {
   try {
+    const razorpay = new Razorpay({
+      key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID as string,
+      key_secret: process.env.RAZORPAY_KEY_SECRET as string,
+    });
+    
     const body = await request.json();
     const { amount } = body; // Amount should be in INR rupees
 
