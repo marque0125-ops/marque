@@ -1,0 +1,10 @@
+# MARQUE RC Cars India - Robots.txt
+# https://marque.co.in
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout/
+
+Sitemap: https://marque.co.in/sitemap.xml

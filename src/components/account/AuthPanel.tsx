@@ -5,16 +5,14 @@ import React, { useState } from "react";
 import { User, AlertCircle, Loader2, Eye, EyeOff } from "lucide-react";
 import { supabase } from '../../utils/supabase';
 import { useAuthStore } from '../../store/useAuthStore';
-import { useUIStore } from '../../store/useUIStore';
 import { useProductStore } from '../../store/useProductStore';
 
 export function AuthPanel() {
   const { login, loginWithSession } = useAuthStore();
-  const { setView } = useUIStore();
   const router = useRouter();
   const { setWishlist } = useProductStore();
 
-  const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
+  const [activeTab, setActiveTab] = useState<'signin' | 'signup' | 'forgot'>('signin');
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
   const [signUpName, setSignUpName] = useState("");
@@ -29,6 +27,8 @@ export function AuthPanel() {
   const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isShaking, setIsShaking] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotSuccess, setForgotSuccess] = useState(false);
 
   const triggerShake = () => {
     setIsShaking(true);
@@ -68,7 +68,7 @@ export function AuthPanel() {
           const name = prof?.name || authData.user.user_metadata?.full_name || email.split("@")[0];
           const phone = prof?.phone || authData.user.user_metadata?.phone || "9999999999";
           const token = authData.session?.access_token || "";
-          loginWithSession(name, phone, email, profile || {}, token);
+          loginWithSession(name, phone, email, profile || {}, token, prof?.is_admin || false);
           setIsLoading(false); return;
         }
       } else {
@@ -125,6 +125,36 @@ export function AuthPanel() {
       }
     } catch (err: any) {
       setErrorMsg(err.message || "Registration failed.");
+      triggerShake();
+    }
+    setIsLoading(false);
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(""); setFieldErrors({}); setForgotSuccess(false);
+    const email = forgotEmail.trim();
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setFieldErrors({ forgotEmail: "Please enter a valid email address." });
+      triggerShake(); return;
+    }
+
+    setIsLoading(true);
+    try {
+      const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+      if (isConfigured) {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/account`,
+        });
+        if (error) {
+          setErrorMsg(error.message);
+          triggerShake(); setIsLoading(false); return;
+        }
+      }
+      setForgotSuccess(true);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Failed to send reset email.");
       triggerShake();
     }
     setIsLoading(false);
@@ -188,6 +218,13 @@ export function AuthPanel() {
             <button type="submit" disabled={isLoading} className="w-full bg-brand-orange text-white sm:text-black font-normal uppercase py-3 rounded-xl hover:bg-brand-gold hover:shadow-glow transition-all flex justify-center items-center">
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign In"}
             </button>
+            <button
+              type="button"
+              onClick={() => { setActiveTab('forgot'); setErrorMsg(""); setFieldErrors({}); }}
+              className="w-full text-center text-[10px] text-slate-500 hover:text-brand-orange transition-colors uppercase tracking-wider pt-1"
+            >
+              Forgot your password?
+            </button>
           </form>
         )}
 
@@ -222,6 +259,43 @@ export function AuthPanel() {
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create Account"}
             </button>
           </form>
+        )}
+
+        {activeTab === 'forgot' && (
+          <div className="space-y-4">
+            {forgotSuccess ? (
+              <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-4 text-center space-y-2">
+                <p className="text-xs text-green-400 font-normal">Password reset email sent! Check your inbox and spam folder.</p>
+                <button
+                  onClick={() => { setActiveTab('signin'); setForgotSuccess(false); }}
+                  className="text-[10px] text-brand-orange hover:text-brand-gold uppercase tracking-wider underline"
+                >
+                  Back to Sign In
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleForgotPassword} className="space-y-4">
+                <p className="text-xs text-slate-400 text-center">
+                  Enter your registered email and we&apos;ll send you a link to reset your password.
+                </p>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] text-slate-500 font-normal uppercase block">Email Address</label>
+                  <input type="email" value={forgotEmail} onChange={(e) => setForgotEmail(e.target.value)} disabled={isLoading} className={`w-full rounded-xl border bg-slate-900 py-3 px-4 text-sm text-slate-200 outline-none transition-all ${fieldErrors.forgotEmail ? "border-red-500" : "border-brand-border focus:border-brand-orange"}`} />
+                  {fieldErrors.forgotEmail && <span className="text-[10px] text-red-400">{fieldErrors.forgotEmail}</span>}
+                </div>
+                <button type="submit" disabled={isLoading} className="w-full bg-brand-orange text-white sm:text-black font-normal uppercase py-3 rounded-xl hover:bg-brand-gold hover:shadow-glow transition-all flex justify-center items-center">
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send Reset Link"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setActiveTab('signin'); setErrorMsg(""); setFieldErrors({}); }}
+                  className="w-full text-center text-[10px] text-slate-500 hover:text-brand-orange transition-colors uppercase tracking-wider"
+                >
+                  Back to Sign In
+                </button>
+              </form>
+            )}
+          </div>
         )}
       </div>
     </div>

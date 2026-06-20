@@ -13,13 +13,14 @@ export interface Address {
 
 interface AuthState {
   isAuthenticated: boolean;
+  isAdmin: boolean;
   jwtToken: string | null;
   userEmail: string;
   address: Address;
   setUserEmail: (email: string) => void;
   setAddress: (fields: Partial<Address>) => void;
   login: (name: string, phone: string, email?: string, token?: string) => void;
-  loginWithSession: (name: string, phone: string, email: string, profile: any, token: string) => void;
+  loginWithSession: (name: string, phone: string, email: string, profile: any, token: string, isAdmin?: boolean) => void;
   logout: () => void;
 }
 
@@ -27,6 +28,7 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       isAuthenticated: false,
+      isAdmin: false,
       jwtToken: null,
       userEmail: "",
       address: {
@@ -66,6 +68,7 @@ export const useAuthStore = create<AuthState>()(
 
         set(state => ({
           isAuthenticated: true,
+          isAdmin: false,
           jwtToken: activeToken,
           userEmail: finalEmail,
           address: {
@@ -104,8 +107,9 @@ export const useAuthStore = create<AuthState>()(
           })();
         }
       },
-      loginWithSession: (name, phone, email, profile, token) => set(state => ({
+      loginWithSession: (name, phone, email, profile, token, isAdmin = false) => set(state => ({
         isAuthenticated: true,
+        isAdmin: isAdmin,
         jwtToken: token,
         userEmail: email || "",
         address: {
@@ -125,6 +129,7 @@ export const useAuthStore = create<AuthState>()(
         }
         set({
           isAuthenticated: false,
+          isAdmin: false,
           jwtToken: null,
           userEmail: "",
           address: {
@@ -142,6 +147,7 @@ export const useAuthStore = create<AuthState>()(
       name: "marque-auth-storage",
       partialize: (state) => ({
         isAuthenticated: state.isAuthenticated,
+        isAdmin: state.isAdmin,
         userEmail: state.userEmail,
         jwtToken: state.jwtToken,
         address: state.address

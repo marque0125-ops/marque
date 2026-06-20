@@ -6,6 +6,7 @@ import { useCartStore } from "./useCartStore";
 import { useAuthStore } from "./useAuthStore";
 import { useUIStore } from "./useUIStore";
 import { useProductStore } from "./useProductStore";
+import toast from "react-hot-toast";
 
 export interface OrderState {
   orders: Order[];
@@ -34,6 +35,7 @@ export const useOrderStore = create<OrderState>()(
 
           if (error) {
             console.error("Supabase Error fetching orders:", error.message);
+            toast.error("Failed to fetch orders: " + error.message);
             return;
           }
 
@@ -61,6 +63,7 @@ export const useOrderStore = create<OrderState>()(
           }
         } catch (err) {
           console.error("Failed to fetch orders from Supabase", err);
+          toast.error("Database error while fetching orders");
         } finally {
           set({ isLoading: false });
         }
@@ -171,6 +174,7 @@ export const useOrderStore = create<OrderState>()(
             }
           } catch (err) {
             console.warn("☁️ Supabase Cloud Sync Info: Orders table is not initialized yet.", err);
+            toast.error("Could not sync order to cloud database.");
           }
         })();
 
@@ -237,7 +241,9 @@ export const useOrderStore = create<OrderState>()(
                   payment_status: (updatedOrder as Order).paymentStatus,
                   logs: (updatedOrder as Order).logs as any
                 }).eq("id", orderId);
-              } catch (err) {}
+              } catch (err) {
+                toast.error("Failed to sync order update to cloud.");
+              }
             })();
           }
         }
@@ -283,7 +289,9 @@ export const useOrderStore = create<OrderState>()(
                   payment_status: (updatedOrder as Order).paymentStatus,
                   logs: (updatedOrder as Order).logs as any
                 }).eq("id", orderId);
-              } catch (err) {}
+              } catch (err) {
+                toast.error("Failed to sync order cancellation to cloud.");
+              }
             })();
           }
         }
@@ -291,9 +299,7 @@ export const useOrderStore = create<OrderState>()(
     }),
     {
       name: "marque-order-storage",
-      partialize: (state) => ({
-        orders: state.orders
-      })
+      partialize: () => ({})
     }
   )
 );

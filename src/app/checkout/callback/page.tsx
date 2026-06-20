@@ -25,7 +25,7 @@ function CallbackContent() {
       if (status === "PAYMENT_SUCCESS") {
         // Only create order if cart has items to prevent duplicate orders on refresh
         if (cartStore.cart.length > 0) {
-          const grandTotal = cartStore.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+          const grandTotal = cartStore.cart.reduce((sum, item) => sum + ((item.variant.priceOverride || item.product.price) * item.qty), 0);
           
           const isCodAdvance = orderId?.startsWith('CODADV_');
           const order = orderStore.createOrder(isCodAdvance ? 'COD' : 'UPI'); // Use COD or UPI

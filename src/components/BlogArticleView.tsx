@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useProductStore } from '../store/useProductStore';
 import { ArrowLeft, Clock, Calendar } from 'lucide-react';
@@ -57,10 +58,13 @@ export default function BlogArticleView() {
 
         {/* Hero Image */}
         <div className="w-full aspect-[21/9] sm:aspect-[16/7] rounded-3xl overflow-hidden border border-brand-border/40 bg-slate-900 relative">
-          <img 
+          <Image 
             src={article.imageUrl} 
             alt={article.title}
-            className="w-full h-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 800px"
+            className="object-cover"
+            priority
           />
         </div>
 

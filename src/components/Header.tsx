@@ -31,9 +31,9 @@ export default function Header() {
     setFilterBrand,
     products
   } = useProductStore();
-  const { isAuthenticated, userEmail } = useAuthStore();
-  const router = useRouter();
+  const { isAuthenticated, userEmail, isAdmin } = useAuthStore();
   const pathname = usePathname();
+  const router = useRouter();
   const {
 
 
@@ -42,8 +42,6 @@ export default function Header() {
     setSelectedProduct,
     announcementText
   } = useUIStore();
-
-  const isAdmin = isAuthenticated && userEmail === "2002dineshmurugan@gmail.com";
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSearchBox, setShowSearchBox] = useState(false);

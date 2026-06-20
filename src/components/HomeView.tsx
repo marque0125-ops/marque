@@ -513,7 +513,7 @@ export default function HomeView() {
       {/* ==================== 4. DUAL CALL-TO-ACTION CARDS ==================== */}
       <section className="hidden sm:grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
         {/* Card 1: Ready-To-Run */}
-        <div className="group relative rounded-3xl overflow-hidden border border-brand-orange/20 bg-slate-950 hover:border-brand-orange transition-all duration-500 shadow-xl hover:shadow-[0_0_40px_rgba(249,115,22,0.15)] flex flex-col justify-between min-h-[260px] cursor-pointer" onClick={() => { setFilterBrand("ALL"); setView("shop"); }}>
+        <div className="group relative rounded-3xl overflow-hidden border border-brand-orange/20 bg-slate-950 hover:border-brand-orange transition-all duration-500 shadow-xl hover:shadow-[0_0_40px_rgba(249,115,22,0.15)] flex flex-col justify-between min-h-[260px] cursor-pointer" onClick={() => { setFilterBrand("ALL"); router.push('/shop'); }}>
           <div className="absolute inset-0 bg-gradient-to-br from-brand-orange/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="absolute -top-10 -right-10 w-64 h-64 bg-brand-orange/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-brand-orange/30 transition-colors duration-500" />
 
@@ -537,7 +537,7 @@ export default function HomeView() {
         </div>
 
         {/* Card 2: Hardcore Builders */}
-        <div className="group relative rounded-3xl overflow-hidden border border-brand-gold/20 bg-slate-950 hover:border-brand-gold transition-all duration-500 shadow-xl hover:shadow-[0_0_40px_rgba(234,179,8,0.15)] flex flex-col justify-between min-h-[260px] cursor-pointer" onClick={() => { setFilterBrand("ALL"); setView("shop"); }}>
+        <div className="group relative rounded-3xl overflow-hidden border border-brand-gold/20 bg-slate-950 hover:border-brand-gold transition-all duration-500 shadow-xl hover:shadow-[0_0_40px_rgba(234,179,8,0.15)] flex flex-col justify-between min-h-[260px] cursor-pointer" onClick={() => { setFilterBrand("ALL"); router.push('/shop'); }}>
           <div className="absolute inset-0 bg-gradient-to-br from-brand-gold/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="absolute -top-10 -right-10 w-64 h-64 bg-brand-gold/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-brand-gold/30 transition-colors duration-500" />
 
@@ -596,7 +596,7 @@ export default function HomeView() {
 
             <div className="pt-4">
               <button
-                onClick={() => { setFilterBrand("ALL"); setView("shop"); }}
+                onClick={() => { setFilterBrand("ALL"); router.push('/shop'); }}
                 className="group inline-flex items-center justify-center gap-3 text-sm font-normal uppercase text-white bg-transparent border border-white/20 hover:border-brand-orange hover:bg-brand-orange hover:text-white sm:text-black px-8 py-4 rounded-full transition-all duration-300 tracking-widest"
               >
                 Explore Vehicles <ArrowRight className="h-4 w-4" />

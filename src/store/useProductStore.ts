@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { Product, PRODUCTS, MOCK_REVIEWS, Review, Category, MOCK_CATEGORIES, RCGuide, RC_GUIDES } from "../data/mockData";
 import { supabase } from "../utils/supabase";
 import { useAuthStore } from "./useAuthStore";
+import toast from "react-hot-toast";
 
 export interface ProductState {
   isLoading: boolean;
@@ -137,6 +138,7 @@ export const useProductStore = create<ProductState>()(
               }
             } catch (err) {
               console.warn("Could not sync wishlist to cloud", err);
+              toast.error("Could not sync wishlist to cloud");
             }
           })();
         }
@@ -161,6 +163,7 @@ export const useProductStore = create<ProductState>()(
 
           if (error) {
             console.warn("Fetch products error:", error.message);
+            toast.error("Failed to fetch products: " + error.message);
             // Preserve local state if DB fetch fails
             return;
           }
@@ -183,7 +186,7 @@ export const useProductStore = create<ProductState>()(
                     variants: product.variants, stock_qty: product.stockQty, average_rating: product.averageRating, review_count: product.reviewCount,
                     brand_id: product.brandId, category_id: product.categoryId
                   };
-                  await supabase.from("products").insert(dbProduct);
+                  await supabase.from("products").insert(dbProduct as any);
                 } catch (e) {}
               });
             } else {
@@ -192,6 +195,7 @@ export const useProductStore = create<ProductState>()(
           }
         } catch (err: any) {
           console.error("Supabase error:", err.message);
+          toast.error("Database error: " + err.message);
         } finally {
           set({ isLoading: false });
         }
@@ -213,6 +217,7 @@ export const useProductStore = create<ProductState>()(
 
           if (error) {
             console.warn("Fetch categories error:", error.message);
+            toast.error("Failed to fetch categories: " + error.message);
             return;
           }
 
@@ -228,7 +233,7 @@ export const useProductStore = create<ProductState>()(
                     id: category.id,
                     name: category.name,
                     image: category.image
-                  });
+                  } as any);
                 } catch (e) {}
               });
             } else {
@@ -237,6 +242,7 @@ export const useProductStore = create<ProductState>()(
           }
         } catch (err: any) {
           console.error("Supabase error:", err.message);
+          toast.error("Database error: " + err.message);
         }
       },
 
@@ -264,7 +270,7 @@ export const useProductStore = create<ProductState>()(
                 await supabase.from("products").update({
                   variants: (updatedProduct as Product).variants as any,
                   stock_qty: (updatedProduct as Product).stockQty
-                }).eq("id", productId);
+                } as any).eq("id", productId);
               } catch (err) {}
             })();
           }
@@ -286,7 +292,7 @@ export const useProductStore = create<ProductState>()(
                 variants: product.variants, stock_qty: product.stockQty, average_rating: product.averageRating, review_count: product.reviewCount,
                 brand_id: product.brandId, category_id: product.categoryId
               };
-              await supabase.from("products").insert(dbProduct);
+              await supabase.from("products").insert(dbProduct as any);
             } catch (err) {}
           })();
         }
@@ -308,7 +314,7 @@ export const useProductStore = create<ProductState>()(
                 variants: updatedProduct.variants, stock_qty: updatedProduct.stockQty, average_rating: updatedProduct.averageRating, review_count: updatedProduct.reviewCount,
                 brand_id: updatedProduct.brandId, category_id: updatedProduct.categoryId
               };
-              await supabase.from("products").update(dbProduct).eq("id", updatedProduct.id);
+              await supabase.from("products").update(dbProduct as any).eq("id", updatedProduct.id);
             } catch (err) {}
           })();
         }
@@ -356,7 +362,7 @@ export const useProductStore = create<ProductState>()(
                 id: category.id,
                 name: category.name,
                 image: category.image
-              });
+              } as any);
             } catch (err) {}
           })();
         }
@@ -372,7 +378,7 @@ export const useProductStore = create<ProductState>()(
               await supabase.from("categories").update({
                 name: updatedCategory.name,
                 image: updatedCategory.image
-              }).eq("id", updatedCategory.id);
+              } as any).eq("id", updatedCategory.id);
             } catch (err) {}
           })();
         }
@@ -404,9 +410,7 @@ export const useProductStore = create<ProductState>()(
     {
       name: "marque-product-storage",
       partialize: (state) => ({
-        wishlist: state.wishlist,
-        products: state.products,
-        categories: state.categories
+        wishlist: state.wishlist
       }),
       version: 1
     }

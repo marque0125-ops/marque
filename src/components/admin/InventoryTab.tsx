@@ -5,6 +5,7 @@ import { Layers, Plus, Car, X, Trash2, Edit2 } from "lucide-react";
 import { useProductStore } from "../../store/useProductStore";
 import { useUIStore } from "../../store/useUIStore";
 import { BRANDS } from "../../data/mockData";
+import toast from "react-hot-toast";
 
 export function InventoryTab() {
   const { showDialog } = useUIStore();
@@ -13,6 +14,8 @@ export function InventoryTab() {
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [isEditingProduct, setIsEditingProduct] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const [editingVariantId, setEditingVariantId] = useState<string | null>(null);
   const [editingStockVal, setEditingStockVal] = useState<number>(0);
@@ -42,25 +45,58 @@ export function InventoryTab() {
   const [newVarStock, setNewVarStock] = useState<number>(5);
   const [newVarImageUrl, setNewVarImageUrl] = useState("");
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadToCloudinary = async (file: File): Promise<string | null> => {
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    
+    if (!cloudName || !uploadPreset || cloudName.includes("your-cloud-name")) {
+      toast.error("Cloudinary is not configured. Please check your .env file.");
+      return null;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", uploadPreset);
+
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.secure_url) return data.secure_url;
+      console.error("Cloudinary error:", data);
+      toast.error("Image upload failed.");
+      return null;
+    } catch (err) {
+      console.error("Cloudinary upload error:", err);
+      toast.error("Network error during upload.");
+      return null;
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-    Array.from(files).forEach((file) => {
-      if (file.size > 1024 * 1024 * 2) {
-        alert(`File ${file.name} exceeds 2MB limit.`);
-        return;
+    setIsUploadingImage(true);
+    for (const file of Array.from(files)) {
+      if (file.size > 1024 * 1024 * 5) {
+        toast.error(`File ${file.name} exceeds 5MB limit.`);
+        continue;
       }
-      const reader = new FileReader();
-      reader.onloadend = () => setFormImages(prev => [...prev, reader.result as string]);
-      reader.readAsDataURL(file);
-    });
+      const url = await uploadToCloudinary(file);
+      if (url) {
+        setFormImages(prev => [...prev, url]);
+      }
+    }
+    setIsUploadingImage(false);
   };
 
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 1024 * 1024 * 5) {
-        alert("Video file size exceeds 5MB limit.");
+      if (file.size > 1024 * 1024 * 10) {
+        toast.error("Video file size exceeds 10MB limit.");
         return;
       }
       const reader = new FileReader();
@@ -69,16 +105,19 @@ export function InventoryTab() {
     }
   };
 
-  const handleVariantImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVariantImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 1024 * 1024 * 2) {
-        alert("Variant image exceeds 2MB limit.");
+      if (file.size > 1024 * 1024 * 5) {
+        toast.error("Variant image exceeds 5MB limit.");
         return;
       }
-      const reader = new FileReader();
-      reader.onloadend = () => setNewVarImageUrl(reader.result as string);
-      reader.readAsDataURL(file);
+      setIsUploadingImage(true);
+      const url = await uploadToCloudinary(file);
+      if (url) {
+        setNewVarImageUrl(url);
+      }
+      setIsUploadingImage(false);
     }
   };
 
@@ -115,7 +154,10 @@ export function InventoryTab() {
 
   const handleSaveProduct = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formName || !formSku || formPrice <= 0) return showDialog({ title: 'Validation Error', message: 'Please fill in Name, SKU, and a valid Price.' });
+    if (!formName || !formSku || formPrice <= 0) {
+      toast.error('Please fill in Name, SKU, and a valid Price.');
+      return;
+    }
     const isEdit = !!selectedProductId;
     const finalProductId = isEdit ? selectedProductId! : `p-${Date.now()}`;
     const totalStock = formVariants.reduce((sum, v) => sum + v.stockQty, 0);
@@ -135,8 +177,13 @@ export function InventoryTab() {
       reviewCount: isEdit ? (products.find(p => p.id === selectedProductId)?.reviewCount || 1) : 0
     };
 
-    if (isEdit) { updateProduct(productData); showDialog({ title: 'Success', message: `Success: ${formName} updated!` }); }
-    else { addProduct(productData); showDialog({ title: 'Success', message: `Success: ${formName} added!` }); }
+    if (isEdit) { 
+      updateProduct(productData); 
+      toast.success(`${formName} updated!`); 
+    } else { 
+      addProduct(productData); 
+      toast.success(`${formName} added!`); 
+    }
     resetProductForm();
   };
 
@@ -153,7 +200,10 @@ export function InventoryTab() {
   const handleRemoveVariant = (id: string) => setFormVariants(formVariants.filter(v => v.id !== id));
 
   const handleDeleteProductClick = (id: string, name: string) => {
-    showDialog({ type: 'confirm', title: 'Delete Product', message: `CRITICAL DELETION: Remove ${name}?`, onConfirm: () => { deleteProduct(id); showDialog({ title: 'Success', message: `Deleted ${name}.` }); } });
+    showDialog({ type: 'confirm', title: 'Delete Product', message: `CRITICAL DELETION: Remove ${name}?`, onConfirm: () => { 
+      deleteProduct(id); 
+      toast.success(`Deleted ${name}.`); 
+    } });
   };
 
   const handleStockUpdate = (productId: string, variantId: string) => {
@@ -234,10 +284,13 @@ export function InventoryTab() {
                     type="file"
                     multiple
                     accept="image/*"
+                    disabled={isUploadingImage}
                     onChange={handleImageUpload}
-                    className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-normal file:uppercase file:bg-brand-orange file:text-white sm:text-black hover:file:bg-brand-gold file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
+                    className={`w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-normal file:uppercase file:bg-brand-orange file:text-white sm:text-black hover:file:bg-brand-gold file:transition-colors ${isUploadingImage ? 'opacity-50 cursor-not-allowed' : 'file:cursor-pointer'} bg-slate-900/50 border border-brand-border rounded-lg`}
                   />
-                  <p className="text-[10px] text-slate-400 mt-1.5 uppercase font-normal tracking-wider">Max size: 2MB per image. Select multiple files.</p>
+                  <p className="text-[10px] text-slate-400 mt-1.5 uppercase font-normal tracking-wider">
+                    {isUploadingImage ? <span className="text-brand-orange">Uploading to Cloudinary...</span> : "Max size: 5MB per image. Select multiple files."}
+                  </p>
                 </div>
               </div>
             </div>
@@ -264,7 +317,7 @@ export function InventoryTab() {
                     onChange={handleVideoUpload}
                     className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-normal file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
                   />
-                  <p className="text-[10px] text-slate-400 mt-1.5 uppercase font-normal tracking-wider">Or upload video file (Max 5MB).</p>
+                  <p className="text-[10px] text-slate-400 mt-1.5 uppercase font-normal tracking-wider">Or upload video file (Max 10MB).</p>
                 </div>
               </div>
               {formVideoUrl && formVideoUrl.startsWith("data:video") && (
@@ -286,11 +339,13 @@ export function InventoryTab() {
                 <input
                   type="file"
                   accept="image/*"
+                  disabled={isUploadingImage}
                   onChange={handleVariantImageUpload}
-                  className="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-normal file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 file:cursor-pointer"
+                  className={`text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-normal file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 ${isUploadingImage ? 'opacity-50 cursor-not-allowed' : 'file:cursor-pointer'}`}
                 />
-                {newVarImageUrl && newVarImageUrl.startsWith("data:image") && (
-                  <span className="text-[10px] text-brand-orange font-normal uppercase">Image Loaded</span>
+                {isUploadingImage && <span className="text-[10px] text-brand-orange font-normal uppercase">Uploading...</span>}
+                {newVarImageUrl && newVarImageUrl.startsWith("http") && !isUploadingImage && (
+                  <span className="text-[10px] text-green-500 font-normal uppercase">Image Uploaded ✓</span>
                 )}
               </div>
             </div>

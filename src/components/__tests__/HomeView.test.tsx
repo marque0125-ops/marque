@@ -7,6 +7,13 @@ import HomeView from '../HomeView';
 import { useUIStore } from '../../store/useUIStore';
 
 // Mock matchMedia to prevent slick-carousel issues if any, though we use custom slider
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    prefetch: vi.fn(),
+  }),
+}));
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: vi.fn().mockImplementation(query => ({
@@ -49,14 +56,14 @@ describe('HomeView', () => {
     expect(screen.getByText('134+ KM/H')).toBeInTheDocument();
     
     // Check if main sections are rendered
-    expect(screen.getByText(/BRUTAL SPEED/i)).toBeInTheDocument();
-    expect(screen.getByText(/Explore Track Rigs/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/EXTREME RC CARS/i)[0]).toBeInTheDocument();
+    expect(screen.getByText(/WATCH LIVE RACING/i)).toBeInTheDocument();
   });
 
   it('renders product category tabs', () => {
     render(<HomeView />);
     
-    expect(screen.getByText('Explore All Vehicles')).toBeInTheDocument();
-    expect(screen.getByText('Off-Road Bashers')).toBeInTheDocument();
+    expect(screen.getByText(/Featured Products/i)).toBeInTheDocument();
+    expect(screen.getAllByText('Off-Road')[0]).toBeInTheDocument();
   });
 });

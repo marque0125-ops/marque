@@ -44,6 +44,8 @@ export const metadata: Metadata = {
 
 import dynamic from 'next/dynamic';
 
+import { Toaster } from 'react-hot-toast';
+
 const Header = dynamic(() => import('../components/Header'), { ssr: false });
 const Footer = dynamic(() => import('../components/Footer'), { ssr: false });
 const GlobalDialog = dynamic(() => import('../components/GlobalDialog').then(mod => mod.GlobalDialog), { ssr: false });
@@ -79,6 +81,15 @@ export default function RootLayout({
           
           {/* Floating WhatsApp Button */}
           <WhatsAppButton />
+
+          {/* Global Toast Notifications */}
+          <Toaster 
+            position="bottom-right" 
+            toastOptions={{ 
+              style: { background: '#020617', color: '#fff', border: '1px solid #334155' },
+              success: { iconTheme: { primary: '#f97316', secondary: '#fff' } }
+            }} 
+          />
         </div>
       </body>
     </html>

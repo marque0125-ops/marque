@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ShieldAlert, KeyRound, Loader2, AlertCircle } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
+import { supabase } from "../../utils/supabase";
 
 export function AdminLogin() {
   const { login } = useAuthStore();
@@ -18,7 +19,7 @@ export function AdminLogin() {
     setTimeout(() => setIsShaking(false), 400);
   };
 
-  const handleAdminLogin = (e: React.FormEvent) => {
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
 
@@ -30,17 +31,62 @@ export function AdminLogin() {
 
     setIsLoading(true);
 
-    // Simulated network delay for effect
-    setTimeout(() => {
-      if (email === "2002dineshmurugan@gmail.com" && password === "admin123") {
-        // Successful mock login
-        login("Dinesh Admin", "9999999999", email);
-      } else {
+    try {
+      const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+      
+      if (!isConfigured) {
+        // Fallback for local testing without Supabase
+        if (email === "2002dineshmurugan@gmail.com" && password === "admin123") {
+          login("Dinesh Admin", "9999999999", email);
+        } else {
+          setErrorMsg("ACCESS DENIED: Unauthorized clearance code.");
+          triggerShake();
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      // Real Supabase Auth Flow
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
+      
+      if (authError || !authData.user) {
         setErrorMsg("ACCESS DENIED: Unauthorized clearance code.");
         triggerShake();
+        setIsLoading(false);
+        return;
       }
-      setIsLoading(false);
-    }, 800);
+
+      // Check if user has admin clearance
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", authData.user.id)
+        .maybeSingle();
+
+      const prof = profile as any;
+
+      if (!prof || prof.is_admin !== true) {
+        // Not an admin, sign out immediately
+        await supabase.auth.signOut();
+        setErrorMsg("ACCESS DENIED: Insufficient clearance level.");
+        triggerShake();
+        setIsLoading(false);
+        return;
+      }
+
+      // Successful Admin Login
+      const name = prof.name || authData.user.user_metadata?.full_name || email.split("@")[0];
+      const phone = prof.phone || authData.user.user_metadata?.phone || "9999999999";
+      const token = authData.session?.access_token || "";
+      
+      useAuthStore.getState().loginWithSession(name, phone, email, prof, token, true);
+      
+    } catch (err: any) {
+      setErrorMsg(err.message || "Authentication failed.");
+      triggerShake();
+    }
+
+    setIsLoading(false);
   };
 
   return (

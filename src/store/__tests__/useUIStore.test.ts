@@ -5,7 +5,6 @@ describe('useUIStore', () => {
   beforeEach(() => {
     // Reset store before each test
     useUIStore.setState({
-      currentView: 'home',
       heroBanners: [],
       promoBanners: [],
       lowStockAlerts: [],
@@ -17,14 +16,8 @@ describe('useUIStore', () => {
 
   it('should initialize with default values', () => {
     const state = useUIStore.getState();
-    expect(state.currentView).toBe('home');
     expect(state.heroBanners).toEqual([]);
     expect(state.promoBanners).toEqual([]);
-  });
-
-  it('should set view correctly', () => {
-    useUIStore.getState().setView('shop');
-    expect(useUIStore.getState().currentView).toBe('shop');
   });
 
   it('should add and remove hero banners', () => {

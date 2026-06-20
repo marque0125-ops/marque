@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Product, ProductVariant } from "../data/mockData";
 import { CartItem, Coupon } from "../types/store";
+import { Product, ProductVariant } from "../data/mockData";
+import toast from "react-hot-toast";
 
 export const AVAILABLE_COUPONS: Coupon[] = [
   { code: "MARQUE10", type: "percent", value: 10, minOrder: 15000, description: "10% OFF on premium RC cars above ₹15,000" },
@@ -32,17 +33,25 @@ export const useCartStore = create<CartState>()(
 
         if (existing) {
           const updatedQty = existing.qty + qty;
-          if (updatedQty > variant.stockQty) return;
+          if (updatedQty > variant.stockQty) {
+            toast.error(`Only ${variant.stockQty} left in stock.`);
+            return;
+          }
           set({
             cart: currentCart.map(item =>
               item.id === cartItemId ? { ...item, qty: updatedQty } : item
             )
           });
+          toast.success("Cart updated!");
         } else {
-          if (qty > variant.stockQty) return;
+          if (qty > variant.stockQty) {
+            toast.error(`Only ${variant.stockQty} left in stock.`);
+            return;
+          }
           set({
             cart: [...currentCart, { id: cartItemId, product, variant, qty }]
           });
+          toast.success("Added to cart!");
         }
       },
       removeFromCart: (cartItemId) => {
