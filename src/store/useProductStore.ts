@@ -270,7 +270,7 @@ export const useProductStore = create<ProductState>()(
                 await supabase.from("products").update({
                   variants: (updatedProduct as Product).variants as any,
                   stock_qty: (updatedProduct as Product).stockQty
-                } as any).eq("id", productId);
+                }).eq("id", productId);
               } catch (err) {}
             })();
           }
@@ -314,7 +314,7 @@ export const useProductStore = create<ProductState>()(
                 variants: updatedProduct.variants, stock_qty: updatedProduct.stockQty, average_rating: updatedProduct.averageRating, review_count: updatedProduct.reviewCount,
                 brand_id: updatedProduct.brandId, category_id: updatedProduct.categoryId
               };
-              await supabase.from("products").update(dbProduct as any).eq("id", updatedProduct.id);
+              await supabase.from("products").update(dbProduct).eq("id", updatedProduct.id);
             } catch (err) {}
           })();
         }
@@ -378,7 +378,7 @@ export const useProductStore = create<ProductState>()(
               await supabase.from("categories").update({
                 name: updatedCategory.name,
                 image: updatedCategory.image
-              } as any).eq("id", updatedCategory.id);
+              }).eq("id", updatedCategory.id);
             } catch (err) {}
           })();
         }

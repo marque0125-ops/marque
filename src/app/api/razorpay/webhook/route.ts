@@ -55,7 +55,7 @@ export async function POST(request: Request) {
         // Update the order in Supabase to mark as verified paid
         const { error: dbError } = await supabase
         .from("orders")
-        .update({ payment_status: "paid", payment_id: rzpPaymentId, status: "confirmed" } as any)
+        .update({ payment_status: "paid", payment_id: rzpPaymentId, status: "confirmed" })
         .eq("id", orderId);
 
         if (dbError) {

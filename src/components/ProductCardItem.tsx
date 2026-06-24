@@ -107,6 +107,14 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
           </span>
         </div>
 
+        {p.stockQty <= 0 && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center" style={{ backgroundColor: 'rgba(2, 6, 23, 0.6)' }}>
+            <span className="bg-red-500/90 text-white font-bold uppercase tracking-widest px-4 py-1.5 rounded-sm border border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.5)] transform -rotate-12 text-sm sm:text-base">
+              Sold Out
+            </span>
+          </div>
+        )}
+
         <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
           <button
             aria-label="Toggle Wishlist"
@@ -181,12 +189,22 @@ export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }:
         {/* Cart Action */}
         <div className="border-t border-brand-border pt-3 w-full flex items-center gap-2">
           <button
-            onClick={(e) => handleQuickAdd(e, p)}
-            className="flex-1 rounded-lg bg-brand-orange hover:bg-brand-gold font-normal uppercase px-3 py-2 text-[10px] sm:text-xs transition-colors flex items-center justify-center gap-1"
-            style={{ color: '#ffffff' }}
+            onClick={(e) => {
+              if (selectedVariant.stockQty > 0) {
+                handleQuickAdd(e, p);
+              } else {
+                e.stopPropagation();
+              }
+            }}
+            disabled={selectedVariant.stockQty <= 0}
+            className={`flex-1 rounded-lg font-normal uppercase px-3 py-2 text-[10px] sm:text-xs transition-colors flex items-center justify-center gap-1 ${
+              selectedVariant.stockQty > 0 
+                ? 'bg-brand-orange hover:bg-brand-gold text-white' 
+                : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+            }`}
           >
             <Car className="h-3.5 w-3.5" />
-            Buy Rig
+            {selectedVariant.stockQty > 0 ? "Buy Rig" : "Sold Out"}
           </button>
           <button
             aria-label="Share Product"

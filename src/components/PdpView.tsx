@@ -750,6 +750,14 @@ export default function PdpView() {
                       )}
                     </div>
 
+                    {p.stockQty <= 0 && (
+                      <div className="absolute inset-0 z-10 flex items-center justify-center" style={{ backgroundColor: 'rgba(2, 6, 23, 0.6)' }}>
+                        <span className="bg-red-500/90 text-white font-bold uppercase tracking-widest px-4 py-1.5 rounded-sm border border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.5)] transform -rotate-12 text-sm sm:text-base">
+                          Sold Out
+                        </span>
+                      </div>
+                    )}
+
                     {/* Wishlist button */}
                     <button 
                       aria-label="Add to Wishlist"
