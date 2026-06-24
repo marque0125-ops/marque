@@ -58,6 +58,7 @@ export interface Product {
   description: string;
   price: number;
   comparePrice: number;
+  batteryAddonPrice?: number;
   sku: string;
   weightGrams: number;
   scale: string;

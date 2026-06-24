@@ -24,6 +24,7 @@ export function InventoryTab() {
   const [formSku, setFormSku] = useState("");
   const [formPrice, setFormPrice] = useState<number>(0);
   const [formComparePrice, setFormComparePrice] = useState<number>(0);
+  const [formBatteryAddonPrice, setFormBatteryAddonPrice] = useState<number>(0);
   const [formBrandId, setFormBrandId] = useState("b1");
   const [formScale, setFormScale] = useState("1/10");
   const [formTerrainType, setFormTerrainType] = useState('Off-Road');
@@ -33,10 +34,14 @@ export function InventoryTab() {
   const [formDescription, setFormDescription] = useState("");
   const [formImages, setFormImages] = useState<string[]>(["https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=600&q=80"]);
   const [formVideoUrl, setFormVideoUrl] = useState("");
-  const [formWhatsInTheBox, setFormWhatsInTheBox] = useState("RC Vehicle, 2.4GHz Transmitter, Quick-Start Guide");
-  const [formMotorSpec, setFormMotorSpec] = useState("Brushless 3300Kv");
-  const [formEscSpec, setFormEscSpec] = useState("Waterproof ESC 3S");
-  const [formServoSpec, setFormServoSpec] = useState("High-Torque Metal Gear");
+  const [formWhatsInTheBox, setFormWhatsInTheBox] = useState<string[]>(["RC Vehicle", "2.4GHz Transmitter", "Quick-Start Guide"]);
+  const [formSpecs, setFormSpecs] = useState<{key: string, value: string}[]>([
+    { key: "ESC", value: "Waterproof ESC 3S" },
+    { key: "Motor", value: "Brushless 3300Kv" },
+    { key: "Servo", value: "High-Torque Metal Gear" },
+    { key: "DriveSystem", value: "4WD Shaft Drive" },
+    { key: "Differential", value: "Sealed Steel Gear" }
+  ]);
   const [formCategoryId, setFormCategoryId] = useState("crawler");
 
   const [formVariants, setFormVariants] = useState<any[]>([]);
@@ -126,13 +131,19 @@ export function InventoryTab() {
   };
 
   const resetProductForm = () => {
-    setFormName(""); setFormSku(""); setFormPrice(0); setFormComparePrice(0); setFormBrandId("b1");
+    setFormName(""); setFormSku(""); setFormPrice(0); setFormComparePrice(0); setFormBatteryAddonPrice(0); setFormBrandId("b1");
     setFormScale("1/10"); setFormTerrainType("Off-Road"); setFormBuildType("RTR"); setFormSpeedKmh(60);
     setFormWeightGrams(3500); setFormDescription("");
     setFormImages(["https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=600&q=80"]);
     setFormVideoUrl("");
-    setFormWhatsInTheBox("RC Vehicle, 2.4GHz Transmitter, Quick-Start Guide");
-    setFormMotorSpec("Brushless 3300Kv"); setFormEscSpec("Waterproof ESC 3S"); setFormServoSpec("High-Torque Metal Gear");
+    setFormWhatsInTheBox(["RC Vehicle", "2.4GHz Transmitter", "Quick-Start Guide"]);
+    setFormSpecs([
+      { key: "ESC", value: "Waterproof ESC 3S" },
+      { key: "Motor", value: "Brushless 3300Kv" },
+      { key: "Servo", value: "High-Torque Metal Gear" },
+      { key: "DriveSystem", value: "4WD Shaft Drive" },
+      { key: "Differential", value: "Sealed Steel Gear" }
+    ]);
     setFormCategoryId("crawler");
     setFormVariants([{ id: `var-1-${Date.now()}`, name: "Standard Orange", sku: "SKU-ORANGE", stockQty: 5, attributes: { color: "Orange", battery: "3S LiPo" } }]);
     setSelectedProductId(null); setIsAddingProduct(false); setIsEditingProduct(false);
@@ -140,14 +151,14 @@ export function InventoryTab() {
 
   const handleOpenEditProduct = (p: any) => {
     setSelectedProductId(p.id); setFormName(p.name); setFormSku(p.sku); setFormPrice(p.price);
-    setFormComparePrice(p.comparePrice || p.price); setFormBrandId(p.brandId); setFormScale(p.scale);
+    setFormComparePrice(p.comparePrice || p.price); setFormBatteryAddonPrice(p.batteryAddonPrice || 0); setFormBrandId(p.brandId); setFormScale(p.scale);
     setFormTerrainType(p.terrainType); setFormBuildType(p.buildType); setFormSpeedKmh(p.speedKmh || 60);
     setFormWeightGrams(p.weightGrams || 3000); setFormDescription(p.description); 
     setFormImages(p.images && p.images.length > 0 ? p.images : [""]);
     setFormVideoUrl(p.videoUrl || "");
-    setFormWhatsInTheBox(p.whatsInTheBox ? p.whatsInTheBox.join(", ") : "RC Vehicle, Transmitter");
-    setFormMotorSpec(p.specs?.Motor || "Brushless"); setFormEscSpec(p.specs?.ESC || "Waterproof ESC");
-    setFormServoSpec(p.specs?.Servo || "Metal Gear Servo"); setFormVariants(p.variants || []);
+    setFormWhatsInTheBox(p.whatsInTheBox || ["RC Vehicle"]);
+    setFormSpecs(p.specs ? Object.entries(p.specs).map(([key, value]) => ({ key, value: String(value) })) : []);
+    setFormVariants(p.variants || []);
     setFormCategoryId(p.categoryId || "crawler");
     setIsEditingProduct(true); setIsAddingProduct(false);
   };
@@ -166,12 +177,16 @@ export function InventoryTab() {
       id: finalProductId, brandId: formBrandId, categoryId: formCategoryId, name: formName,
       slug: formName.toLowerCase().replace(/[^a-z0-9]+/g, "-"), description: formDescription,
       price: formPrice, comparePrice: formComparePrice || Math.round(formPrice * 1.15),
+      batteryAddonPrice: formBatteryAddonPrice,
       sku: formSku, weightGrams: formWeightGrams, scale: formScale, terrainType: formTerrainType,
       isFeatured: false, isActive: true, speedKmh: formSpeedKmh, buildType: formBuildType,
       images: formImages.length > 0 ? formImages : ["https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=600&q=80"], 
       videoUrl: formVideoUrl,
-      whatsInTheBox: formWhatsInTheBox.split(",").map(i => i.trim()),
-      specs: { Motor: formMotorSpec, ESC: formEscSpec, Servo: formServoSpec, DriveSystem: "4WD Shaft Drive", Differential: "Sealed Steel Gear" },
+      whatsInTheBox: formWhatsInTheBox.filter(i => i.trim() !== ""),
+      specs: formSpecs.reduce((acc, curr) => {
+        if (curr.key.trim()) acc[curr.key.trim()] = curr.value.trim();
+        return acc;
+      }, {} as Record<string, string>),
       compatibleParts: [], variants: formVariants.length > 0 ? formVariants : [{ id: `var-std-${Date.now()}`, name: "Standard", sku: `${formSku}-STD`, stockQty: 10, attributes: { color: "Standard" } }],
       stockQty: totalStock, averageRating: isEdit ? (products.find(p => p.id === selectedProductId)?.averageRating || 4.8) : 5.0,
       reviewCount: isEdit ? (products.find(p => p.id === selectedProductId)?.reviewCount || 1) : 0
@@ -256,6 +271,7 @@ export function InventoryTab() {
             </div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Sale Price</label><input type="number" value={formPrice || ""} onChange={(e) => setFormPrice(parseInt(e.target.value) || 0)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">MRP (Compare Price)</label><input type="number" value={formComparePrice || ""} onChange={(e) => setFormComparePrice(parseInt(e.target.value) || 0)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Battery Add-on Price</label><input type="number" value={formBatteryAddonPrice || ""} onChange={(e) => setFormBatteryAddonPrice(parseInt(e.target.value) || 0)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Scale (e.g. 1:10)</label><input type="text" value={formScale} onChange={(e) => setFormScale(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Top Speed (KM/H)</label><input type="number" value={formSpeedKmh || ""} onChange={(e) => setFormSpeedKmh(parseInt(e.target.value) || 0)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5 md:col-span-4">
@@ -295,7 +311,52 @@ export function InventoryTab() {
               </div>
             </div>
 
-            <div className="space-y-1.5 md:col-span-3 border-t border-brand-border pt-4">
+            {/* Specs & What's in the Box */}
+            <div className="md:col-span-4 grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-brand-border pt-4">
+              {/* Chassis Specifications */}
+              <div className="space-y-3">
+                <label className="text-[10px] text-slate-400 font-normal uppercase block">Chassis Specifications</label>
+                <div className="space-y-2">
+                  {formSpecs.map((spec, idx) => (
+                    <div key={idx} className="flex gap-2 items-center">
+                      <input type="text" value={spec.key} onChange={e => {
+                        const newSpecs = [...formSpecs];
+                        newSpecs[idx].key = e.target.value;
+                        setFormSpecs(newSpecs);
+                      }} placeholder="Key (e.g. Motor)" className="w-1/3 rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange text-white" />
+                      <input type="text" value={spec.value} onChange={e => {
+                        const newSpecs = [...formSpecs];
+                        newSpecs[idx].value = e.target.value;
+                        setFormSpecs(newSpecs);
+                      }} placeholder="Value (e.g. Brushless)" className="flex-1 rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange text-white" />
+                      <button type="button" onClick={() => setFormSpecs(formSpecs.filter((_, i) => i !== idx))} className="text-red-500 hover:text-red-400 p-2"><Trash2 className="h-4 w-4" /></button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => setFormSpecs([...formSpecs, { key: "", value: "" }])} className="text-[10px] text-brand-orange font-normal uppercase">+ Add Specification</button>
+                </div>
+              </div>
+
+              {/* What's In The Box */}
+              <div className="space-y-3">
+                <label className="text-[10px] text-slate-400 font-normal uppercase block">What's in the Box?</label>
+                <div className="space-y-2">
+                  {formWhatsInTheBox.map((item, idx) => (
+                    <div key={idx} className="flex gap-2 items-center">
+                      <span className="text-[10px] text-brand-orange font-mono">{idx + 1}.</span>
+                      <input type="text" value={item} onChange={e => {
+                        const newItems = [...formWhatsInTheBox];
+                        newItems[idx] = e.target.value;
+                        setFormWhatsInTheBox(newItems);
+                      }} placeholder="e.g. RC Vehicle" className="flex-1 rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange text-white" />
+                      <button type="button" onClick={() => setFormWhatsInTheBox(formWhatsInTheBox.filter((_, i) => i !== idx))} className="text-red-500 hover:text-red-400 p-2"><Trash2 className="h-4 w-4" /></button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => setFormWhatsInTheBox([...formWhatsInTheBox, ""])} className="text-[10px] text-brand-orange font-normal uppercase">+ Add Item</button>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-1.5 md:col-span-4 border-t border-brand-border pt-4">
               <label className="text-[10px] text-slate-400 font-normal uppercase block flex items-center gap-2">
                 Play Track Video
               </label>

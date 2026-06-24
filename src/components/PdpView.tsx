@@ -55,6 +55,9 @@ export default function PdpView() {
   // Upgrade parts selection
   const [selectedParts, setSelectedParts] = useState<string[]>([]);
   
+  // Battery Add-on Selection
+  const [includesBatteryAddon, setIncludesBatteryAddon] = useState(false);
+  
   // Video overlay
   const [showVideo, setShowVideo] = useState(false);
   
@@ -133,8 +136,9 @@ export default function PdpView() {
   };
 
   // Get active price
-  const activePrice = activeVariant?.priceOverride || selectedProduct.price;
-  const activeComparePrice = selectedProduct.comparePrice;
+  const basePrice = activeVariant?.priceOverride || selectedProduct.price;
+  const activePrice = basePrice + (includesBatteryAddon && selectedProduct.batteryAddonPrice ? selectedProduct.batteryAddonPrice : 0);
+  const activeComparePrice = (selectedProduct.comparePrice || selectedProduct.price) + (includesBatteryAddon && selectedProduct.batteryAddonPrice ? selectedProduct.batteryAddonPrice : 0);
 
   // Filter reviews for this product
   const productReviews = reviews.filter(r => r.productId === selectedProduct.id);
@@ -142,7 +146,18 @@ export default function PdpView() {
   // Add to cart
   const handleAddToCart = () => {
     if (!activeVariant) return;
-    addToCart(selectedProduct, activeVariant, 1);
+
+    let variantToAdd = { ...activeVariant };
+    if (includesBatteryAddon && selectedProduct.batteryAddonPrice) {
+      variantToAdd = {
+        ...activeVariant,
+        id: `${activeVariant.id}-with-battery`,
+        name: `${activeVariant.name} + Battery Pack`,
+        priceOverride: activePrice
+      };
+    }
+
+    addToCart(selectedProduct, variantToAdd, 1);
     
     // Track main product AddToCart event
     trackAddToCart(selectedProduct.name, selectedProduct.sku, activePrice, 'INR');
@@ -461,6 +476,30 @@ export default function PdpView() {
             </div>
           )}
 
+          {/* ADD-ON BATTERY TOGGLE */}
+          {selectedProduct.batteryAddonPrice && selectedProduct.batteryAddonPrice > 0 ? (
+            <div className="space-y-3 pt-4">
+              <label className="text-xs font-normal text-slate-300 uppercase tracking-wider block">
+                Power Bundle Add-on:
+              </label>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setIncludesBatteryAddon(false)}
+                  className={`flex-1 p-3.5 rounded-xl border flex items-center justify-center transition-all ${!includesBatteryAddon ? 'bg-brand-orange/10 border-brand-orange text-white' : 'border-brand-border bg-slate-900/60 hover:bg-slate-900 text-slate-300'}`}
+                >
+                  <span className="text-xs font-normal">Without Battery</span>
+                </button>
+                <button
+                  onClick={() => setIncludesBatteryAddon(true)}
+                  className={`flex-1 p-3.5 rounded-xl border flex flex-col items-center justify-center transition-all ${includesBatteryAddon ? 'bg-brand-orange/10 border-brand-orange text-white' : 'border-brand-border bg-slate-900/60 hover:bg-slate-900 text-slate-300'}`}
+                >
+                  <span className="text-xs font-normal">With Battery</span>
+                  <span className="font-mono text-[10px] text-brand-gold">+₹{selectedProduct.batteryAddonPrice.toLocaleString('en-IN')}</span>
+                </button>
+              </div>
+            </div>
+          ) : null}
+
           {/* LIVE STOCK BADGES & CTA BUTTONS */}
           <div className="space-y-3 pt-4">
             <div className="flex items-center gap-2 text-xs">
@@ -483,9 +522,9 @@ export default function PdpView() {
               <button 
                 onClick={handleAddToCart}
                 disabled={!activeVariant || activeVariant.stockQty === 0}
-                className="flex-1 group flex items-center justify-center gap-2 rounded-xl bg-brand-orange py-4 text-sm font-normal text-white sm:text-black hover:bg-brand-gold hover:shadow-glow disabled:bg-slate-800 disabled:text-slate-600 disabled:shadow-none transition-all uppercase tracking-wider"
+                className="flex-1 group relative overflow-hidden flex items-center justify-center gap-2 rounded-xl bg-brand-orange bg-gradient-to-r from-brand-orange via-red-500 to-brand-gold py-4 text-sm font-bold text-white hover:shadow-[0_0_30px_rgba(255,77,0,0.5)] disabled:opacity-80 disabled:from-slate-600 disabled:via-slate-700 disabled:to-slate-800 disabled:text-slate-300 disabled:shadow-none transition-all duration-300 uppercase tracking-widest bg-[length:200%_auto] hover:bg-[position:right_center]"
               >
-                <ShoppingBag className="h-4.5 w-4.5" />
+                <ShoppingBag className="h-5 w-5 group-hover:scale-110 transition-transform" />
                 Configure & Add to Cart
               </button>
             </div>
