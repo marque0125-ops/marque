@@ -409,7 +409,9 @@ export default function CartView() {
               {cart.map((item) => (
                 <div key={item.id} className="flex justify-between pt-3.5 first:pt-0">
                   <div className="space-y-0.5 max-w-[80%]">
-                    <span className="text-slate-200 font-normal block">{item.product.name}</span>
+                    <span className="text-slate-200 font-normal block">
+                      {item.product.name} {item.variant.id.includes('-with-battery') ? '+ Power Bundle' : ''}
+                    </span>
                     <span className="text-[10px] text-slate-400 block font-display">
                       Variant: {item.variant.attributes.color || "Default"} • Qty: {item.qty}
                     </span>
@@ -523,10 +525,17 @@ export default function CartView() {
                           <span className="text-[9px] text-slate-500 block leading-none font-mono">
                             SKU: {item.variant.sku}
                           </span>
-                          <div className="flex gap-2 pt-1 text-[9px] text-slate-400 font-normal font-display">
-                            <span>Color: {item.variant.attributes.color || "Standard"}</span>
-                            <span>•</span>
-                            <span>Power: {item.variant.attributes.battery || "Rechargeable"}</span>
+                          <div className="flex flex-col gap-1 pt-1 text-[9px] text-slate-400 font-normal font-display">
+                            <div className="flex gap-2">
+                              <span>Color: {item.variant.attributes.color || "Standard"}</span>
+                              <span>•</span>
+                              <span>Power: {item.variant.attributes.battery || "Rechargeable"}</span>
+                            </div>
+                            {item.variant.id.includes('-with-battery') && item.product.batteryAddonPrice && (
+                              <div className="text-brand-orange">
+                                + Power Bundle Add-on (₹{item.product.batteryAddonPrice.toLocaleString('en-IN')})
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -665,51 +674,6 @@ export default function CartView() {
 
           {/* Right Column: Checkout Invoicing Sidebar */}
           <div className="lg:col-span-5 space-y-6">
-
-            {/* Coupon Code section */}
-            <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-3">
-              <label className="text-[10px] font-normal text-slate-400 uppercase tracking-widest block flex items-center gap-1">
-                <Ticket className="h-4 w-4 text-brand-orange" />
-                Apply Technical Promo Coupon
-              </label>
-
-              <form onSubmit={handleCouponApply} className="flex gap-2">
-                <input
-                  type="text"
-                  value={couponInput}
-                  onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                  placeholder="e.g. MARQUE10, MAXBASH"
-                  className="w-full rounded-lg border border-brand-border bg-slate-900 py-2 px-3 text-xs text-slate-200 outline-none focus:border-brand-orange font-mono"
-                />
-                <button
-                  type="submit"
-                  className="bg-brand-orange text-white sm:text-black px-4 rounded-lg font-normal uppercase text-[10px] hover:bg-brand-gold transition-colors"
-                >
-                  Apply
-                </button>
-              </form>
-
-              {couponFeedback && (
-                <div className={`p-2 rounded text-[10px] font-normal text-center border ${couponFeedback.type === 'success' ? 'bg-green-500/10 border-green-500 text-green-400' : 'bg-red-500/10 border-red-500 text-red-400'}`}>
-                  {couponFeedback.text}
-                </div>
-              )}
-
-              {appliedCoupon && (
-                <div className="p-2.5 rounded-lg bg-green-500/10 border border-green-500/40 text-[10px] text-green-400 flex items-center justify-between font-normal">
-                  <div>
-                    <span>Coupon: {appliedCoupon.code}</span>
-                    <span className="block text-[8px] text-slate-500 mt-0.5">{appliedCoupon.description}</span>
-                  </div>
-                  <button
-                    onClick={removeCoupon}
-                    className="text-red-400 hover:text-red-500 uppercase text-[9px] underline ml-2"
-                  >
-                    Remove
-                  </button>
-                </div>
-              )}
-            </div>
 
 
             {/* Checkout Pricing Manifest */}

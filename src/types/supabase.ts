@@ -23,6 +23,7 @@ export type ProductRow = {
   is_active: boolean
   speed_kmh: number | null
   build_type: string | null
+  battery_addon_price: number | null
   images: string[]
   video_url: string | null
   whats_in_the_box: string[]
@@ -91,6 +92,7 @@ export type ProductInsert = {
   is_active?: boolean
   speed_kmh?: number | null
   build_type?: string | null
+  battery_addon_price?: number | null
   images?: string[]
   video_url?: string | null
   whats_in_the_box?: string[]
