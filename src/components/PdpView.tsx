@@ -408,7 +408,7 @@ export default function PdpView() {
               <span className="text-sm text-slate-500 line-through">
                 ₹{activeComparePrice.toLocaleString('en-IN')}
               </span>
-              <span className="text-xs text-green-400 font-normal uppercase">
+              <span className="text-sm md:text-base text-green-400 font-bold uppercase bg-green-500/20 px-2.5 py-1 rounded-md border border-green-500/30">
                 Save ₹{(activeComparePrice - activePrice).toLocaleString('en-IN')}!
               </span>
             </div>
@@ -462,7 +462,7 @@ export default function PdpView() {
                       key={idx}
                       onClick={() => handleAttributeChange(selectedColor, battery)}
                       disabled={stock === 0}
-                      className={`w-full text-left p-3.5 rounded-xl border flex items-center justify-between transition-all ${stock === 0 ? 'opacity-40 border-slate-800 cursor-not-allowed' : selectedBattery === battery ? 'bg-brand-orange/10 border-brand-orange text-white' : 'border-brand-border bg-slate-900/60 hover:bg-slate-900 text-slate-300'}`}
+                      className={`w-full text-left p-3.5 rounded-xl border flex items-center justify-between transition-all ${stock === 0 ? 'opacity-40 border-slate-800 cursor-not-allowed' : selectedBattery === battery ? 'bg-brand-orange/10 border-brand-orange text-brand-orange font-medium' : 'border-brand-border bg-slate-900/60 hover:bg-slate-900 text-slate-300'}`}
                     >
                       <div className="space-y-0.5">
                         <span className="text-xs font-normal block">{battery}</span>
@@ -485,13 +485,13 @@ export default function PdpView() {
               <div className="flex gap-3">
                 <button
                   onClick={() => setIncludesBatteryAddon(false)}
-                  className={`flex-1 p-3.5 rounded-xl border flex items-center justify-center transition-all ${!includesBatteryAddon ? 'bg-brand-orange/10 border-brand-orange text-white' : 'border-brand-border bg-slate-900/60 hover:bg-slate-900 text-slate-300'}`}
+                  className={`flex-1 p-3.5 rounded-xl border flex items-center justify-center transition-all ${!includesBatteryAddon ? 'bg-brand-orange/10 border-brand-orange text-brand-orange font-medium' : 'border-brand-border bg-slate-900/60 hover:bg-slate-900 text-slate-300'}`}
                 >
                   <span className="text-xs font-normal">Without Battery</span>
                 </button>
                 <button
                   onClick={() => setIncludesBatteryAddon(true)}
-                  className={`flex-1 p-3.5 rounded-xl border flex flex-col items-center justify-center transition-all ${includesBatteryAddon ? 'bg-brand-orange/10 border-brand-orange text-white' : 'border-brand-border bg-slate-900/60 hover:bg-slate-900 text-slate-300'}`}
+                  className={`flex-1 p-3.5 rounded-xl border flex flex-col items-center justify-center transition-all ${includesBatteryAddon ? 'bg-brand-orange/10 border-brand-orange text-brand-orange font-medium' : 'border-brand-border bg-slate-900/60 hover:bg-slate-900 text-slate-300'}`}
                 >
                   <span className="text-xs font-normal">With Battery</span>
                   <span className="font-mono text-[10px] text-brand-gold">+₹{selectedProduct.batteryAddonPrice.toLocaleString('en-IN')}</span>
