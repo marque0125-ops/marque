@@ -1,9 +1,24 @@
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { BRANDS, PRODUCTS } from '../../../data/mockData';
+import { supabase } from '../../../utils/supabase';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const product = PRODUCTS.find((p) => p.slug === params.slug);
+  let product = PRODUCTS.find((p) => p.slug === params.slug);
+  
+  if (!product) {
+    try {
+      const { data } = await supabase.from('products').select('*').eq('slug', params.slug).single();
+      if (data) {
+        product = {
+          ...data,
+          brandId: data.brand_id || data.brandId,
+        } as any;
+      }
+    } catch (e) {
+      // ignore errors
+    }
+  }
   
   if (!product) {
     return {
@@ -12,30 +27,36 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
   }
 
-  const brand = BRANDS.find(b => b.id === product.brandId);
+  const brand = BRANDS.find(b => b.id === product?.brandId);
   const brandName = brand ? brand.name : "MARQUE";
+  
+  const title = `${product.name} - ${brandName} RC Car | MARQUE`;
+  const description = product.description ? product.description.substring(0, 160) + "..." : "";
+  const imageUrl = product.images && product.images.length > 0 
+    ? (product.images[0].startsWith('http') ? product.images[0] : `https://marque.co.in${product.images[0]}`)
+    : "";
 
   return {
-    title: `${product.name} - ${brandName} RC Car | MARQUE`,
-    description: product.description.substring(0, 160) + "...",
+    title,
+    description,
     openGraph: {
       title: `${product.name} | MARQUE Premium RC`,
-      description: product.description.substring(0, 160) + "...",
-      images: [
+      description,
+      images: imageUrl ? [
         {
-          url: product.images[0].startsWith('http') ? product.images[0] : `https://marque.co.in${product.images[0]}`,
+          url: imageUrl,
           width: 800,
           height: 600,
           alt: product.name,
         },
-      ],
+      ] : [],
       type: "article",
     },
     twitter: {
       card: "summary_large_image",
       title: `${product.name} | MARQUE Premium RC`,
-      description: product.description.substring(0, 160) + "...",
-      images: [product.images[0].startsWith('http') ? product.images[0] : `https://marque.co.in${product.images[0]}`],
+      description,
+      images: imageUrl ? [imageUrl] : [],
     },
   };
 }
