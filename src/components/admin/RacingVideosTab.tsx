@@ -17,10 +17,7 @@ export function RacingVideosTab() {
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 1024 * 1024 * 5) {
-        alert("Video file size exceeds 5MB limit.");
-        return;
-      }
+      // Removed file size limit to accept all sizes
       const reader = new FileReader();
       reader.onloadend = () => setFormData({ ...formData, url: reader.result as string });
       reader.readAsDataURL(file);
@@ -122,7 +119,7 @@ export function RacingVideosTab() {
                   <label className="text-[10px] text-slate-400 uppercase tracking-wider mb-1 block">Or Upload Video</label>
                   <input
                     type="file"
-                    accept="video/*"
+                    accept="video/*, .mp4, .mov, .avi, .mkv, .webm, .flv, .wmv"
                     onChange={handleVideoUpload}
                     className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-normal file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
                   />
@@ -180,7 +177,7 @@ export function RacingVideosTab() {
                     {video.url.startsWith("data:video") ? (
                       <video 
                         src={video.url} 
-                        className="absolute inset-0 w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-contain"
                         controls
                       />
                     ) : (

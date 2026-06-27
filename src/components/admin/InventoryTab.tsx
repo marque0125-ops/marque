@@ -24,6 +24,7 @@ export function InventoryTab() {
   const [formSku, setFormSku] = useState("");
   const [formPrice, setFormPrice] = useState<number>(0);
   const [formComparePrice, setFormComparePrice] = useState<number>(0);
+  const [formShippingPrice, setFormShippingPrice] = useState<number>(0);
   const [formBatteryAddonPrice, setFormBatteryAddonPrice] = useState<number>(0);
   const [formBrandId, setFormBrandId] = useState("b1");
   const [formScale, setFormScale] = useState("1/10");
@@ -100,10 +101,7 @@ export function InventoryTab() {
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 1024 * 1024 * 10) {
-        toast.error("Video file size exceeds 10MB limit.");
-        return;
-      }
+      // Removed file size limit to accept all sizes
       const reader = new FileReader();
       reader.onloadend = () => setFormVideoUrl(reader.result as string);
       reader.readAsDataURL(file);
@@ -131,7 +129,7 @@ export function InventoryTab() {
   };
 
   const resetProductForm = () => {
-    setFormName(""); setFormSku(""); setFormPrice(0); setFormComparePrice(0); setFormBatteryAddonPrice(0); setFormBrandId("b1");
+    setFormName(""); setFormSku(""); setFormPrice(0); setFormComparePrice(0); setFormShippingPrice(0); setFormBatteryAddonPrice(0); setFormBrandId("b1");
     setFormScale("1/10"); setFormTerrainType("Off-Road"); setFormBuildType("RTR"); setFormSpeedKmh(60);
     setFormWeightGrams(3500); setFormDescription("");
     setFormImages(["https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=600&q=80"]);
@@ -151,7 +149,7 @@ export function InventoryTab() {
 
   const handleOpenEditProduct = (p: any) => {
     setSelectedProductId(p.id); setFormName(p.name); setFormSku(p.sku); setFormPrice(p.price);
-    setFormComparePrice(p.comparePrice || p.price); setFormBatteryAddonPrice(p.batteryAddonPrice || 0); setFormBrandId(p.brandId); setFormScale(p.scale);
+    setFormComparePrice(p.comparePrice || p.price); setFormShippingPrice(p.shippingPrice || 0); setFormBatteryAddonPrice(p.batteryAddonPrice || 0); setFormBrandId(p.brandId); setFormScale(p.scale);
     setFormTerrainType(p.terrainType); setFormBuildType(p.buildType); setFormSpeedKmh(p.speedKmh || 60);
     setFormWeightGrams(p.weightGrams || 3000); setFormDescription(p.description); 
     setFormImages(p.images && p.images.length > 0 ? p.images : [""]);
@@ -177,6 +175,7 @@ export function InventoryTab() {
       id: finalProductId, brandId: formBrandId, categoryId: formCategoryId, name: formName,
       slug: formName.toLowerCase().replace(/[^a-z0-9]+/g, "-"), description: formDescription,
       price: formPrice, comparePrice: formComparePrice || Math.round(formPrice * 1.15),
+      shippingPrice: formShippingPrice,
       batteryAddonPrice: formBatteryAddonPrice,
       sku: formSku, weightGrams: formWeightGrams, scale: formScale, terrainType: formTerrainType,
       isFeatured: false, isActive: true, speedKmh: formSpeedKmh, buildType: formBuildType,
@@ -271,6 +270,7 @@ export function InventoryTab() {
             </div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Sale Price</label><input type="number" value={formPrice || ""} onChange={(e) => setFormPrice(parseInt(e.target.value) || 0)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">MRP (Compare Price)</label><input type="number" value={formComparePrice || ""} onChange={(e) => setFormComparePrice(parseInt(e.target.value) || 0)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Shipping Price</label><input type="number" value={formShippingPrice || ""} onChange={(e) => setFormShippingPrice(parseInt(e.target.value) || 0)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Battery Add-on Price</label><input type="number" value={formBatteryAddonPrice || ""} onChange={(e) => setFormBatteryAddonPrice(parseInt(e.target.value) || 0)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Scale (e.g. 1:10)</label><input type="text" value={formScale} onChange={(e) => setFormScale(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Top Speed (KM/H)</label><input type="number" value={formSpeedKmh || ""} onChange={(e) => setFormSpeedKmh(parseInt(e.target.value) || 0)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
@@ -374,11 +374,11 @@ export function InventoryTab() {
                 <div>
                   <input
                     type="file"
-                    accept="video/*"
+                    accept="video/*, .mp4, .mov, .avi, .mkv, .webm, .flv, .wmv"
                     onChange={handleVideoUpload}
                     className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-normal file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
                   />
-                  <p className="text-[10px] text-slate-400 mt-1.5 uppercase font-normal tracking-wider">Or upload video file (Max 10MB).</p>
+                  <p className="text-[10px] text-slate-400 mt-1.5 uppercase font-normal tracking-wider">Or upload video file (Any Size).</p>
                 </div>
               </div>
               {formVideoUrl && formVideoUrl.startsWith("data:video") && (

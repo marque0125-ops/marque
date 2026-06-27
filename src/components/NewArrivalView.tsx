@@ -67,7 +67,7 @@ export default function NewArrivalView() {
                   {video.url.startsWith("data:video") ? (
                     <video 
                       src={video.url} 
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-contain"
                       controls
                     />
                   ) : (

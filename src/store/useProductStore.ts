@@ -58,6 +58,7 @@ const normalizeProduct = (p: any): Product => ({
   description: p.description || "",
   price: Number(p.price || 0),
   comparePrice: Number(p.compare_price || p.comparePrice || 0),
+  shippingPrice: Number(p.shipping_price || p.shippingPrice || 0),
   batteryAddonPrice: Number(p.battery_addon_price || p.batteryAddonPrice || 0),
   sku: p.sku || "",
   weightGrams: Number(p.weight_grams || p.weightGrams || 0),
@@ -180,7 +181,7 @@ export const useProductStore = create<ProductState>()(
                 try {
                   const dbProduct = {
                     id: product.id, name: product.name, slug: product.slug, description: product.description,
-                    price: product.price, compare_price: product.comparePrice, battery_addon_price: product.batteryAddonPrice || 0, sku: product.sku, weight_grams: product.weightGrams,
+                    price: product.price, compare_price: product.comparePrice, shipping_price: product.shippingPrice || 0, battery_addon_price: product.batteryAddonPrice || 0, sku: product.sku, weight_grams: product.weightGrams,
                     scale: product.scale, terrain_type: product.terrainType, is_featured: product.isFeatured, is_active: product.isActive,
                     speed_kmh: product.speedKmh, build_type: product.buildType, images: product.images, video_url: product.videoUrl,
                     whats_in_the_box: product.whatsInTheBox, specs: product.specs, compatible_parts: product.compatibleParts,
@@ -286,7 +287,7 @@ export const useProductStore = create<ProductState>()(
             try {
               const dbProduct = {
                 id: product.id, name: product.name, slug: product.slug, description: product.description,
-                price: product.price, compare_price: product.comparePrice, battery_addon_price: product.batteryAddonPrice || 0, sku: product.sku, weight_grams: product.weightGrams,
+                price: product.price, compare_price: product.comparePrice, shipping_price: product.shippingPrice || 0, battery_addon_price: product.batteryAddonPrice || 0, sku: product.sku, weight_grams: product.weightGrams,
                 scale: product.scale, terrain_type: product.terrainType, is_featured: product.isFeatured, is_active: product.isActive,
                 speed_kmh: product.speedKmh, build_type: product.buildType, images: product.images, video_url: product.videoUrl,
                 whats_in_the_box: product.whatsInTheBox, specs: product.specs, compatible_parts: product.compatibleParts,
@@ -308,14 +309,14 @@ export const useProductStore = create<ProductState>()(
             try {
               const dbProduct = {
                 name: updatedProduct.name, slug: updatedProduct.slug, description: updatedProduct.description,
-                price: updatedProduct.price, compare_price: updatedProduct.comparePrice, battery_addon_price: updatedProduct.batteryAddonPrice || 0, sku: updatedProduct.sku, weight_grams: updatedProduct.weightGrams,
+                price: updatedProduct.price, compare_price: updatedProduct.comparePrice, shipping_price: updatedProduct.shippingPrice || 0, battery_addon_price: updatedProduct.batteryAddonPrice || 0, sku: updatedProduct.sku, weight_grams: updatedProduct.weightGrams,
                 scale: updatedProduct.scale, terrain_type: updatedProduct.terrainType, is_featured: updatedProduct.isFeatured, is_active: updatedProduct.isActive,
                 speed_kmh: updatedProduct.speedKmh, build_type: updatedProduct.buildType, images: updatedProduct.images, video_url: updatedProduct.videoUrl,
                 whats_in_the_box: updatedProduct.whatsInTheBox, specs: updatedProduct.specs, compatible_parts: updatedProduct.compatibleParts,
                 variants: updatedProduct.variants, stock_qty: updatedProduct.stockQty, average_rating: updatedProduct.averageRating, review_count: updatedProduct.reviewCount,
                 brand_id: updatedProduct.brandId, category_id: updatedProduct.categoryId
               };
-              await supabase.from("products").update(dbProduct).eq("id", updatedProduct.id);
+              await supabase.from("products").update(dbProduct as any).eq("id", updatedProduct.id);
             } catch (err) {}
           })();
         }
