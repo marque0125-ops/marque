@@ -28,12 +28,13 @@ export function VideosTab() {
     let embedUrl = url;
     if (url.includes("youtube.com/watch?v=")) {
       embedUrl = url.replace("watch?v=", "embed/");
-      const ampersandIndex = embedUrl.indexOf("&");
-      if (ampersandIndex !== -1) embedUrl = embedUrl.substring(0, ampersandIndex);
+      if (embedUrl.includes("&")) embedUrl = embedUrl.split("&")[0];
+    } else if (url.includes("youtube.com/shorts/")) {
+      embedUrl = url.replace("youtube.com/shorts/", "youtube.com/embed/");
+      if (embedUrl.includes("?")) embedUrl = embedUrl.split("?")[0];
     } else if (url.includes("youtu.be/")) {
       embedUrl = url.replace("youtu.be/", "www.youtube.com/embed/");
-      const questionIndex = embedUrl.indexOf("?");
-      if (questionIndex !== -1) embedUrl = embedUrl.substring(0, questionIndex);
+      if (embedUrl.includes("?")) embedUrl = embedUrl.split("?")[0];
     }
     return embedUrl;
   };

@@ -168,7 +168,7 @@ export function InventoryTab() {
       return;
     }
     const isEdit = !!selectedProductId;
-    const finalProductId = isEdit ? selectedProductId! : `p-${Date.now()}`;
+    const finalProductId = isEdit ? selectedProductId! : crypto.randomUUID();
     const totalStock = formVariants.reduce((sum, v) => sum + v.stockQty, 0);
 
     const productData: any = {
