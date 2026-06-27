@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
+import { get, set as setIDB, del } from "idb-keyval";
 import { Product, PinCodeDetail, PIN_CODES } from "../data/mockData";
 
 export interface BannerSlide {
@@ -127,25 +128,25 @@ export interface UIState {
   removeRacingVideo: (id: string) => void;
 }
 
-const safeStorage = {
-  getItem: (name: string) => {
-    try { return localStorage.getItem(name); } catch { return null; }
+const idbStorage: StateStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    return (await get(name)) || null;
   },
-  setItem: (name: string, value: string) => {
+  setItem: async (name: string, value: string): Promise<void> => {
     try {
-      localStorage.setItem(name, value);
+      await setIDB(name, value);
     } catch (e) {
-      console.warn("Storage quota exceeded! Attempting to recover...", e);
+      console.warn("Storage quota exceeded or error writing to IDB!", e);
       try {
-        localStorage.removeItem(name);
+        await del(name);
       } catch (err) {
         console.error("Recovery failed", err);
       }
     }
   },
-  removeItem: (name: string) => {
-    try { localStorage.removeItem(name); } catch {}
-  }
+  removeItem: async (name: string): Promise<void> => {
+    await del(name);
+  },
 };
 
 export const useUIStore = create<UIState>()(
@@ -330,7 +331,7 @@ export const useUIStore = create<UIState>()(
     }),
     {
       name: "marque-ui-storage",
-      storage: createJSONStorage(() => safeStorage),
+      storage: createJSONStorage(() => idbStorage),
       partialize: (state) => ({
         lowStockAlerts: state.lowStockAlerts,
         announcementText: state.announcementText,
