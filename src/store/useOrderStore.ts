@@ -299,7 +299,9 @@ export const useOrderStore = create<OrderState>()(
     }),
     {
       name: "marque-order-storage",
-      partialize: () => ({})
+      partialize: (state) => ({
+        orders: state.orders
+      })
     }
   )
 );

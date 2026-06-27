@@ -294,12 +294,22 @@ export const useProductStore = create<ProductState>()(
                 variants: product.variants, stock_qty: product.stockQty, average_rating: product.averageRating, review_count: product.reviewCount,
                 brand_id: product.brandId, category_id: product.categoryId
               };
-              await supabase.from("products").insert(dbProduct as any);
-            } catch (err) {}
+              const { error } = await supabase.from("products").insert(dbProduct as any);
+              if (error) {
+                console.error("Failed to save product to Supabase:", error);
+                toast.error("Cloud DB Error: " + error.message);
+                // Rollback local state
+                set(state => ({ products: state.products.filter(p => p.id !== product.id) }));
+              }
+            } catch (err: any) {
+              console.error("Supabase exception:", err);
+              toast.error("Cloud DB Exception: " + err.message);
+            }
           })();
         }
       },
       updateProduct: (updatedProduct) => {
+        const previousState = get().products;
         set(state => ({
           products: state.products.map(p => p.id === updatedProduct.id ? updatedProduct : p)
         }));
@@ -316,12 +326,21 @@ export const useProductStore = create<ProductState>()(
                 variants: updatedProduct.variants, stock_qty: updatedProduct.stockQty, average_rating: updatedProduct.averageRating, review_count: updatedProduct.reviewCount,
                 brand_id: updatedProduct.brandId, category_id: updatedProduct.categoryId
               };
-              await supabase.from("products").update(dbProduct as any).eq("id", updatedProduct.id);
-            } catch (err) {}
+              const { error } = await supabase.from("products").update(dbProduct as any).eq("id", updatedProduct.id);
+              if (error) {
+                console.error("Failed to update product in Supabase:", error);
+                toast.error("Cloud DB Update Error: " + error.message);
+                set({ products: previousState }); // Rollback
+              }
+            } catch (err: any) {
+              toast.error("Cloud DB Exception: " + err.message);
+              set({ products: previousState });
+            }
           })();
         }
       },
       deleteProduct: (productId) => {
+        const previousState = get().products;
         set(state => ({
           products: state.products.filter(p => p.id !== productId)
         }));
@@ -329,8 +348,16 @@ export const useProductStore = create<ProductState>()(
         if (isConfigured) {
           (async () => {
             try {
-              await supabase.from("products").delete().eq("id", productId);
-            } catch (err) {}
+              const { error } = await supabase.from("products").delete().eq("id", productId);
+              if (error) {
+                console.error("Failed to delete product in Supabase:", error);
+                toast.error("Cloud DB Delete Error: " + error.message);
+                set({ products: previousState }); // Rollback
+              }
+            } catch (err: any) {
+              toast.error("Cloud DB Exception: " + err.message);
+              set({ products: previousState });
+            }
           })();
         }
       },
@@ -412,7 +439,11 @@ export const useProductStore = create<ProductState>()(
     {
       name: "marque-product-storage",
       partialize: (state) => ({
-        wishlist: state.wishlist
+        wishlist: state.wishlist,
+        products: state.products,
+        categories: state.categories,
+        guides: state.guides,
+        reviews: state.reviews
       }),
       version: 1
     }
