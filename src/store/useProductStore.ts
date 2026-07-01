@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { safeStorage } from "../utils/safeStorage";
 import { Product, PRODUCTS, MOCK_REVIEWS, Review, Category, MOCK_CATEGORIES, RCGuide, RC_GUIDES } from "../data/mockData";
 import { supabase } from "../utils/supabase";
 import { useAuthStore } from "./useAuthStore";
@@ -569,12 +570,9 @@ export const useProductStore = create<ProductState>()(
     }),
     {
       name: "marque-product-storage",
+      storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({
-        wishlist: state.wishlist,
-        products: state.products,
-        categories: state.categories,
-        guides: state.guides,
-        reviews: state.reviews
+        wishlist: state.wishlist
       }),
       version: 1
     }

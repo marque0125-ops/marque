@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { safeStorage } from "../utils/safeStorage";
 import { supabase } from "../utils/supabase";
 import { Order } from "../types/store";
 import { useCartStore } from "./useCartStore";
@@ -302,9 +303,8 @@ export const useOrderStore = create<OrderState>()(
     }),
     {
       name: "marque-order-storage",
-      partialize: (state) => ({
-        orders: state.orders
-      })
+      storage: createJSONStorage(() => safeStorage),
+      partialize: (state) => ({}) // Do not persist the orders array to localStorage, fetch from Supabase!
     }
   )
 );

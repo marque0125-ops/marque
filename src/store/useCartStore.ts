@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { safeStorage } from "../utils/safeStorage";
 import { CartItem, Coupon } from "../types/store";
 import { Product, ProductVariant } from "../data/mockData";
 import toast from "react-hot-toast";
@@ -96,6 +97,7 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: "marque-cart-storage",
+      storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({
         cart: state.cart
       })

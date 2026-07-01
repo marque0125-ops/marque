@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { safeStorage } from "../utils/safeStorage";
 import { supabase } from "../utils/supabase";
 
 export interface Address {
@@ -145,6 +146,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "marque-auth-storage",
+      storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({
         isAuthenticated: state.isAuthenticated,
         isAdmin: state.isAdmin,
