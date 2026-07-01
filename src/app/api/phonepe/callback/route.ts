@@ -51,7 +51,7 @@ async function handlePhonePeCallback(request: Request) {
       const statusResponse = await client.getOrderStatus(merchantOrderId);
       
       // statusResponse.state contains the status like 'COMPLETED', 'FAILED', 'PENDING'
-      if (statusResponse && statusResponse.state === 'COMPLETED') {
+      if (statusResponse && (statusResponse.state === 'COMPLETED' || statusResponse.state === 'SUCCESS')) {
         status = 'PAYMENT_SUCCESS';
       } else if (statusResponse && statusResponse.state === 'FAILED') {
         status = 'PAYMENT_ERROR';
@@ -59,7 +59,7 @@ async function handlePhonePeCallback(request: Request) {
     } catch (statusError) {
       console.error("Error fetching order status from PhonePe:", statusError);
       // If we can't verify, we'll rely on the code returned by PhonePe, though it's less secure
-      if (code === 'PAYMENT_SUCCESS') {
+      if (code === 'PAYMENT_SUCCESS' || code === 'SUCCESS') {
          status = 'PAYMENT_SUCCESS';
       } else if (code) {
          status = 'PAYMENT_ERROR';

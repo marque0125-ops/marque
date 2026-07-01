@@ -152,6 +152,8 @@ export default function Footer() {
             <Link href="/blog" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange underline underline-offset-2">Knowledge Base</Link>
             <Link href="/contact" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange underline underline-offset-2">Contact Us</Link>
             <Link href="/terms" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange underline underline-offset-2">Terms of Service</Link>
+            <Link href="/privacy" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange underline underline-offset-2">Privacy Policy</Link>
+            <Link href="/refunds" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange underline underline-offset-2">Refund Policy</Link>
             <Link href="/shipping" onClick={() => window.scrollTo(0, 0)} className="hover:text-brand-orange underline underline-offset-2">Shipping Rates</Link>
           </div>
         </div>

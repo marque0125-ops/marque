@@ -30,7 +30,8 @@ import {
   Layers,
   HelpCircle,
   Truck,
-  Heart
+  Heart,
+  User
 } from "lucide-react";
 import { ProductCardItem } from "./ProductCardItem";
 
@@ -730,13 +731,9 @@ export default function HomeView() {
               "{testimonialsList[testimonialIndex]?.quote}"
             </blockquote>
             <div className="flex items-center justify-center gap-3">
-              <Image
-                src={testimonialsList[testimonialIndex]?.avatar || "/placeholder.jpg"}
-                alt={testimonialsList[testimonialIndex]?.name || ""}
-                width={40}
-                height={40}
-                className="rounded-full border border-brand-border object-cover"
-              />
+              <div className="h-10 w-10 flex items-center justify-center rounded-full bg-slate-900 border border-brand-border text-brand-orange shrink-0">
+                <User className="h-5 w-5" />
+              </div>
               <div className="text-left">
                 <span className="font-normal text-white block text-xs sm:text-sm">
                   {testimonialsList[testimonialIndex]?.name}
