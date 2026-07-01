@@ -35,6 +35,8 @@ export interface ProductState {
   toggleWishlist: (productId: string) => void;
   fetchProducts: () => Promise<void>;
   fetchCategories: () => Promise<void>;
+  fetchGuides: () => Promise<void>;
+  fetchReviews: () => Promise<void>;
   updateProductStock: (productId: string, variantId: string, newStock: number) => void;
   addProduct: (product: Product) => void;
   updateProduct: (product: Product) => void;
@@ -248,6 +250,62 @@ export const useProductStore = create<ProductState>()(
         }
       },
 
+      fetchGuides: async () => {
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (!isConfigured) return;
+
+        try {
+          const { data, error } = await (supabase as any).from("guides").select("*");
+          if (error) {
+            console.error("Supabase Error fetching guides:", error.message);
+            return;
+          }
+          if (data && data.length > 0) {
+            const mappedGuides = data.map((g: any) => ({
+              id: g.id,
+              title: g.title,
+              excerpt: g.excerpt,
+              content: g.content,
+              category: g.category,
+              readTime: g.read_time,
+              imageUrl: g.image_url
+            }));
+            set({ guides: mappedGuides });
+          }
+        } catch (err) {
+          console.error("Failed to fetch guides from Supabase", err);
+        }
+      },
+
+      fetchReviews: async () => {
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (!isConfigured) return;
+
+        try {
+          const { data, error } = await (supabase as any).from("reviews").select("*").order("created_at", { ascending: false });
+          if (error) {
+            console.error("Supabase Error fetching reviews:", error.message);
+            return;
+          }
+          if (data && data.length > 0) {
+            const mappedReviews = data.map((r: any) => ({
+              id: r.id,
+              productId: r.product_id,
+              userName: r.reviewer_name,
+              rating: r.rating,
+              title: r.title,
+              body: r.body,
+              date: r.date,
+              verifiedPurchase: r.is_verified,
+              avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=150&auto=format&fit=crop"
+            }));
+            set({ reviews: mappedReviews });
+          }
+        } catch (err) {
+          console.error("Failed to fetch reviews from Supabase", err);
+        }
+      },
+
       updateProductStock: (productId, variantId, newStock) => {
         let updatedProduct: Product | null = null;
         set(state => ({
@@ -364,9 +422,10 @@ export const useProductStore = create<ProductState>()(
 
       addProductReview: (review) => {
         const newReview: Review = {
-          ...review,
+          ...review as any,
           id: `rev-${Date.now()}`,
-          date: new Date().toISOString().split('T')[0]
+          date: new Date().toISOString().split('T')[0],
+          avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=150&auto=format&fit=crop"
         };
         set(state => {
           const nextReviews = [newReview, ...state.reviews];
@@ -379,6 +438,37 @@ export const useProductStore = create<ProductState>()(
             products: state.products.map(p => p.id === review.productId ? { ...p, averageRating: avg, reviewCount: prodReviews.length } : p)
           };
         });
+
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (isConfigured) {
+          (async () => {
+            try {
+              await (supabase as any).from("reviews").insert({
+                id: newReview.id,
+                product_id: newReview.productId,
+                reviewer_name: newReview.userName,
+                rating: newReview.rating,
+                title: newReview.title,
+                body: newReview.body,
+                date: newReview.date,
+                is_verified: newReview.verifiedPurchase || false
+              } as any);
+
+              // Update product stats in DB
+              const state = get();
+              const prodReviews = state.reviews.filter(r => r.productId === review.productId);
+              const totalRating = prodReviews.reduce((sum, r) => sum + r.rating, 0);
+              const avg = prodReviews.length > 0 ? parseFloat((totalRating / prodReviews.length).toFixed(1)) : 0;
+              await supabase.from("products").update({
+                average_rating: avg,
+                review_count: prodReviews.length
+              }).eq("id", review.productId);
+
+            } catch (err) {
+              console.error("Failed to save review to Supabase:", err);
+            }
+          })();
+        }
       },
 
       addCategory: (category) => {
@@ -426,15 +516,56 @@ export const useProductStore = create<ProductState>()(
         }
       },
 
-      addGuide: (guide) => set(state => ({
-        guides: [...state.guides, guide]
-      })),
-      updateGuide: (guide) => set(state => ({
-        guides: state.guides.map(g => g.id === guide.id ? guide : g)
-      })),
-      deleteGuide: (guideId) => set(state => ({
-        guides: state.guides.filter(g => g.id !== guideId)
-      })),
+      addGuide: (guide) => {
+        set(state => ({ guides: [...state.guides, guide] }));
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (isConfigured) {
+          (async () => {
+            try {
+              await (supabase as any).from("guides").insert({
+                id: guide.id,
+                title: guide.title,
+                excerpt: guide.excerpt,
+                content: guide.content,
+                category: guide.category,
+                read_time: guide.readTime,
+                image_url: guide.imageUrl,
+                date: new Date().toISOString()
+              } as any);
+            } catch (err) {}
+          })();
+        }
+      },
+      updateGuide: (guide) => {
+        set(state => ({ guides: state.guides.map(g => g.id === guide.id ? guide : g) }));
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (isConfigured) {
+          (async () => {
+            try {
+              await (supabase as any).from("guides").update({
+                title: guide.title,
+                excerpt: guide.excerpt,
+                content: guide.content,
+                category: guide.category,
+                read_time: guide.readTime,
+                image_url: guide.imageUrl,
+                date: new Date().toISOString()
+              }).eq("id", guide.id);
+            } catch (err) {}
+          })();
+        }
+      },
+      deleteGuide: (guideId) => {
+        set(state => ({ guides: state.guides.filter(g => g.id !== guideId) }));
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (isConfigured) {
+          (async () => {
+            try {
+              await (supabase as any).from("guides").delete().eq("id", guideId);
+            } catch (err) {}
+          })();
+        }
+      },
     }),
     {
       name: "marque-product-storage",

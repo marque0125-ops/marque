@@ -22,7 +22,7 @@ function CallbackContent() {
       const orderStore = useOrderStore.getState();
       const uiStore = useUIStore.getState();
 
-      if (status === "PAYMENT_SUCCESS") {
+      if (status === "PAYMENT_SUCCESS" || status === "PAYMENT_PENDING") {
         // Only create order if cart has items to prevent duplicate orders on refresh
         if (cartStore.cart.length > 0) {
           const grandTotal = cartStore.cart.reduce((sum, item) => sum + ((item.variant.priceOverride || item.product.price) * item.qty), 0);

@@ -2,45 +2,56 @@
 
 import React, { useState } from "react";
 import { useUIStore, UnboxingVideo } from "../../store/useUIStore";
-import { Plus, Trash2, Edit2, PlayCircle } from "lucide-react";
+import { Plus, Trash2, Edit2, PlayCircle, Video, AlertCircle } from "lucide-react";
+
+const getEmbedUrl = (url: string): string => {
+  let embedUrl = url.trim();
+  // youtube.com/watch?v=ID
+  if (embedUrl.includes("youtube.com/watch?v=")) {
+    embedUrl = embedUrl.replace("watch?v=", "embed/");
+    if (embedUrl.includes("&")) embedUrl = embedUrl.split("&")[0];
+  }
+  // youtube.com/shorts/ID
+  else if (embedUrl.includes("youtube.com/shorts/")) {
+    embedUrl = embedUrl.replace("youtube.com/shorts/", "youtube.com/embed/");
+    if (embedUrl.includes("?")) embedUrl = embedUrl.split("?")[0];
+  }
+  // youtu.be/ID
+  else if (embedUrl.includes("youtu.be/")) {
+    embedUrl = embedUrl.replace("youtu.be/", "www.youtube.com/embed/");
+    if (embedUrl.includes("?")) embedUrl = embedUrl.split("?")[0];
+  }
+  return embedUrl;
+};
 
 export function VideosTab() {
-  const { unboxingVideos, addUnboxingVideo, updateUnboxingVideo, removeUnboxingVideo } = useUIStore();
+  const { unboxingVideos, addUnboxingVideo, updateUnboxingVideo, removeUnboxingVideo } =
+    useUIStore();
   const [isEditing, setIsEditing] = useState<string | null>(null);
+  const [formData, setFormData] = useState({ title: "", url: "", description: "" });
+  const [urlError, setUrlError] = useState("");
 
-  const [formData, setFormData] = useState({
-    title: "",
-    url: "",
-    description: ""
-  });
-
-  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Removed file size limit to accept all sizes
-      const reader = new FileReader();
-      reader.onloadend = () => setFormData({ ...formData, url: reader.result as string });
-      reader.readAsDataURL(file);
+  const validateUrl = (url: string) => {
+    const trimmed = url.trim();
+    if (!trimmed) {
+      setUrlError("URL is required.");
+      return false;
     }
-  };
-
-  const getEmbedUrl = (url: string) => {
-    let embedUrl = url;
-    if (url.includes("youtube.com/watch?v=")) {
-      embedUrl = url.replace("watch?v=", "embed/");
-      if (embedUrl.includes("&")) embedUrl = embedUrl.split("&")[0];
-    } else if (url.includes("youtube.com/shorts/")) {
-      embedUrl = url.replace("youtube.com/shorts/", "youtube.com/embed/");
-      if (embedUrl.includes("?")) embedUrl = embedUrl.split("?")[0];
-    } else if (url.includes("youtu.be/")) {
-      embedUrl = url.replace("youtu.be/", "www.youtube.com/embed/");
-      if (embedUrl.includes("?")) embedUrl = embedUrl.split("?")[0];
+    if (
+      !trimmed.includes("youtube.com") &&
+      !trimmed.includes("youtu.be") &&
+      !trimmed.includes("youtube.com/embed/")
+    ) {
+      setUrlError("Please enter a valid YouTube URL (youtube.com/watch?v=..., youtu.be/..., or an embed URL).");
+      return false;
     }
-    return embedUrl;
+    setUrlError("");
+    return true;
   };
 
   const handleSave = () => {
-    if (!formData.title || !formData.url) return;
+    if (!formData.title.trim()) return;
+    if (!validateUrl(formData.url)) return;
 
     const formattedUrl = getEmbedUrl(formData.url);
 
@@ -49,39 +60,52 @@ export function VideosTab() {
         id: isEditing,
         title: formData.title,
         url: formattedUrl,
-        description: formData.description
+        description: formData.description,
       });
     } else {
       addUnboxingVideo({
         id: `video-${Date.now()}`,
         title: formData.title,
         url: formattedUrl,
-        description: formData.description
+        description: formData.description,
       });
     }
 
     setIsEditing(null);
     setFormData({ title: "", url: "", description: "" });
+    setUrlError("");
   };
 
   const startEdit = (video: UnboxingVideo) => {
     setIsEditing(video.id);
-    setFormData({
-      title: video.title,
-      url: video.url,
-      description: video.description
-    });
+    setFormData({ title: video.title, url: video.url, description: video.description });
+    setUrlError("");
   };
 
   const cancelEdit = () => {
     setIsEditing(null);
     setFormData({ title: "", url: "", description: "" });
+    setUrlError("");
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-display text-xl font-normal uppercase text-white tracking-wider">Unboxing Videos</h2>
+        <h2 className="font-display text-xl font-normal uppercase text-white tracking-wider">
+          Unboxing Videos
+        </h2>
+      </div>
+
+      {/* Info banner */}
+      <div className="flex items-start gap-3 rounded-xl border border-brand-gold/30 bg-brand-gold/5 p-4">
+        <Video className="h-5 w-5 text-brand-gold mt-0.5 shrink-0" />
+        <div>
+          <p className="text-xs font-normal text-brand-gold uppercase tracking-wider">YouTube URLs Only</p>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Paste a YouTube video link (youtube.com/watch?v=..., youtu.be/..., or Shorts). 
+            It will be converted to an embed URL automatically. Videos are saved to the cloud database and will never disappear.
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -89,12 +113,14 @@ export function VideosTab() {
         <div className="lg:col-span-4 space-y-6">
           <div className="rounded-xl border border-brand-border bg-slate-900/30 p-6 space-y-4">
             <h2 className="font-display text-sm font-normal uppercase text-brand-orange">
-              {isEditing ? 'Edit Video' : 'Add New Video'}
+              {isEditing ? "Edit Video" : "Add New Video"}
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-wider mb-1 block">Video Title</label>
+                <label className="text-[10px] text-slate-400 uppercase tracking-wider mb-1 block">
+                  Video Title *
+                </label>
                 <input
                   type="text"
                   value={formData.title}
@@ -104,38 +130,39 @@ export function VideosTab() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-[10px] text-slate-400 uppercase tracking-wider mb-1 block">Video Embed URL</label>
-                  <input
-                    type="text"
-                    value={formData.url}
-                    onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                    placeholder="e.g. https://www.youtube.com/embed/..."
-                    className="w-full bg-slate-950 border border-brand-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-orange"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[10px] text-slate-400 uppercase tracking-wider mb-1 block">Or Upload Video</label>
-                  <input
-                    type="file"
-                    accept="video/*, .mp4, .mov, .avi, .mkv, .webm, .flv, .wmv"
-                    onChange={handleVideoUpload}
-                    className="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-normal file:uppercase file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 file:transition-colors file:cursor-pointer bg-slate-900/50 border border-brand-border rounded-lg"
-                  />
-                  {formData.url.startsWith("data:video") && (
-                    <p className="text-[10px] text-brand-orange mt-1.5 uppercase font-normal tracking-wider">Video loaded into memory</p>
-                  )}
-                </div>
+              <div>
+                <label className="text-[10px] text-slate-400 uppercase tracking-wider mb-1 block">
+                  YouTube Video URL *
+                </label>
+                <input
+                  type="url"
+                  value={formData.url}
+                  onChange={(e) => {
+                    setFormData({ ...formData, url: e.target.value });
+                    if (urlError) validateUrl(e.target.value);
+                  }}
+                  placeholder="https://www.youtube.com/watch?v=..."
+                  className={`w-full bg-slate-950 border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-orange ${urlError ? "border-red-500" : "border-brand-border"}`}
+                />
+                {urlError && (
+                  <div className="flex items-center gap-1.5 mt-1.5">
+                    <AlertCircle className="h-3 w-3 text-red-400 shrink-0" />
+                    <p className="text-[10px] text-red-400">{urlError}</p>
+                  </div>
+                )}
+                <p className="text-[10px] text-slate-500 mt-1">
+                  Supports: youtube.com/watch?v=..., youtu.be/..., YouTube Shorts
+                </p>
               </div>
 
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-wider mb-1 block">Description</label>
+                <label className="text-[10px] text-slate-400 uppercase tracking-wider mb-1 block">
+                  Description
+                </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Brief description..."
+                  placeholder="Brief description of what's in this video..."
                   rows={3}
                   className="w-full bg-slate-950 border border-brand-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-orange"
                 />
@@ -148,7 +175,7 @@ export function VideosTab() {
                   className="flex-1 bg-brand-orange text-black font-normal uppercase text-xs py-2.5 rounded-lg hover:bg-brand-gold disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
                 >
                   <Plus className="h-4 w-4" />
-                  {isEditing ? 'Update Video' : 'Add Video'}
+                  {isEditing ? "Update Video" : "Save to Database"}
                 </button>
                 {isEditing && (
                   <button
@@ -170,32 +197,27 @@ export function VideosTab() {
               <div className="col-span-2 rounded-xl border border-dashed border-brand-border bg-slate-900/10 p-12 text-center text-slate-400">
                 <PlayCircle className="mx-auto h-8 w-8 mb-2 opacity-50" />
                 <p className="text-sm">No unboxing videos added yet.</p>
+                <p className="text-xs mt-1 text-slate-500">Add a YouTube URL above to get started.</p>
               </div>
             ) : (
               unboxingVideos.map((video) => (
-                <div key={video.id} className="rounded-xl border border-brand-border bg-slate-900/30 overflow-hidden flex flex-col">
+                <div
+                  key={video.id}
+                  className="rounded-xl border border-brand-border bg-slate-900/30 overflow-hidden flex flex-col"
+                >
                   <div className="relative aspect-video bg-black border-b border-brand-border">
-                    {video.url.startsWith("data:video") ? (
-                      <video 
-                        src={video.url} 
-                        className="absolute inset-0 w-full h-full object-contain"
-                        controls
-                      />
-                    ) : (
-                      <iframe 
-                        src={video.url} 
-                        title={video.title}
-                        className="absolute inset-0 w-full h-full"
-                        allowFullScreen
-                      />
-                    )}
+                    <iframe
+                      src={video.url}
+                      title={video.title}
+                      className="absolute inset-0 w-full h-full"
+                      allowFullScreen
+                    />
                   </div>
                   <div className="p-4 flex-1 flex flex-col justify-between gap-4">
                     <div>
                       <h3 className="font-display text-sm text-white uppercase">{video.title}</h3>
                       <p className="text-xs text-slate-400 mt-1 line-clamp-2">{video.description}</p>
                     </div>
-                    
                     <div className="flex items-center gap-2 pt-2 border-t border-brand-border/50">
                       <button
                         onClick={() => startEdit(video)}

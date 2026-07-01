@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 
@@ -13,6 +13,13 @@ const outfit = Outfit({
   variable: "--font-display",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: "MARQUE | Premium RC Cars India • Traxxas, Arrma, FMS, Rlaarlo",
@@ -59,10 +66,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-x-hidden">
       <head>
       </head>
-      <body className={`${inter.variable} ${outfit.variable} antialiased font-sans`}>
+      <body className={`${inter.variable} ${outfit.variable} antialiased font-sans overflow-x-hidden`}>
         <AnalyticsProvider />
         <div className="flex flex-col min-h-screen bg-brand-dark text-slate-100 font-sans selection:bg-brand-orange selection:text-black">
           {/* Dynamic Global Navigation Header */}

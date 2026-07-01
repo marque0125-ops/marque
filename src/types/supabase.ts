@@ -74,6 +74,29 @@ export type OrderRow = {
   logs: Json
   created_at: string
 }
+export type GuideRow = {
+  id: string
+  title: string
+  excerpt: string
+  content: string
+  category: string
+  read_time: string
+  image_url: string
+  date: string
+  created_at: string
+}
+
+export type ReviewRow = {
+  id: string
+  product_id: string
+  reviewer_name: string
+  rating: number
+  title: string
+  body: string
+  date: string
+  is_verified: boolean
+  created_at: string
+}
 
 export type ProductInsert = {
   id?: string
@@ -144,6 +167,30 @@ export type OrderInsert = {
   created_at?: string
 }
 
+export type GuideInsert = {
+  id?: string
+  title?: string
+  excerpt?: string
+  content?: string
+  category?: string
+  read_time?: string
+  image_url?: string
+  date?: string
+  created_at?: string
+}
+
+export type ReviewInsert = {
+  id?: string
+  product_id?: string
+  reviewer_name?: string
+  rating?: number
+  title?: string
+  body?: string
+  date?: string
+  is_verified?: boolean
+  created_at?: string
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -166,6 +213,16 @@ export interface Database {
         Row: OrderRow
         Insert: OrderInsert
         Update: OrderInsert
+      }
+      guides: {
+        Row: GuideRow
+        Insert: GuideInsert
+        Update: GuideInsert
+      }
+      reviews: {
+        Row: ReviewRow
+        Insert: ReviewInsert
+        Update: ReviewInsert
       }
     }
     Views: {
