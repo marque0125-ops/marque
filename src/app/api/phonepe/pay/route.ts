@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       baseUrl = `${protocol}://${request.headers.get('host')}`;
     }
     
-    const callbackUrl = `${baseUrl}/api/phonepe/callback`;
+    const callbackUrl = `${baseUrl}/api/phonepe/callback?orderId=${merchantOrderId}`;
 
     const payRequest = StandardCheckoutPayRequest.builder()
       .merchantOrderId(merchantOrderId)
