@@ -90,8 +90,11 @@ export const useOrderStore = create<OrderState>()(
           }
         }
 
+        const productShippingTotal = cart.reduce((sum, item) => sum + (item.product.shippingPrice || 0) * item.qty, 0);
+        const isFreeShipping = (subtotal - discountAmount) >= 10000;
+        const shippingAmount = isFreeShipping ? 0 : (productShippingTotal > 0 ? productShippingTotal : (uiState.pinDetail ? uiState.pinDetail.shippingCost : 200));
+
         const gstAmount = Math.round((subtotal - discountAmount) - ((subtotal - discountAmount) / 1.18));
-        const shippingAmount = uiState.pinDetail ? uiState.pinDetail.shippingCost : 500;
         const totalAmount = (subtotal - discountAmount) + shippingAmount;
 
         const address = { ...authState.address };
