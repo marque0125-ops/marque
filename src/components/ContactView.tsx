@@ -93,7 +93,7 @@ export default function ContactView() {
                 </div>
                 <div>
                   <h3 className="text-white font-display uppercase tracking-wider mb-1">Email Support</h3>
-                  <a href="mailto:marque0125@gmail.com" className="text-sm text-slate-400 hover:text-brand-orange transition-colors">marque0125@gmail.com</a>
+                  <a href="mailto:2002dineshmurugan@gmail.com" className="text-sm text-slate-400 hover:text-brand-orange transition-colors">2002dineshmurugan@gmail.com</a>
                 </div>
               </div>
 

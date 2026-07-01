@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
     const { data, error } = await resend.emails.send({
       from: 'MARQUE Contact Form <onboarding@resend.dev>', 
-      to: ['marque0125@gmail.com'],
+      to: ['2002dineshmurugan@gmail.com'],
       subject: `New Contact Form Submission: ${subject || 'No Subject'}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background-color: #020617; color: #f8fafc; padding: 20px; border-radius: 8px;">
