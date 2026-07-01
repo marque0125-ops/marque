@@ -64,19 +64,19 @@ export default function RacingView() {
             {racingVideos.map((video) => (
               <div key={video.id} className="group rounded-3xl border border-brand-border bg-slate-900/30 overflow-hidden hover:border-brand-orange hover:shadow-glow transition-all duration-300">
                 <div className="relative aspect-video bg-black border-b border-brand-border">
-                  {video.url.startsWith("data:video") ? (
-                    <video 
-                      src={video.url} 
-                      className="absolute inset-0 w-full h-full object-contain"
-                      controls
-                    />
-                  ) : (
+                  {video.url.includes("youtube.com") || video.url.includes("youtu.be") ? (
                     <iframe 
                       src={video.url} 
                       title={video.title}
                       className="absolute inset-0 w-full h-full"
                       allowFullScreen
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    />
+                  ) : (
+                    <video 
+                      src={video.url} 
+                      className="absolute inset-0 w-full h-full object-contain"
+                      controls
                     />
                   )}
                 </div>

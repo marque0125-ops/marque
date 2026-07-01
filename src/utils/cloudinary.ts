@@ -28,3 +28,26 @@ export async function uploadImageToCloudinary(file: File): Promise<string> {
     throw error;
   }
 }
+
+export async function uploadVideoToCloudinary(file: File): Promise<string> {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/video/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to upload video to Cloudinary");
+    }
+
+    const data = await response.json();
+    return data.secure_url;
+  } catch (error) {
+    console.error("Cloudinary video upload error:", error);
+    throw error;
+  }
+}
