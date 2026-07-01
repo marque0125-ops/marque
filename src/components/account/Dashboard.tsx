@@ -204,18 +204,7 @@ export function Dashboard() {
 
             <OrderTrackingMap status={activeOrder.status} />
 
-            {activeOrder.status !== 'delivered' && activeOrder.status !== 'cancelled' && (
-              <button onClick={() => { 
-                showDialog({
-                  type: 'confirm',
-                  title: 'Cancel Order',
-                  message: 'Are you sure you want to cancel this order? This action cannot be undone.',
-                  onConfirm: () => cancelOrder(activeOrder.id)
-                });
-              }} className="w-full text-center text-[10px] text-red-400 hover:text-red-500 font-normal uppercase tracking-wider underline block pt-2">
-                Cancel Order and Request Refund
-              </button>
-            )}
+
 
             <div className="space-y-3">
               <span className="text-[10px] text-slate-500 font-normal uppercase tracking-widest block">Consignment Movement Logs</span>
