@@ -202,6 +202,26 @@ export function Dashboard() {
               <div className="flex justify-between"><span className="text-slate-400">Destination PIN</span><span className="text-slate-200">{activeOrder.shippingAddress.pincode} ({activeOrder.shippingAddress.city})</span></div>
             </div>
 
+            <div className="py-2 border-b border-brand-border">
+              <span className="text-[10px] text-slate-400 font-normal uppercase tracking-wider block mb-2">Order Items</span>
+              <div className="space-y-2">
+                {activeOrder.items?.map((item: any) => (
+                  <div key={item.id} className="flex items-center gap-3 bg-slate-900/50 p-2 rounded">
+                    <img src={item.product.images[0]} alt={item.product.name} className="h-10 w-10 rounded object-cover border border-brand-border" />
+                    <div className="flex-1">
+                      <span className="text-xs font-normal text-white block line-clamp-1">{item.product.name}</span>
+                      <span className="text-[9px] text-slate-400 font-normal uppercase tracking-wider block">
+                        Qty: {item.qty} &bull; {item.variant.name}
+                      </span>
+                    </div>
+                    <span className="font-mono text-sm font-normal text-brand-gold">
+                      ₹{((item.variant.priceOverride || item.product.price) * item.qty).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <OrderTrackingMap status={activeOrder.status} />
 
 
