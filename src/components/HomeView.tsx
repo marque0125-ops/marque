@@ -146,13 +146,24 @@ export default function HomeView() {
     <div className="space-y-8 sm:space-y-24 pb-12 sm:pb-24">
       {/* ==================== 6.5 STANDALONE PROMO BANNER ==================== */}
       {promoBanners && promoBanners.length > 0 && (
-        <section className="relative w-screen ml-[calc(50%-50vw)] -mt-10 sm:mt-0 overflow-hidden group cursor-pointer aspect-[2.5/1] bg-slate-950">
+        <section className="relative w-screen ml-[calc(50%-50vw)] -mt-10 sm:mt-0 overflow-hidden group aspect-[2.5/1] bg-slate-950">
           {promoBanners.map((slide, idx) => (
             <div
               key={slide.id}
-              className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentPromoSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+              onClick={() => {
+                if (slide.productId) {
+                  const product = products.find(p => p.id === slide.productId);
+                  if (product) {
+                    setSelectedProduct(product);
+                    router.push(`/product/${product.slug}`);
+                    window.scrollTo(0, 0);
+                  }
+                }
+              }}
+              className={`absolute inset-0 transition-opacity duration-1000 ${slide.productId ? 'cursor-pointer' : ''} ${idx === currentPromoSlide ? "opacity-100 z-10" : "opacity-0 z-0"
                 }`}
             >
+              {/* Full Width Banner Image */}
               <Image
                 src={slide.imageUrl}
                 alt={slide.titleMain || "Promo Banner"}
@@ -162,12 +173,36 @@ export default function HomeView() {
                 quality={80}
                 className="object-cover transition-transform duration-1000 group-hover:scale-105"
               />
-              {/* Optional Text Overlay */}
-              {(slide.badgeText || slide.titleMain || slide.titleSub) && (
-                <div className="absolute bottom-4 left-6 p-4 rounded-xl bg-slate-950/80 backdrop-blur border border-brand-border text-left">
-                  {slide.badgeText && <span className="text-[10px] text-brand-orange font-normal uppercase tracking-wider block mb-1">{slide.badgeText}</span>}
-                  {slide.titleMain && <span className="font-display text-2xl sm:text-3xl font-normal text-white leading-none block mb-1">{slide.titleMain}</span>}
-                  {slide.titleSub && <span className="text-xs text-slate-300 block">{slide.titleSub}</span>}
+              
+              {/* 3D Animated Overlay Button (Positioned Bottom Left) - Only show if there is text */}
+              {(slide.badgeText || slide.titleMain) && (
+                <div 
+                  className="absolute bottom-4 left-6 sm:bottom-8 sm:left-12 z-20"
+                >
+                  <div
+                    className="group/btn relative flex flex-col items-center justify-center p-[2px] rounded-2xl bg-gradient-to-br from-brand-orange via-red-500 to-brand-gold shadow-[0_10px_30px_rgba(249,115,22,0.4)] transition-all duration-500 hover:shadow-[0_15px_40px_rgba(249,115,22,0.7)] hover:-translate-y-2 sm:hover:-translate-y-3 hover:scale-105"
+                  >
+                    <div className="flex flex-col items-center justify-center w-24 h-24 sm:w-32 sm:h-32 rounded-[14px] bg-slate-950/80 backdrop-blur-md relative overflow-hidden">
+                      {/* Inner ambient glow */}
+                      <div className="absolute inset-0 bg-gradient-to-b from-brand-orange/20 to-transparent opacity-80 pointer-events-none" />
+                      
+                      {/* Hover light sweep effect */}
+                      <div className="absolute -inset-[100%] bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 transform -translate-x-full group-hover/btn:translate-x-full transition-all duration-1000 ease-in-out rotate-45 pointer-events-none" />
+
+                      <div className="relative z-10 flex flex-col items-center gap-0.5 transform group-hover/btn:scale-110 transition-transform duration-500 ease-out text-center">
+                        {slide.badgeText && (
+                          <span className="text-2xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-brand-orange to-brand-gold drop-shadow-md uppercase leading-none">
+                            {slide.badgeText}
+                          </span>
+                        )}
+                        {slide.titleMain && (
+                          <span className="font-display text-xs sm:text-sm font-bold text-white uppercase tracking-[0.2em] drop-shadow-lg mt-1">
+                            {slide.titleMain}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

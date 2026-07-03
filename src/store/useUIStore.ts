@@ -8,6 +8,7 @@ export interface BannerSlide {
   badgeText: string;
   titleMain: string;
   titleSub: string;
+  productId?: string;
 }
 
 export interface UnboxingVideo {

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Image as ImageIcon, Plus, Trash2, Edit2, X, Save, Layers, Loader2 } from "lucide-react";
 import { useUIStore, BannerSlide } from "../../store/useUIStore";
+import { useProductStore } from "../../store/useProductStore";
 import { uploadImageToCloudinary } from "../../utils/cloudinary";
 
 export function BannersTab() {
@@ -12,6 +13,8 @@ export function BannersTab() {
     promoBanners, addPromoBanner, updatePromoBanner, removePromoBanner,
     heroTitleLine1, heroTitleLine2, heroDescription, updateHeroText
   } = useUIStore();
+  
+  const { products } = useProductStore();
 
   const [activeTab, setActiveTab] = useState<'hero' | 'promo'>('hero');
 
@@ -23,6 +26,7 @@ export function BannersTab() {
   const [formBadgeText, setFormBadgeText] = useState("");
   const [formTitleMain, setFormTitleMain] = useState("");
   const [formTitleSub, setFormTitleSub] = useState("");
+  const [formProductId, setFormProductId] = useState("");
 
   const [isEditingHeroText, setIsEditingHeroText] = useState(false);
   const [heroTextForm, setHeroTextForm] = useState({
@@ -52,6 +56,7 @@ export function BannersTab() {
     setFormBadgeText("");
     setFormTitleMain("");
     setFormTitleSub("");
+    setFormProductId("");
     setIsAdding(false);
     setIsEditing(null);
   };
@@ -61,6 +66,7 @@ export function BannersTab() {
     setFormBadgeText(slide.badgeText);
     setFormTitleMain(slide.titleMain);
     setFormTitleSub(slide.titleSub);
+    setFormProductId(slide.productId || "");
     setIsEditing(slide.id);
     setIsAdding(false);
   };
@@ -87,12 +93,13 @@ export function BannersTab() {
       return;
     }
     
-    const newSlide = {
+    const newSlide: BannerSlide = {
       id: isEditing ? isEditing : `banner-${Date.now()}`,
       imageUrl: formImageUrl,
       badgeText: formBadgeText,
       titleMain: formTitleMain,
       titleSub: formTitleSub,
+      productId: formProductId || undefined,
     };
 
     if (activeTab === 'hero') {
@@ -248,6 +255,22 @@ export function BannersTab() {
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Badge Text (Optional)</label><input type="text" value={formBadgeText} onChange={(e) => setFormBadgeText(e.target.value)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Main Title (Optional)</label><input type="text" value={formTitleMain} onChange={(e) => setFormTitleMain(e.target.value)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5 md:col-span-2"><label className="text-[10px] text-slate-400 font-normal uppercase block">Subtitle (Optional)</label><input type="text" value={formTitleSub} onChange={(e) => setFormTitleSub(e.target.value)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
+
+            {activeTab === 'promo' && (
+              <div className="space-y-1.5 md:col-span-2">
+                <label className="text-[10px] text-brand-orange font-normal uppercase block">Linked Product (Clicking banner opens product)</label>
+                <select 
+                  value={formProductId} 
+                  onChange={(e) => setFormProductId(e.target.value)}
+                  className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange text-slate-200"
+                >
+                  <option value="">-- No Linked Product --</option>
+                  {products.map((p) => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-3 pt-4 border-t border-brand-border">
