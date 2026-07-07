@@ -303,8 +303,7 @@ export const useOrderStore = create<OrderState>()(
     }),
     {
       name: "marque-order-storage",
-      storage: createJSONStorage(() => safeStorage),
-      partialize: (state) => ({}) // Do not persist the orders array to localStorage, fetch from Supabase!
+      storage: createJSONStorage(() => safeStorage)
     }
   )
 );

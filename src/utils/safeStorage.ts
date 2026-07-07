@@ -1,23 +1,28 @@
 import { StateStorage } from 'zustand/middleware';
+import { get, set, del } from 'idb-keyval';
 
 export const safeStorage: StateStorage = {
-  getItem: (name: string): string | null => {
+  getItem: async (name: string): Promise<string | null> => {
+    if (typeof window === 'undefined') return null;
     try {
-      return localStorage.getItem(name);
+      const val = await get(name);
+      return val ? (val as string) : null;
     } catch (e) {
       return null;
     }
   },
-  setItem: (name: string, value: string): void => {
+  setItem: async (name: string, value: string): Promise<void> => {
+    if (typeof window === 'undefined') return;
     try {
-      localStorage.setItem(name, value);
+      await set(name, value);
     } catch (e) {
-      console.warn(`[safeStorage] Failed to setItem for ${name}. Quota may be exceeded or browser is in private mode.`);
+      console.warn(`[safeStorage] Failed to setItem for ${name}.`);
     }
   },
-  removeItem: (name: string): void => {
+  removeItem: async (name: string): Promise<void> => {
+    if (typeof window === 'undefined') return;
     try {
-      localStorage.removeItem(name);
+      await del(name);
     } catch (e) {
       console.warn(`[safeStorage] Failed to removeItem for ${name}.`);
     }

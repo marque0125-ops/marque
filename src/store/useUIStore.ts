@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { safeStorage } from "../utils/safeStorage";
 import { Product, PinCodeDetail, PIN_CODES } from "../data/mockData";
 import { loadAllSiteConfig, saveSiteConfig } from "../utils/siteConfig";
 
@@ -112,6 +114,7 @@ const DEFAULT_TESTIMONIALS: Testimonial[] = [
 ];
 
 export interface UIState {
+  lastFetchedAt: number;
   selectedProduct: Product | null;
   setSelectedProduct: (product: Product | null) => void;
 
@@ -200,8 +203,11 @@ export interface UIState {
   removeRacingVideo: (id: string) => void;
 }
 
-export const useUIStore = create<UIState>((set, get) => ({
-  selectedProduct: null,
+export const useUIStore = create<UIState>()(
+  persist(
+    (set, get) => ({
+      lastFetchedAt: 0,
+      selectedProduct: null,
   setSelectedProduct: (product) => set({ selectedProduct: product }),
 
   isLoadingConfig: false,
@@ -211,6 +217,10 @@ export const useUIStore = create<UIState>((set, get) => ({
    * Falls back to built-in defaults if Supabase is not configured or returns empty.
    */
   loadAllSiteConfig: async () => {
+    const state = get();
+    if (state.lastFetchedAt && Date.now() - state.lastFetchedAt < 3600000) {
+      return;
+    }
     set({ isLoadingConfig: true });
     try {
       const config = await loadAllSiteConfig();
@@ -253,7 +263,7 @@ export const useUIStore = create<UIState>((set, get) => ({
     } catch (e) {
       console.warn("[UIStore] Failed to load site config from Supabase:", e);
     } finally {
-      set({ isLoadingConfig: false });
+      set({ isLoadingConfig: false, lastFetchedAt: Date.now() });
     }
   },
 
@@ -493,4 +503,38 @@ export const useUIStore = create<UIState>((set, get) => ({
       return { racingVideos: next };
     });
   },
-}));
+    }),
+    {
+      name: "marque-ui-storage",
+      storage: createJSONStorage(() => safeStorage),
+      partialize: (state) => ({
+        lastFetchedAt: state.lastFetchedAt,
+        heroBanners: state.heroBanners,
+        promoBanners: state.promoBanners,
+        brandsList: state.brandsList,
+        testimonialsList: state.testimonialsList,
+        unboxingVideos: state.unboxingVideos,
+        racingVideos: state.racingVideos,
+        announcementText: state.announcementText,
+        heroTitleLine1: state.heroTitleLine1,
+        heroTitleLine2: state.heroTitleLine2,
+        heroDescription: state.heroDescription,
+        brandsBadge: state.brandsBadge,
+        brandsTitle: state.brandsTitle,
+        brandsSubtitle: state.brandsSubtitle,
+        aboutBadge: state.aboutBadge,
+        aboutTitleLine1: state.aboutTitleLine1,
+        aboutTitleLine2: state.aboutTitleLine2,
+        aboutSubtitle: state.aboutSubtitle,
+        aboutDescription: state.aboutDescription,
+        aboutBullets: state.aboutBullets,
+        aboutImage: state.aboutImage,
+        aboutImageOverlayTitle: state.aboutImageOverlayTitle,
+        aboutImageOverlaySubtitle: state.aboutImageOverlaySubtitle,
+        testimonialsBadge: state.testimonialsBadge,
+        testimonialsTitle: state.testimonialsTitle,
+      }),
+      version: 1,
+    }
+  )
+);

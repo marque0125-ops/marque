@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 
 export interface ProductState {
   isLoading: boolean;
+  lastFetchedAt: Record<string, number>;
   categories: Category[];
   guides: RCGuide[];
   products: Product[];
@@ -52,7 +53,7 @@ export interface ProductState {
   deleteGuide: (guideId: string) => void;
 }
 
-const normalizeProduct = (p: any): Product => ({
+export const normalizeProduct = (p: any): Product => ({
   id: p.id,
   brandId: p.brand_id || p.brandId || "",
   categoryId: p.category_id || p.categoryId || "",
@@ -89,6 +90,7 @@ export const useProductStore = create<ProductState>()(
       guides: RC_GUIDES,
       products: PRODUCTS,
       isLoading: false,
+      lastFetchedAt: {},
       reviews: MOCK_REVIEWS,
       wishlist: [],
       searchQuery: "",
@@ -150,6 +152,10 @@ export const useProductStore = create<ProductState>()(
       },
 
       fetchProducts: async () => {
+        const state = get();
+        if (state.lastFetchedAt?.products && Date.now() - state.lastFetchedAt.products < 3600000) {
+          return;
+        }
         set({ isLoading: true });
         const isConfigured = 
           process.env.NEXT_PUBLIC_SUPABASE_URL && 
@@ -175,7 +181,7 @@ export const useProductStore = create<ProductState>()(
 
           if (data && data.length > 0) {
             const dbProducts = data.map(normalizeProduct);
-            set({ products: dbProducts });
+            set({ products: dbProducts, lastFetchedAt: { ...get().lastFetchedAt, products: Date.now() } });
           } else if (data && data.length === 0) {
             // DB is empty. If local state has products, seed the DB.
             const currentProducts = get().products;
@@ -207,6 +213,10 @@ export const useProductStore = create<ProductState>()(
       },
 
       fetchCategories: async () => {
+        const state = get();
+        if (state.lastFetchedAt?.categories && Date.now() - state.lastFetchedAt.categories < 3600000) {
+          return;
+        }
         const isConfigured = 
           process.env.NEXT_PUBLIC_SUPABASE_URL && 
           !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
@@ -227,7 +237,7 @@ export const useProductStore = create<ProductState>()(
           }
 
           if (data && data.length > 0) {
-            set({ categories: data });
+            set({ categories: data, lastFetchedAt: { ...get().lastFetchedAt, categories: Date.now() } });
           } else if (data && data.length === 0) {
             // Seed DB with local categories if empty
             const currentCategories = get().categories;
@@ -252,6 +262,10 @@ export const useProductStore = create<ProductState>()(
       },
 
       fetchGuides: async () => {
+        const state = get();
+        if (state.lastFetchedAt?.guides && Date.now() - state.lastFetchedAt.guides < 3600000) {
+          return;
+        }
         const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
         if (!isConfigured) return;
 
@@ -271,7 +285,7 @@ export const useProductStore = create<ProductState>()(
               readTime: g.read_time,
               imageUrl: g.image_url
             }));
-            set({ guides: mappedGuides });
+            set({ guides: mappedGuides, lastFetchedAt: { ...get().lastFetchedAt, guides: Date.now() } });
           }
         } catch (err) {
           console.error("Failed to fetch guides from Supabase", err);
@@ -279,6 +293,10 @@ export const useProductStore = create<ProductState>()(
       },
 
       fetchReviews: async () => {
+        const state = get();
+        if (state.lastFetchedAt?.reviews && Date.now() - state.lastFetchedAt.reviews < 3600000) {
+          return;
+        }
         const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
         if (!isConfigured) return;
 
@@ -300,7 +318,7 @@ export const useProductStore = create<ProductState>()(
               verifiedPurchase: r.is_verified,
               avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=150&auto=format&fit=crop"
             }));
-            set({ reviews: mappedReviews });
+            set({ reviews: mappedReviews, lastFetchedAt: { ...get().lastFetchedAt, reviews: Date.now() } });
           }
         } catch (err) {
           console.error("Failed to fetch reviews from Supabase", err);
@@ -572,7 +590,12 @@ export const useProductStore = create<ProductState>()(
       name: "marque-product-storage",
       storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({
-        wishlist: state.wishlist
+        wishlist: state.wishlist,
+        lastFetchedAt: state.lastFetchedAt,
+        products: state.products,
+        categories: state.categories,
+        guides: state.guides,
+        reviews: state.reviews
       }),
       version: 1
     }
