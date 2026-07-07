@@ -172,7 +172,8 @@ export const useOrderStore = create<OrderState>()(
                   email: authState.userEmail,
                   name: newOrder.shippingAddress.name,
                   totalAmount: newOrder.totalAmount,
-                  items: newOrder.items
+                  items: newOrder.items,
+                  shippingAddress: newOrder.shippingAddress
                 })
               }).catch(e => console.error("Email API network error:", e));
             }
