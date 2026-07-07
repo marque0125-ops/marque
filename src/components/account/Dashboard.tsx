@@ -176,6 +176,9 @@ export function Dashboard() {
                   <div className="text-left sm:text-right flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t border-brand-border/40 pt-3 sm:border-none sm:pt-0">
                     <span className="text-[10px] text-slate-500 font-normal block uppercase leading-none">Net Value</span>
                     <span className="font-mono text-sm font-normal text-brand-gold mt-1 block leading-none">₹{order.totalAmount.toLocaleString('en-IN')}</span>
+                    {order.paymentMethod === 'COD' && order.advancePaidAmount !== undefined && (
+                      <span className="text-[9px] text-amber-400 block mt-1 leading-none border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 rounded">Bal Due: ₹{(order.totalAmount - order.advancePaidAmount).toLocaleString('en-IN')}</span>
+                    )}
                     <span className="text-[9px] text-slate-400 block mt-1 leading-none">{order.items.reduce((sum: number, i: any) => sum + i.qty, 0)} items</span>
                   </div>
                 </div>
@@ -200,6 +203,13 @@ export function Dashboard() {
               <div className="flex justify-between font-normal"><span className="text-slate-400 uppercase tracking-wider">AWB Consignment</span><span className="text-white font-mono">{activeOrder.trackingNumber}</span></div>
               <div className="flex justify-between"><span className="text-slate-400">Logistics Carrier</span><span className="text-slate-200">BlueDart Express Air</span></div>
               <div className="flex justify-between"><span className="text-slate-400">Destination PIN</span><span className="text-slate-200">{activeOrder.shippingAddress.pincode} ({activeOrder.shippingAddress.city})</span></div>
+              <div className="flex justify-between"><span className="text-slate-400">Payment Mode</span><span className="text-slate-200 font-semibold">{activeOrder.paymentMethod}</span></div>
+              {activeOrder.paymentMethod === 'COD' && activeOrder.advancePaidAmount !== undefined && (
+                <>
+                  <div className="flex justify-between"><span className="text-slate-400">Advance Paid</span><span className="text-green-400 font-mono">₹{activeOrder.advancePaidAmount.toLocaleString('en-IN')}</span></div>
+                  <div className="flex justify-between"><span className="text-brand-orange uppercase">Balance on Delivery</span><span className="text-brand-orange font-mono font-bold">₹{(activeOrder.totalAmount - activeOrder.advancePaidAmount).toLocaleString('en-IN')}</span></div>
+                </>
+              )}
             </div>
 
             <div className="py-2 border-b border-brand-border">

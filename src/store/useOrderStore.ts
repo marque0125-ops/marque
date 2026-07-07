@@ -173,7 +173,9 @@ export const useOrderStore = create<OrderState>()(
                   name: newOrder.shippingAddress.name,
                   totalAmount: newOrder.totalAmount,
                   items: newOrder.items,
-                  shippingAddress: newOrder.shippingAddress
+                  shippingAddress: newOrder.shippingAddress,
+                  paymentMethod: newOrder.paymentMethod,
+                  advancePaidAmount: newOrder.advancePaidAmount
                 })
               }).catch(e => console.error("Email API network error:", e));
             }

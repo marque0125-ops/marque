@@ -65,6 +65,12 @@ export function OrdersTab() {
                 <div>
                   <span className="text-[9px] text-slate-400 font-normal uppercase tracking-wider block">Consignment Value</span>
                   <span className="font-mono text-slate-200 font-normal block">₹{order.totalAmount.toLocaleString('en-IN')}</span>
+                  {order.paymentMethod === 'COD' && order.advancePaidAmount !== undefined && (
+                    <div className="mt-1 pt-1 border-t border-brand-border/40">
+                      <span className="text-[9px] text-slate-500 block leading-none">Adv Paid: <span className="text-green-400 font-mono">₹{order.advancePaidAmount.toLocaleString('en-IN')}</span></span>
+                      <span className="text-[9px] text-brand-orange font-bold uppercase block mt-1 leading-none">To Collect: <span className="font-mono font-bold">₹{(order.totalAmount - order.advancePaidAmount).toLocaleString('en-IN')}</span></span>
+                    </div>
+                  )}
                 </div>
               </div>
 
