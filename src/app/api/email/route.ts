@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     ` : 'Address details not provided.';
 
     const { data, error } = await resend.emails.send({
-      from: 'MARQUE RC <orders@yourdomain.com>', // User needs to configure their verified domain in Resend
+      from: 'MARQUE RC <orders@marque.co.in>',
       to: [email],
       bcc: ['marque0125@gmail.com'],
       subject: `Order Confirmation - ${orderId}`,
