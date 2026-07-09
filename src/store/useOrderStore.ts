@@ -12,10 +12,12 @@ import toast from "react-hot-toast";
 export interface OrderState {
   orders: Order[];
   isLoading: boolean;
+  lastFetched?: number;
   createOrder: (paymentMethod: 'UPI' | 'Card' | 'COD', paymentId?: string) => Order;
   advanceOrderStatus: (orderId: string) => void;
   cancelOrder: (orderId: string) => void;
-  fetchOrders: () => Promise<void>;
+  fetchOrders: (force?: boolean) => Promise<void>;
+  updateOrderTracking: (orderId: string, trackingNumber: string) => void;
 }
 
 export const useOrderStore = create<OrderState>()(
@@ -23,14 +25,31 @@ export const useOrderStore = create<OrderState>()(
     (set, get) => ({
       orders: [],
       isLoading: false,
-      fetchOrders: async () => {
+      lastFetched: 0,
+      fetchOrders: async (force = false) => {
         const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
         if (!isConfigured) return;
 
+        const authState = useAuthStore.getState();
+        if (!authState.isAdmin) {
+          // Non-admins keep using local storage order list to avoid RLS clearing their cache
+          return;
+        }
+
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          return;
+        }
+
+        // Cache fetch check: skip if fetched within last 10 seconds (unless force=true)
+        const lastFetched = get().lastFetched || 0;
+        if (!force && Date.now() - lastFetched < 10000 && get().orders.length > 0) {
+          return;
+        }
+
         set({ isLoading: true });
         try {
-          const { data, error } = await supabase
-            .from("orders")
+          const { data, error } = await (supabase.from("orders") as any)
             .select("*")
             .order("created_at", { ascending: false });
 
@@ -40,7 +59,7 @@ export const useOrderStore = create<OrderState>()(
             return;
           }
 
-          if (data && data.length > 0) {
+          if (data) {
             const mappedOrders: Order[] = (data as any[]).map(o => ({
               id: o.id,
               items: o.items as any,
@@ -60,7 +79,10 @@ export const useOrderStore = create<OrderState>()(
               logs: o.logs as any || []
             }));
             
-            set({ orders: mappedOrders });
+            set({ 
+              orders: mappedOrders,
+              lastFetched: Date.now()
+            });
           }
         } catch (err) {
           console.error("Failed to fetch orders from Supabase", err);
@@ -92,8 +114,7 @@ export const useOrderStore = create<OrderState>()(
         }
 
         const productShippingTotal = cart.reduce((sum, item) => sum + (item.product.shippingPrice || 0) * item.qty, 0);
-        const isFreeShipping = (subtotal - discountAmount) >= 10000;
-        const shippingAmount = isFreeShipping ? 0 : (productShippingTotal > 0 ? productShippingTotal : (uiState.pinDetail ? uiState.pinDetail.shippingCost : 200));
+        const shippingAmount = productShippingTotal > 0 ? productShippingTotal : (uiState.pinDetail ? uiState.pinDetail.shippingCost : 200);
 
         const gstAmount = Math.round((subtotal - discountAmount) - ((subtotal - discountAmount) / 1.18));
         const totalAmount = (subtotal - discountAmount) + shippingAmount;
@@ -250,6 +271,52 @@ export const useOrderStore = create<OrderState>()(
                 }).eq("id", orderId);
               } catch (err) {
                 toast.error("Failed to sync order update to cloud.");
+              }
+            })();
+          }
+        }
+      },
+
+      updateOrderTracking: (orderId, trackingNumber) => {
+        const orderList = get().orders;
+        let updatedOrder: Order | null = null;
+        const updated = orderList.map(order => {
+          if (order.id === orderId) {
+            const nextLogs = order.logs.map((log: any) => {
+              if (log.status === 'dispatched') {
+                return {
+                  ...log,
+                  message: `Dispatched via MARQUE Logistics Desk AWB: ${trackingNumber}. Custom courier assigned.`
+                };
+              }
+              return log;
+            });
+
+            const nextOrder = {
+              ...order,
+              trackingNumber,
+              logs: nextLogs
+            };
+            updatedOrder = nextOrder;
+            return nextOrder;
+          }
+          return order;
+        });
+
+        set({ orders: updated });
+
+        if (updatedOrder) {
+          const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+          if (isConfigured) {
+            (async () => {
+              try {
+                await (supabase.from("orders") as any).update({
+                  tracking_number: trackingNumber,
+                  logs: (updatedOrder as Order).logs as any
+                }).eq("id", orderId);
+              } catch (err) {
+                console.error("Supabase update error:", err);
+                toast.error("Failed to sync tracking ID update to cloud.");
               }
             })();
           }

@@ -16,8 +16,7 @@ export default function AdminViewPage() {
   useEffect(() => {
     setMounted(true);
     
-    // Automatically re-verify admin status if logged in but local store says false
-    if (isAuthenticated && !isAdmin) {
+    if (isAuthenticated) {
       setIsVerifying(true);
       const verifyAdmin = async () => {
         try {
@@ -30,18 +29,23 @@ export default function AdminViewPage() {
               .maybeSingle();
               
             if (profile?.is_admin) {
-              useAuthStore.setState({ isAdmin: true });
+              useAuthStore.setState({ isAdmin: true, isAuthenticated: true });
+            } else {
+              useAuthStore.setState({ isAdmin: false, isAuthenticated: false });
             }
+          } else {
+            useAuthStore.setState({ isAdmin: false, isAuthenticated: false });
           }
         } catch (err) {
           console.error("Failed to verify admin status", err);
+          useAuthStore.setState({ isAdmin: false, isAuthenticated: false });
         } finally {
           setIsVerifying(false);
         }
       };
       verifyAdmin();
     }
-  }, [isAuthenticated, isAdmin]);
+  }, [isAuthenticated]);
 
   if (!mounted || isVerifying) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-brand-orange">Verifying clearance...</div>;
 

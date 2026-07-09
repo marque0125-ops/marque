@@ -79,9 +79,7 @@ export default function CartView() {
   // Shiprocket Shipping calculation
   const productShippingTotal = cart.reduce((sum, item) => sum + (item.product.shippingPrice || 0) * item.qty, 0);
 
-  // Free shipping on orders over ₹10,000 as per site banner
-  const isFreeShipping = (subtotal - discountAmount) >= 10000;
-  const shippingCost = isFreeShipping ? 0 : (productShippingTotal > 0 ? productShippingTotal : (pinDetail ? pinDetail.shippingCost : 200));
+  const shippingCost = productShippingTotal > 0 ? productShippingTotal : (pinDetail ? pinDetail.shippingCost : 200);
 
   // Indian GST 18% inclusive calculation:
   // Tax = Subtotal - (Subtotal / 1.18)

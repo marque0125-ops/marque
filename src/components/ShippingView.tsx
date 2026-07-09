@@ -47,7 +47,7 @@ export default function ShippingView() {
           <ul className="list-disc pl-5 space-y-2 text-slate-400 marker:text-brand-gold">
             <li><strong>Standard Surface (3-7 Days):</strong> Recommended for all orders containing LiPo batteries (Aviation regulations prohibit air-shipping high-capacity LiPos).</li>
             <li><strong>Express Air (1-3 Days):</strong> Available only for orders containing NO batteries (e.g., bare chassis, spare parts, plastics).</li>
-            <li><strong>Free Shipping:</strong> Automatically applied to all orders over ₹10,000.</li>
+            <li><strong>Premium Delivery:</strong> Rates calculated based on package weight, volume, or destination region at checkout.</li>
             <li><em>Note: Deliveries to remote locations (J&K, North East India) may experience an additional 3-5 days in transit.</em></li>
           </ul>
         </section>

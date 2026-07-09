@@ -26,9 +26,13 @@ const SiteContentTab = dynamic(() => import('./admin/SiteContentTab').then(mod =
 export default function AdminView() {
   const [activeTab, setActiveTab] = useState<'analytics' | 'categories' | 'inventory' | 'orders' | 'blog' | 'banners' | 'videos' | 'racing' | 'site_content'>('analytics');
   
-  const orders = useOrderStore(state => state.orders);
+  const { orders, fetchOrders } = useOrderStore();
   const [newOrderCount, setNewOrderCount] = useState(0);
   const topOrderIdRef = useRef(orders[0]?.id);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
   useEffect(() => {
     if (orders.length > 0) {

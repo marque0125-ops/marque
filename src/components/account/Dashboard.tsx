@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { User, Mail, MapPin, Phone, ShieldCheck, Box, LogOut, ChevronRight, Truck, Heart, Edit2, X, Save } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useOrderStore } from "../../store/useOrderStore";
@@ -13,12 +13,18 @@ export function Dashboard() {
   const { userEmail, address, setAddress, logout } = useAuthStore();
   const { orders, fetchOrders, cancelOrder } = useOrderStore();
   const { showDialog } = useUIStore();
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
   const router = useRouter();
   const { products, wishlist } = useProductStore();
   const { setSelectedProduct } = useUIStore();
 
-  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(orders.length > 0 ? orders[0].id : null);
-  const activeOrder = orders.find((o: any) => o.id === selectedOrderId);
+  const userOrders = orders.filter((o: any) => o.shippingAddress?.phone === address.phone);
+  const [selectedOrderIdState, setSelectedOrderId] = useState<string | null>(null);
+  const selectedOrderId = selectedOrderIdState || (userOrders.length > 0 ? userOrders[0].id : null);
+  const activeOrder = userOrders.find((o: any) => o.id === selectedOrderId);
 
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -158,13 +164,13 @@ export function Dashboard() {
           <h3 className="font-display text-lg font-normal uppercase text-white flex items-center gap-2">
             <Box className="h-5 w-5 text-brand-orange" />Order Log Book
           </h3>
-          {orders.length === 0 ? (
+          {userOrders.length === 0 ? (
             <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 text-center text-xs text-slate-500">
               No orders found. Head to the Shop to acquire new rigs!
             </div>
           ) : (
             <div className="space-y-4">
-              {orders.map((order: any) => (
+              {userOrders.map((order: any) => (
                 <div key={order.id} onClick={() => setSelectedOrderId(order.id)} className={`cursor-pointer rounded-2xl border p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all ${selectedOrderId === order.id ? 'bg-slate-900 border-brand-orange shadow-glow' : 'bg-slate-950 border-brand-border hover:border-slate-700'}`}>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2.5">
@@ -200,7 +206,10 @@ export function Dashboard() {
         ) : (
           <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-6">
             <div className="border-b border-brand-border pb-4 space-y-1.5 text-xs">
-              <div className="flex justify-between font-normal"><span className="text-slate-400 uppercase tracking-wider">AWB Consignment</span><span className="text-white font-mono">{activeOrder.trackingNumber}</span></div>
+              <div className="flex justify-between items-center py-1.5 border-b border-brand-border/40 pb-3 mb-2">
+                <span className="text-white font-bold uppercase tracking-wider text-xs sm:text-sm">AWB Consignment</span>
+                <span className="text-brand-orange font-mono font-bold text-sm sm:text-base bg-brand-orange/10 px-3 py-1 rounded border border-brand-orange/25 tracking-wide shadow-[0_0_15px_rgba(249,115,22,0.1)]">{activeOrder.trackingNumber}</span>
+              </div>
               <div className="flex justify-between"><span className="text-slate-400">Logistics Carrier</span><span className="text-slate-200">BlueDart Express Air</span></div>
               <div className="flex justify-between"><span className="text-slate-400">Destination PIN</span><span className="text-slate-200">{activeOrder.shippingAddress.pincode} ({activeOrder.shippingAddress.city})</span></div>
               <div className="flex justify-between"><span className="text-slate-400">Payment Mode</span><span className="text-slate-200 font-semibold">{activeOrder.paymentMethod}</span></div>

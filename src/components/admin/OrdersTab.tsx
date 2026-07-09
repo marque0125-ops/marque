@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useOrderStore } from "../../store/useOrderStore";
 import { Loader2 } from "lucide-react";
 import { OrderTrackingMap } from "../OrderTrackingMap";
+import toast from "react-hot-toast";
 
 export function OrdersTab() {
-  const { orders, isLoading, advanceOrderStatus, cancelOrder, fetchOrders } = useOrderStore();
+  const { orders, isLoading, advanceOrderStatus, cancelOrder, fetchOrders, updateOrderTracking } = useOrderStore();
+  const [trackingInputs, setTrackingInputs] = useState<Record<string, string>>({});
 
   useEffect(() => {
     fetchOrders();
@@ -99,7 +101,29 @@ export function OrdersTab() {
               </div>
 
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pt-2">
-                <span className="text-[10px] text-slate-400 font-mono">AWB Code: {order.trackingNumber}</span>
+                {order.status !== 'delivered' && order.status !== 'cancelled' ? (
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] text-slate-400 font-mono">AWB Tracking:</span>
+                    <input
+                      type="text"
+                      value={trackingInputs[order.id] !== undefined ? trackingInputs[order.id] : order.trackingNumber}
+                      onChange={(e) => setTrackingInputs(prev => ({ ...prev, [order.id]: e.target.value }))}
+                      className="bg-slate-900 border border-brand-border/60 focus:border-brand-orange rounded px-2 py-0.5 text-[10px] text-white font-mono w-32 sm:w-40 outline-none transition-all"
+                      placeholder="Enter Tracking ID..."
+                    />
+                    <button
+                      onClick={() => {
+                        updateOrderTracking(order.id, trackingInputs[order.id] !== undefined ? trackingInputs[order.id] : order.trackingNumber);
+                        toast.success("Tracking ID saved!");
+                      }}
+                      className="bg-brand-orange/15 text-brand-orange hover:bg-brand-orange hover:text-white px-2 py-0.5 rounded text-[9px] uppercase font-normal transition-all"
+                    >
+                      Save
+                    </button>
+                  </div>
+                ) : (
+                  <span className="text-[10px] text-slate-400 font-mono">AWB Code: {order.trackingNumber}</span>
+                )}
                 <div className="flex gap-2">
                   {order.status !== 'delivered' && order.status !== 'cancelled' && (
                     <button onClick={() => advanceOrderStatus(order.id)} className="bg-brand-orange text-white sm:text-black px-3.5 py-1.5 rounded font-normal uppercase text-[9px] hover:bg-brand-gold">

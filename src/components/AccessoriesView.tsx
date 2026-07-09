@@ -107,7 +107,7 @@ export default function AccessoriesView() {
           {/* Quick trust metrics */}
           <div className="flex flex-wrap gap-4 pt-2 text-[10px] text-slate-400 font-normal uppercase tracking-wider">
             <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-brand-orange" /> 100% Certified Genuine</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-brand-gold" /> Free Shipping Above ₹10,000</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-brand-gold" /> Secure Tracked Delivery</span>
             <span className="flex items-center gap-1.5"><Box className="h-4 w-4 text-green-400" /> Damage-Proof Packaging</span>
           </div>
         </div>

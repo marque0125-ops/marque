@@ -309,7 +309,7 @@ export const useUIStore = create<UIState>()(
   clearLowStockAlerts: () => set({ lowStockAlerts: [] }),
 
   announcementText:
-    "⚡ EXTREME 8S BRUSHLESS ACTION • GST-INCLUSIVE PRICES • FREE SHIPPING ABOVE ₹10,000 ⚡",
+    "⚡ EXTREME 8S BRUSHLESS ACTION • GST-INCLUSIVE PRICES • NATIONWIDE PREMIUM SHIPPING ⚡",
   setAnnouncementText: (text) => {
     set({ announcementText: text });
     saveSiteConfig("announcement_text", text);

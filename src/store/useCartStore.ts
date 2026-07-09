@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 export const AVAILABLE_COUPONS: Coupon[] = [
   { code: "MARQUE10", type: "percent", value: 10, minOrder: 15000, description: "10% OFF on premium RC cars above ₹15,000" },
   { code: "MAXBASH", type: "flat", value: 5000, minOrder: 50000, description: "Flat ₹5,000 OFF on extreme performance rigs above ₹50,000" },
-  { code: "FREESHIP", type: "flat", value: 500, minOrder: 10000, description: "Flat ₹500 discount simulating free standard shipping above ₹10,000" }
+  { code: "FREESHIP", type: "flat", value: 500, minOrder: 10000, description: "Flat ₹500 discount on orders above ₹10,000" }
 ];
 
 interface CartState {
