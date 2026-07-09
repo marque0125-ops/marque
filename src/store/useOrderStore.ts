@@ -16,6 +16,7 @@ export interface OrderState {
   createOrder: (paymentMethod: 'UPI' | 'Card' | 'COD', paymentId?: string) => Order;
   advanceOrderStatus: (orderId: string) => void;
   cancelOrder: (orderId: string) => void;
+  deleteOrder: (orderId: string) => void;
   fetchOrders: (force?: boolean) => Promise<void>;
   updateOrderTracking: (orderId: string, trackingNumber: string) => void;
 }
@@ -320,6 +321,43 @@ export const useOrderStore = create<OrderState>()(
               }
             })();
           }
+        }
+      },
+
+      deleteOrder: (orderId) => {
+        const orderList = get().orders;
+        const orderToDelete = orderList.find(o => o.id === orderId);
+        
+        if (!orderToDelete) return;
+        
+        if (orderToDelete.status !== 'delivered') {
+          toast.error("Access Denied: Only delivered orders can be deleted.");
+          return;
+        }
+
+        const updated = orderList.filter(order => order.id !== orderId);
+        set({ orders: updated });
+
+        const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+        if (isConfigured) {
+          (async () => {
+            try {
+              const { error } = await (supabase.from("orders") as any)
+                .delete()
+                .eq("id", orderId);
+              if (error) {
+                console.error("Supabase delete error:", error);
+                toast.error("Failed to delete order from cloud database.");
+              } else {
+                toast.success("Order deleted successfully.");
+              }
+            } catch (err) {
+              console.error("Supabase delete error:", err);
+              toast.error("Failed to sync order deletion to cloud.");
+            }
+          })();
+        } else {
+          toast.success("Order deleted successfully.");
         }
       },
 

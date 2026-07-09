@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layers, Plus, Car, X, Trash2, Edit2 } from "lucide-react";
 import { useProductStore } from "../../store/useProductStore";
 import { useUIStore } from "../../store/useUIStore";
@@ -10,6 +10,19 @@ import toast from "react-hot-toast";
 export function InventoryTab() {
   const { showDialog } = useUIStore();
   const { products, categories, addProduct, updateProduct, deleteProduct, updateProductStock } = useProductStore();
+
+  const [currentInvPage, setCurrentInvPage] = useState(1);
+  const invItemsPerPage = 5;
+  const totalInvPages = Math.ceil(products.length / invItemsPerPage);
+
+  useEffect(() => {
+    if (currentInvPage > totalInvPages && totalInvPages > 0) {
+      setCurrentInvPage(totalInvPages);
+    }
+  }, [products.length, totalInvPages, currentInvPage]);
+
+  const startInvIndex = (currentInvPage - 1) * invItemsPerPage;
+  const paginatedProducts = products.slice(startInvIndex, startInvIndex + invItemsPerPage);
 
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [isEditingProduct, setIsEditingProduct] = useState(false);
@@ -435,7 +448,7 @@ export function InventoryTab() {
       ) : (
         <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-6">
           <div className="divide-y divide-brand-border text-xs">
-            {products.map((p) => {
+            {paginatedProducts.map((p) => {
               const brand = BRANDS.find(b => b.id === p.brandId);
               return (
                 <div key={p.id} className="py-6 first:pt-0 last:pb-0 space-y-4">
@@ -477,6 +490,46 @@ export function InventoryTab() {
               );
             })}
           </div>
+
+          {/* Pagination Controls */}
+          {totalInvPages > 1 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-950 border border-brand-border rounded-2xl p-4 mt-6">
+              <span className="text-slate-400 text-xs font-normal">
+                Showing <strong className="text-slate-200">{startInvIndex + 1}</strong> to <strong className="text-slate-200">{Math.min(startInvIndex + invItemsPerPage, products.length)}</strong> of <strong className="text-slate-200">{products.length}</strong> models
+              </span>
+              
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  disabled={currentInvPage === 1}
+                  onClick={() => setCurrentInvPage(prev => Math.max(prev - 1, 1))}
+                  className="px-3 py-1.5 rounded bg-slate-900 border border-brand-border text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-800 hover:text-white transition-all text-[11px] uppercase font-normal"
+                >
+                  Prev
+                </button>
+                
+                {Array.from({ length: totalInvPages }, (_, i) => i + 1).map(page => (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => setCurrentInvPage(page)}
+                    className={`px-3 py-1.5 rounded text-[11px] font-mono border transition-all ${currentInvPage === page ? 'bg-brand-orange text-white sm:text-black border-brand-orange' : 'bg-slate-900 border-brand-border text-slate-300 hover:bg-slate-800'}`}
+                  >
+                    {page}
+                  </button>
+                ))}
+                
+                <button
+                  type="button"
+                  disabled={currentInvPage === totalInvPages}
+                  onClick={() => setCurrentInvPage(prev => Math.min(prev + 1, totalInvPages))}
+                  className="px-3 py-1.5 rounded bg-slate-900 border border-brand-border text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-800 hover:text-white transition-all text-[11px] uppercase font-normal"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

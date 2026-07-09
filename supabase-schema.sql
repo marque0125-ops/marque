@@ -166,6 +166,10 @@ DROP POLICY IF EXISTS "Allow admin update orders" ON public.orders;
 CREATE POLICY "Allow admin update orders" ON public.orders FOR UPDATE TO authenticated USING (
     EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND is_admin = true)
 );
+DROP POLICY IF EXISTS "Allow admin delete orders" ON public.orders;
+CREATE POLICY "Allow admin delete orders" ON public.orders FOR DELETE TO authenticated USING (
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND is_admin = true)
+);
 
 -- 5. INITIALIZE GUIDES TABLE
 CREATE TABLE IF NOT EXISTS public.guides (

@@ -7,8 +7,21 @@ import { OrderTrackingMap } from "../OrderTrackingMap";
 import toast from "react-hot-toast";
 
 export function OrdersTab() {
-  const { orders, isLoading, advanceOrderStatus, cancelOrder, fetchOrders, updateOrderTracking } = useOrderStore();
+  const { orders, isLoading, advanceOrderStatus, cancelOrder, deleteOrder, fetchOrders, updateOrderTracking } = useOrderStore();
   const [trackingInputs, setTrackingInputs] = useState<Record<string, string>>({});
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(orders.length / itemsPerPage);
+
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [orders.length, totalPages, currentPage]);
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedOrders = orders.slice(startIndex, startIndex + itemsPerPage);
 
   useEffect(() => {
     fetchOrders();
@@ -39,7 +52,7 @@ export function OrdersTab() {
         </div>
       ) : (
         <div className="space-y-4 text-xs">
-          {orders.map((order) => (
+          {paginatedOrders.map((order) => (
             <div key={order.id} className="rounded-2xl border border-brand-border bg-slate-950 p-5 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-brand-border pb-3">
                 <div className="flex items-center gap-3">
@@ -125,6 +138,18 @@ export function OrdersTab() {
                   <span className="text-[10px] text-slate-400 font-mono">AWB Code: {order.trackingNumber}</span>
                 )}
                 <div className="flex gap-2">
+                  {order.status === 'delivered' && (
+                    <button
+                      onClick={() => {
+                        if (confirm("Are you sure you want to permanently delete this completed order?")) {
+                          deleteOrder(order.id);
+                        }
+                      }}
+                      className="bg-red-950/40 hover:bg-red-700 text-red-400 hover:text-white border border-red-900/60 px-3.5 py-1.5 rounded font-normal uppercase text-[9px] transition-all"
+                    >
+                      Delete Order
+                    </button>
+                  )}
                   {order.status !== 'delivered' && order.status !== 'cancelled' && (
                     <button onClick={() => advanceOrderStatus(order.id)} className="bg-brand-orange text-white sm:text-black px-3.5 py-1.5 rounded font-normal uppercase text-[9px] hover:bg-brand-gold">
                       Fulfill / Advance Status
@@ -139,6 +164,43 @@ export function OrdersTab() {
               </div>
             </div>
           ))}
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-950 border border-brand-border rounded-2xl p-4 mt-6">
+              <span className="text-slate-400 text-xs font-normal">
+                Showing <strong className="text-slate-200">{startIndex + 1}</strong> to <strong className="text-slate-200">{Math.min(startIndex + itemsPerPage, orders.length)}</strong> of <strong className="text-slate-200">{orders.length}</strong> orders
+              </span>
+              
+              <div className="flex items-center gap-1">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  className="px-3 py-1.5 rounded bg-slate-900 border border-brand-border text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-800 hover:text-white transition-all text-[11px] uppercase font-normal"
+                >
+                  Prev
+                </button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`px-3 py-1.5 rounded text-[11px] font-mono border transition-all ${currentPage === page ? 'bg-brand-orange text-white sm:text-black border-brand-orange' : 'bg-slate-900 border-brand-border text-slate-300 hover:bg-slate-800'}`}
+                  >
+                    {page}
+                  </button>
+                ))}
+                
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  className="px-3 py-1.5 rounded bg-slate-900 border border-brand-border text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-800 hover:text-white transition-all text-[11px] uppercase font-normal"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
