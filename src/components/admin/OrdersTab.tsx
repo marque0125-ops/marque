@@ -74,7 +74,7 @@ export function OrdersTab() {
                 </div>
                 <div>
                   <span className="text-[9px] text-slate-400 font-normal uppercase tracking-wider block">Address</span>
-                  <span className="text-slate-200 block truncate">{order.shippingAddress.addressLine}</span>
+                  <span className="text-slate-200 block break-words">{order.shippingAddress.addressLine}</span>
                   <span className="block mt-0.5">{order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}</span>
                 </div>
                 <div>

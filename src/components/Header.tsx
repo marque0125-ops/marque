@@ -8,7 +8,7 @@ import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { useUIStore } from "../store/useUIStore";
-import { BRANDS } from "../data/mockData";
+
 import {
   ShoppingBag,
   User,
@@ -35,8 +35,7 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const {
-
-
+    brandsList,
     lowStockAlerts,
     clearLowStockAlerts,
     setSelectedProduct,
@@ -53,7 +52,7 @@ export default function Header() {
   const searchResults = searchQuery.length > 1 ? products.filter(p => {
     const q = searchQuery.toLowerCase();
     const matchName = p.name.toLowerCase().includes(q);
-    const brand = BRANDS.find(b => b.id === p.brandId);
+    const brand = brandsList.find(b => b.id === p.brandId);
     const matchBrand = brand ? brand.name.toLowerCase().includes(q) : false;
     return matchName || matchBrand;
   }).slice(0, 4) : [];
@@ -132,10 +131,10 @@ export default function Header() {
                   Shop
                 </button>
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 rounded-xl border border-brand-border bg-slate-950 p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 grid grid-cols-2 gap-2 z-50">
-                  {BRANDS.map(b => (
+                  {brandsList.map(b => (
                     <button
                       key={b.id}
-                      onClick={() => handleBrandClick(b.slug)}
+                      onClick={() => handleBrandClick(b.name.toLowerCase().replace(/\s+/g, '-'))}
                       className="flex flex-col items-start p-2 rounded-lg hover:bg-slate-900 text-left transition-colors"
                     >
                       <span className="text-xs font-normal text-slate-200">{b.name}</span>
