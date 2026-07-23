@@ -525,7 +525,7 @@ export function InventoryTab() {
                 Showing <strong className="text-slate-200">{filteredProducts.length === 0 ? 0 : startInvIndex + 1}</strong> to <strong className="text-slate-200">{Math.min(startInvIndex + invItemsPerPage, filteredProducts.length)}</strong> of <strong className="text-slate-200">{filteredProducts.length}</strong> models
               </span>
               
-              <div className="flex items-center gap-1">
+              <div className="flex flex-wrap justify-center items-center gap-1">
                 <button
                   type="button"
                   disabled={currentInvPage === 1}
