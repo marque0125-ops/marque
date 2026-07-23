@@ -586,9 +586,9 @@ export default function PdpView() {
           </h3>
           <div className="divide-y divide-brand-border text-xs">
             {Object.entries(selectedProduct.specs).map(([key, val]) => (
-              <div key={key} className="flex justify-between py-2.5">
-                <span className="text-slate-400 font-normal">{key}</span>
-                <span className="text-slate-200 font-normal">{val}</span>
+              <div key={key} className="flex gap-4 justify-between items-start py-3">
+                <span className="text-slate-400 font-normal shrink-0">{key}</span>
+                <span className="text-slate-200 font-normal text-right">{val}</span>
               </div>
             ))}
           </div>
