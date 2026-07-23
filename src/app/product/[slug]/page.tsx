@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { BRANDS, PRODUCTS } from '../../../data/mockData';
 import { supabase } from '../../../utils/supabase';
+import { loadSiteConfig } from '../../../utils/siteConfig';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   let product = PRODUCTS.find((p) => p.slug === params.slug);
@@ -27,7 +28,16 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
   }
 
-  const brand = BRANDS.find(b => b.id === product?.brandId);
+  // Try to load dynamic brands list
+  let dynamicBrands: any[] | null = null;
+  try {
+    dynamicBrands = await loadSiteConfig<any[]>('brands_list');
+  } catch (e) {
+    // ignore
+  }
+
+  const activeBrands = dynamicBrands && dynamicBrands.length > 0 ? dynamicBrands : BRANDS;
+  const brand = activeBrands.find(b => b.id === product?.brandId);
   const brandName = brand ? brand.name : "MARQUE";
   
   const title = `${product.name} - ${brandName} RC Car | MARQUE`;

@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Heart, Car, Share2 } from "lucide-react";
 import { Product } from "../data/mockData";
-import { BRANDS } from "../data/mockData";
 import { useCartStore } from "../store/useCartStore";
 import { useUIStore } from "../store/useUIStore";
 import { trackAddToCart } from "../utils/analytics";
@@ -32,8 +31,8 @@ const getColorHex = (colorName: string): string => {
 
 export function ProductCardItem({ p, wishlist, toggleWishlist, onProductClick }: ProductCardItemProps) {
   const { addToCart } = useCartStore();
-  const { showDialog } = useUIStore();
-  const brand = BRANDS.find((b) => b.id === p.brandId);
+  const { showDialog, brandsList } = useUIStore();
+  const brand = brandsList.find((b) => b.id === p.brandId);
   const [selectedVariant, setSelectedVariant] = useState(p.variants[0]);
 
   const handleShare = async (e: React.MouseEvent, product: Product) => {

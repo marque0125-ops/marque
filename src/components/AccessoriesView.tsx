@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
 import { useUIStore } from "../store/useUIStore";
-import { BRANDS, Product } from "../data/mockData";
+import { Product } from "../data/mockData";
 import { 
   Heart, 
   Star, 
@@ -30,7 +30,8 @@ export default function AccessoriesView() {
   } = useProductStore();
   const {
     setSelectedProduct,
-    showDialog
+    showDialog,
+    brandsList
   } = useUIStore();
   const router = useRouter();
 
@@ -205,7 +206,7 @@ export default function AccessoriesView() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredAccessories.map((p) => {
-                const brand = BRANDS.find(b => b.id === p.brandId);
+                const brand = brandsList.find(b => b.id === p.brandId);
                 const isWished = wishlist.includes(p.id);
 
                 return (

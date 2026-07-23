@@ -6,7 +6,6 @@ import { useCartStore } from "../store/useCartStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { useUIStore } from "../store/useUIStore";
 import { useOrderStore } from "../store/useOrderStore";
-import { BRANDS } from "../data/mockData";
 import {
   Trash2,
   Plus,
@@ -45,7 +44,8 @@ export default function CartView() {
     pinLoading,
     pinError,
     checkPincode,
-    showDialog
+    showDialog,
+    brandsList
   } = useUIStore();
   const router = useRouter();
 
@@ -503,7 +503,7 @@ export default function CartView() {
                 {cart.map((item) => {
                   const basePrice = item.variant.priceOverride || item.product.price;
                   const itemSubtotal = basePrice * item.qty;
-                  const brand = BRANDS.find(b => b.id === item.product.brandId);
+                  const brand = brandsList.find(b => b.id === item.product.brandId);
 
                   return (
                     <div key={item.id} className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">

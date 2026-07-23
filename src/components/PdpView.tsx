@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
 import { useUIStore } from "../store/useUIStore";
-import { BRANDS, Product, ProductVariant } from "../data/mockData";
+import { Product, ProductVariant } from "../data/mockData";
 import { 
   Heart, 
   Star, 
@@ -39,7 +39,8 @@ export default function PdpView() {
   const {
     selectedProduct,
     setSelectedProduct,
-    showDialog
+    showDialog,
+    brandsList
   } = useUIStore();
   const router = useRouter();
 
@@ -85,7 +86,7 @@ export default function PdpView() {
 
   if (!selectedProduct) return null;
 
-  const brand = BRANDS.find(b => b.id === selectedProduct.brandId);
+  const brand = brandsList.find(b => b.id === selectedProduct.brandId);
   const isWished = wishlist.includes(selectedProduct.id);
 
   // Find variant matching current attributes
@@ -754,7 +755,7 @@ export default function PdpView() {
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {relatedProducts.map((p) => {
-              const brand = BRANDS.find(b => b.id === p.brandId);
+              const brand = brandsList.find(b => b.id === p.brandId);
               const isWished = wishlist.includes(p.id);
 
               return (

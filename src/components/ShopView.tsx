@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { useCartStore } from "../store/useCartStore";
 import { useProductStore } from "../store/useProductStore";
 import { useUIStore } from "../store/useUIStore";
-import { BRANDS, Product } from "../data/mockData";
+import { Product } from "../data/mockData";
 import {
   RotateCcw,
   SlidersHorizontal,
@@ -41,7 +41,8 @@ export default function ShopView() {
     isLoading
   } = useProductStore();
   const {
-    setSelectedProduct
+    setSelectedProduct,
+    brandsList
   } = useUIStore();
   const router = useRouter();
 
@@ -70,14 +71,14 @@ export default function ShopView() {
       const q = searchQuery.toLowerCase();
       const matchName = p.name.toLowerCase().includes(q);
       const matchDesc = p.description.toLowerCase().includes(q);
-      const brand = BRANDS.find(b => b.id === p.brandId);
+      const brand = brandsList.find(b => b.id === p.brandId);
       const matchBrand = brand ? brand.name.toLowerCase().includes(q) : false;
       const matchTerrain = p.terrainType.toLowerCase().includes(q);
       if (!matchName && !matchDesc && !matchBrand && !matchTerrain) return false;
     }
     if (filterBrand !== "ALL") {
-      const brand = BRANDS.find(b => b.id === p.brandId);
-      if (!brand || brand.slug !== filterBrand) return false;
+      const brand = brandsList.find(b => b.id === p.brandId);
+      if (!brand || brand.id !== filterBrand) return false;
     }
     if (filterCategory !== "ALL") {
       if (p.categoryId !== filterCategory) return false;
@@ -146,8 +147,8 @@ export default function ShopView() {
           className="w-full rounded-xl border border-brand-border/50 bg-slate-950/50 py-2.5 px-3 text-xs text-slate-200 focus:border-brand-orange outline-none transition-all"
         >
           <option value="ALL">All Brands</option>
-          {BRANDS.map(b => (
-            <option key={b.id} value={b.slug}>{b.name}</option>
+          {brandsList.map(b => (
+            <option key={b.id} value={b.id}>{b.name}</option>
           ))}
         </select>
       </div>

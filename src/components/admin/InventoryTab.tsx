@@ -1,28 +1,40 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Layers, Plus, Car, X, Trash2, Edit2 } from "lucide-react";
+import { Layers, Plus, Car, X, Trash2, Edit2, Search } from "lucide-react";
 import { useProductStore } from "../../store/useProductStore";
 import { useUIStore } from "../../store/useUIStore";
-import { BRANDS } from "../../data/mockData";
 import toast from "react-hot-toast";
 
 export function InventoryTab() {
-  const { showDialog } = useUIStore();
+  const { showDialog, brandsList } = useUIStore();
   const { products, categories, addProduct, updateProduct, deleteProduct, updateProductStock } = useProductStore();
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredProducts = products.filter(p => {
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    const brand = brandsList.find(b => b.id === p.brandId);
+    return (
+      p.name.toLowerCase().includes(q) ||
+      p.sku.toLowerCase().includes(q) ||
+      (brand && brand.name.toLowerCase().includes(q))
+    );
+  });
 
   const [currentInvPage, setCurrentInvPage] = useState(1);
   const invItemsPerPage = 5;
-  const totalInvPages = Math.ceil(products.length / invItemsPerPage);
+  const totalInvPages = Math.ceil(filteredProducts.length / invItemsPerPage);
 
   useEffect(() => {
     if (currentInvPage > totalInvPages && totalInvPages > 0) {
       setCurrentInvPage(totalInvPages);
     }
-  }, [products.length, totalInvPages, currentInvPage]);
+  }, [filteredProducts.length, totalInvPages, currentInvPage]);
 
   const startInvIndex = (currentInvPage - 1) * invItemsPerPage;
-  const paginatedProducts = products.slice(startInvIndex, startInvIndex + invItemsPerPage);
+  const paginatedProducts = filteredProducts.slice(startInvIndex, startInvIndex + invItemsPerPage);
 
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [isEditingProduct, setIsEditingProduct] = useState(false);
@@ -268,7 +280,7 @@ export function InventoryTab() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-xs text-slate-300">
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Model Name</label><input type="text" value={formName} onChange={(e) => setFormName(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
             <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Chassis SKU Code</label><input type="text" value={formSku} onChange={(e) => setFormSku(e.target.value)} required className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange" /></div>
-            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Brand Manufacturer</label><select value={formBrandId} onChange={(e) => setFormBrandId(e.target.value)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange">{BRANDS.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}</select></div>
+            <div className="space-y-1.5"><label className="text-[10px] text-slate-400 font-normal uppercase block">Brand Manufacturer</label><select value={formBrandId} onChange={(e) => setFormBrandId(e.target.value)} className="w-full rounded-lg bg-slate-950 border border-brand-border py-2 px-3 focus:border-brand-orange">{brandsList.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}</select></div>
             <div className="space-y-1.5">
               <label className="text-[10px] text-slate-400 font-normal uppercase block">Category</label>
               <select
@@ -447,9 +459,23 @@ export function InventoryTab() {
         </form>
       ) : (
         <div className="rounded-2xl border border-brand-border bg-slate-950 p-6 space-y-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search by model name, SKU, or brand..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-xl border border-brand-border bg-slate-900 py-2.5 pl-9 pr-3 text-xs text-slate-200 outline-none focus:border-brand-orange transition-colors"
+            />
+          </div>
+          
           <div className="divide-y divide-brand-border text-xs">
-            {paginatedProducts.map((p) => {
-              const brand = BRANDS.find(b => b.id === p.brandId);
+            {paginatedProducts.length === 0 ? (
+              <div className="py-8 text-center text-slate-500">No models found matching your search.</div>
+            ) : (
+              paginatedProducts.map((p) => {
+              const brand = brandsList.find(b => b.id === p.brandId);
               return (
                 <div key={p.id} className="py-6 first:pt-0 last:pb-0 space-y-4">
                   <div className="flex flex-col sm:flex-row justify-between sm:items-center border-b border-brand-border/40 pb-3 gap-3">
@@ -488,14 +514,15 @@ export function InventoryTab() {
                   </div>
                 </div>
               );
-            })}
+            })
+            )}
           </div>
 
           {/* Pagination Controls */}
           {totalInvPages > 1 && (
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-950 border border-brand-border rounded-2xl p-4 mt-6">
               <span className="text-slate-400 text-xs font-normal">
-                Showing <strong className="text-slate-200">{startInvIndex + 1}</strong> to <strong className="text-slate-200">{Math.min(startInvIndex + invItemsPerPage, products.length)}</strong> of <strong className="text-slate-200">{products.length}</strong> models
+                Showing <strong className="text-slate-200">{filteredProducts.length === 0 ? 0 : startInvIndex + 1}</strong> to <strong className="text-slate-200">{Math.min(startInvIndex + invItemsPerPage, filteredProducts.length)}</strong> of <strong className="text-slate-200">{filteredProducts.length}</strong> models
               </span>
               
               <div className="flex items-center gap-1">
