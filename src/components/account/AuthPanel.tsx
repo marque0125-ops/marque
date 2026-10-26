@@ -54,7 +54,13 @@ export function AuthPanel() {
     try {
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
       if (authError) {
-        setErrorMsg(authError.message);
+        let msg = authError.message;
+        if (msg.toLowerCase().includes("invalid login credentials")) {
+          msg = "Invalid email or password. If you haven't registered yet, please switch to 'Create Account' above.";
+        } else if (msg.toLowerCase().includes("email not confirmed")) {
+          msg = "Please verify your email address before signing in, or check out as guest.";
+        }
+        setErrorMsg(msg);
         triggerShake(); setIsLoading(false); return;
       }
       if (authData?.user) {

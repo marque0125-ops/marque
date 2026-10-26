@@ -52,7 +52,8 @@ export default function CartView() {
   const {
     address,
     setAddress,
-    isAuthenticated
+    isAuthenticated,
+    login
   } = useAuthStore();
 
   const [couponInput, setCouponInput] = useState("");
@@ -111,17 +112,6 @@ export default function CartView() {
   const handleProceed = () => {
     if (cart.length === 0) return;
 
-    if (!isAuthenticated) {
-      showDialog({ 
-        title: 'Authentication Required', 
-        message: 'To ensure a secure checkout and proper order tracking, please sign in or create an account first.' 
-      });
-      setTimeout(() => {
-        router.push('/account');
-      }, 1500);
-      return;
-    }
-
     if (!address.city || !address.state || !address.pincode) {
       showDialog({ title: 'Notice', message: "DELIVERY DETAILS REQUIRED: Please fill in your city, state, and pincode." });
       return;
@@ -130,6 +120,11 @@ export default function CartView() {
     if (!address.name || !address.phone || !address.addressLine) {
       showDialog({ title: 'Notice', message: "DELIVERY DETAILS REQUIRED: Please fill in receiver's name, phone, and complete street address." });
       return;
+    }
+
+    // Auto-create local session if not already logged in
+    if (!isAuthenticated) {
+      login(address.name, address.phone);
     }
 
     // Track InitiateCheckout event
@@ -267,7 +262,10 @@ export default function CartView() {
       const data = await res.json();
 
       if (!data || !data.redirectUrl) {
-        showDialog({ title: 'Notice', message: "PhonePe initialization failed from backend. Please try again." });
+        showDialog({ 
+          title: 'Notice', 
+          message: data?.error || "PhonePe initialization failed from backend. Please try again." 
+        });
         return;
       }
 
